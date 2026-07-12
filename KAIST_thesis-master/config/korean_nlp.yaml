@@ -1,0 +1,293 @@
+# Korean Text Processing Configuration
+# Adapted from Hoberg & Phillips (2016) methodology for Korean language
+
+# Tokenizer settings
+tokenizer:
+  # Backend: kiwipiepy (Korean morphological analyzer)
+  # Alternative: konlpy.tag.Mecab (requires separate installation)
+  backend: kiwipiepy
+
+  # Kiwipiepy-specific settings
+  model_type: knlm  # Korean NLP model
+  typos: none      # Typo tolerance: none, basic, auto
+
+# Part-of-speech (POS) tags to keep
+# Following H&P 2016: "keep only nouns and proper nouns"
+pos_tags:
+  - NNG  # Common noun (일반명사): 제품, 시장, 개발
+  - NNP  # Proper noun (고유명사): 삼성, 서울, LG
+  - NNB  # Dependent noun (의존명사): 것, 수, 등
+
+# Token filtering
+filters:
+  # Minimum word length in characters
+  # Korean words typically 2-4 characters (vs English 3-letter minimum)
+  min_word_length: 2
+
+  # Maximum text length to process (for performance optimization)
+  # Texts longer than this will be truncated before tokenization
+  # Rationale: After ~50k chars, additional text rarely adds distinctive vocabulary
+  # H&P methodology focuses on product descriptions (typically <10k chars)
+  max_text_length: 50000
+
+  # Remove numeric tokens
+  remove_numbers: true
+
+  # Remove single-character tokens (except proper nouns)
+  remove_single_char: false
+
+# Korean business stopwords (66 words)
+# These are common business/financial terms that appear frequently but don't distinguish products
+stopwords:
+  # Time/Date terms
+  - 년      # year
+  - 월      # month
+  - 일      # day
+  - 분기    # quarter
+  - 당기    # current period
+  - 전기    # previous period
+
+  # Company/Organization terms
+  - 회사    # company
+  - 당사    # our company
+  - 기업    # corporation
+  - 업체    # company/vendor
+  - 사업    # business
+
+  # Legal/Financial terms
+  - 백만원  # million won
+  - 억원    # hundred million won
+  - 천원    # thousand won
+  - 원      # won (currency)
+  - 금액    # amount
+  - 회계    # accounting
+
+  # Personnel terms
+  - 대표    # representative
+  - 이사    # director
+  - 임원    # executive
+  - 직원    # employee
+
+  # Geographic terms - Korean cities (H&P 2016: "top 50 cities")
+  # Major cities (Metropolitan)
+  - 서울    # Seoul
+  - 부산    # Busan
+  - 대구    # Daegu
+  - 인천    # Incheon
+  - 광주    # Gwangju
+  - 대전    # Daejeon
+  - 울산    # Ulsan (industrial hub)
+
+  # Large cities (>500k population)
+  - 수원    # Suwon (Samsung)
+  - 창원    # Changwon (heavy industry)
+  - 성남    # Seongnam (IT hub)
+  - 고양    # Goyang
+  - 용인    # Yongin
+  - 부천    # Bucheon
+  - 안산    # Ansan
+  - 천안    # Cheonan
+  - 전주    # Jeonju
+  - 청주    # Cheongju
+  - 안양    # Anyang
+  - 포항    # Pohang (steel)
+  - 구미    # Gumi (electronics)
+  - 김해    # Gimhae
+  - 제주시  # Jeju City
+
+  # Medium cities (industrial/tech hubs)
+  - 화성    # Hwaseong
+  - 남양주  # Namyangju
+  - 평택    # Pyeongtaek
+  - 시흥    # Siheung
+  - 의정부  # Uijeongbu
+  - 파주    # Paju
+  - 김포    # Gimpo
+  - 광명    # Gwangmyeong
+  - 군포    # Gunpo
+  - 하남    # Hanam
+  - 오산    # Osan
+  - 이천    # Icheon
+  - 양주    # Yangju
+  - 구리    # Guri
+  - 안성    # Anseong
+  - 포천    # Pocheon
+  - 의왕    # Uiwang
+  - 여주    # Yeoju
+  - 여수    # Yeosu
+  - 순천    # Suncheon
+  - 목포    # Mokpo
+  - 김천    # Gimcheon
+  - 경주    # Gyeongju
+  - 안동    # Andong
+  - 진주    # Jinju
+  - 통영    # Tongyeong
+  - 사천    # Sacheon
+  - 춘천    # Chuncheon
+  - 원주    # Wonju
+  - 강릉    # Gangneung
+
+  # Geographic terms - Korean provinces/regions
+  - 경기    # Gyeonggi
+  - 강원    # Gangwon
+  - 충남    # South Chungcheong
+  - 충북    # North Chungcheong
+  - 전남    # South Jeolla
+  - 전북    # North Jeolla
+  - 경남    # South Gyeongsang
+  - 경북    # North Gyeongsang
+  - 제주    # Jeju
+  - 충청    # Chungcheong (general)
+  - 전라    # Jeolla (general)
+  - 경상    # Gyeongsang (general)
+
+  # Geographic terms - Major world cities (H&P 2016: "top 50 cities...in the world")
+  # Asia-Pacific
+  - 도쿄    # Tokyo
+  - 베이징  # Beijing
+  - 상하이  # Shanghai
+  - 홍콩    # Hong Kong
+  - 싱가포르 # Singapore
+  - 방콕    # Bangkok
+  - 자카르타 # Jakarta
+  - 마닐라  # Manila
+  - 하노이  # Hanoi
+  - 호치민  # Ho Chi Minh
+  - 쿠알라룸푸르 # Kuala Lumpur
+  - 타이베이 # Taipei
+  - 뭄바이  # Mumbai
+  - 델리    # Delhi
+  - 시드니  # Sydney
+  - 멜버른  # Melbourne
+
+  # Europe
+  - 런던    # London
+  - 파리    # Paris
+  - 베를린  # Berlin
+  - 프랑크푸르트 # Frankfurt
+  - 암스테르담 # Amsterdam
+  - 브뤼셀  # Brussels
+  - 취리히  # Zurich
+  - 밀라노  # Milan
+  - 로마    # Rome
+  - 마드리드 # Madrid
+  - 바르셀로나 # Barcelona
+  - 모스크바 # Moscow
+  - 상트페테르부르크 # St. Petersburg
+  - 이스탄불 # Istanbul
+
+  # Americas
+  - 뉴욕    # New York
+  - 로스앤젤레스 # Los Angeles
+  - 시카고  # Chicago
+  - 샌프란시스코 # San Francisco
+  - 실리콘밸리 # Silicon Valley
+  - 보스턴  # Boston
+  - 시애틀  # Seattle
+  - 휴스턴  # Houston
+  - 댄버    # Denver
+  - 토론토  # Toronto
+  - 밴쿠버  # Vancouver
+  - 멕시코시티 # Mexico City
+  - 상파울루 # Sao Paulo
+
+  # Middle East & Africa
+  - 두바이  # Dubai
+  - 아부다비 # Abu Dhabi
+  - 텔아비브 # Tel Aviv
+  - 카이로  # Cairo
+  - 요하네스버그 # Johannesburg
+
+  # Countries (H&P 2016: "country...names")
+  # East Asia
+  - 한국    # Korea
+  - 중국    # China
+  - 일본    # Japan
+  - 대만    # Taiwan
+
+  # Americas
+  - 미국    # USA
+  - 캐나다  # Canada
+  - 멕시코  # Mexico
+  - 브라질  # Brazil
+  - 칠레    # Chile
+  - 아르헨티나 # Argentina
+
+  # Europe
+  - 독일    # Germany
+  - 영국    # UK
+  - 프랑스  # France
+  - 이탈리아 # Italy
+  - 스페인  # Spain
+  - 네덜란드 # Netherlands
+  - 벨기에  # Belgium
+  - 스위스  # Switzerland
+  - 스웨덴  # Sweden
+  - 노르웨이 # Norway
+  - 폴란드  # Poland
+  - 러시아  # Russia
+  - 터키    # Turkey
+
+  # Southeast Asia
+  - 베트남  # Vietnam
+  - 태국    # Thailand
+  - 말레이시아 # Malaysia
+  - 싱가포르국 # Singapore (country)
+  - 인도네시아 # Indonesia
+  - 필리핀  # Philippines
+  - 미얀마  # Myanmar
+
+  # South Asia & Middle East
+  - 인도    # India
+  - 파키스탄 # Pakistan
+  - 방글라데시 # Bangladesh
+  - 사우디아라비아 # Saudi Arabia
+  - 아랍에미리트 # UAE
+  - 이스라엘 # Israel
+  - 이란    # Iran
+
+  # Oceania & Others
+  - 호주    # Australia
+  - 뉴질랜드 # New Zealand
+  - 남아프리카공화국 # South Africa
+
+  # Common function words (that survive POS filtering)
+  - 것      # thing
+  - 등      # etc
+  - 수      # number/ability
+  - 바      # thing/fact
+  - 내      # inside
+  - 중      # middle/among
+  - 간      # between
+
+  # Relational/Comparative terms
+  - 관련    # related
+  - 대한    # about/regarding
+  - 위한    # for
+  - 따른    # according to
+  - 통한    # through
+  - 따라    # according/along
+
+  # Quantifiers
+  - 이상    # above/more than
+  - 이하    # below/less than
+
+  # Generic business terms
+  - 내용    # content
+  - 경우    # case
+  - 기준    # standard/basis
+  - 기타    # other
+  - 현재    # current/present
+  - 때      # time/when
+  - 또는    # or
+
+# Preprocessing options
+preprocessing:
+  # Remove extra whitespace
+  strip_whitespace: true
+
+  # Normalize unicode (NFC normalization)
+  normalize_unicode: true
+
+  # Remove special characters (preserve Korean, English, numbers)
+  remove_special_chars: true

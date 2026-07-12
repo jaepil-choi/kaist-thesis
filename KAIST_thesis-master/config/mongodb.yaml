@@ -1,0 +1,98 @@
+# MongoDB Configuration for Korean DART Business Descriptions
+
+# Connection settings
+connection:
+  # MongoDB host (loaded from environment variable)
+  host: ${MONGO_HOST}
+
+  # Database name (loaded from environment variable)
+  database: ${DB_NAME}
+
+  # Collection name (loaded from environment variable)
+  collection: ${COLLECTION_NAME}
+
+  # Connection timeout (milliseconds)
+  timeout: 30000
+
+  # Maximum pool size
+  max_pool_size: 10
+
+# Data extraction settings
+extraction:
+  # Target section codes for business descriptions
+  # 020000: 사업의 개요 (Business Overview - Level 1)
+  # 020100: 1. 사업의 개요 (Business Overview - Level 2, more detailed)
+  section_codes:
+    - "020000"
+    - "020100"
+
+  # Year range for extraction
+  year_range:
+    start: 2010
+    end: 2025
+
+  # Report types to include
+  # A001: 사업보고서 (Annual Business Report)
+  report_types:
+    - "A001"
+
+  # Fields to retrieve
+  fields:
+    - document_id
+    - rcept_no
+    - rcept_dt
+    - year
+    - corp_code
+    - corp_name
+    - stock_code
+    - report_type
+    - report_name
+    - section_code
+    - section_title
+    - text
+    - char_count
+    - word_count
+    - level
+
+# Data cleaning filters
+filters:
+  # Remove documents with zero-length text
+  remove_zero_length: true
+
+  # Percentile cutoff for character count (remove top X% as outliers)
+  # Set to null to disable
+  percentile_cutoff: 95
+
+  # Character count limits (applied after percentile cutoff)
+  # Set to null to disable
+  min_char_count: null
+  max_char_count: null
+
+  # Level preference for deduplication
+  # When multiple levels exist for same firm-year-section, prefer this level
+  # Level 2 is more detailed than Level 1
+  prefer_level: 2
+
+  # Deduplication strategy for multiple reports per firm-year
+  # Options: latest_rcept_dt, earliest_rcept_dt, longest_text
+  dedup_strategy: latest_rcept_dt
+
+# Query optimization
+query:
+  # Batch size for cursor iteration
+  batch_size: 1000
+
+  # Use projection to limit fields (memory optimization)
+  use_projection: true
+
+  # Sort order for results
+  sort_by: year
+  sort_order: ascending  # ascending or descending
+
+# Logging
+logging:
+  # Log every N documents during extraction
+  log_frequency: 100
+
+  # Log level for MongoDB operations
+  level: INFO

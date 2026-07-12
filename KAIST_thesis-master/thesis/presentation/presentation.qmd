@@ -1,0 +1,531 @@
+---
+title: "한국 주식시장에서의 텍스트 기반 산업 모멘텀"
+subtitle: "Text-Based Industry Momentum in Korean Stock Market"
+author: "최재필"
+institute: "KAIST 금융공학대학원"
+advisor: "지도교수: 강장구 교수님"
+date: today
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    chalkboard: false
+    preview-links: auto
+    logo: ""
+    css: styles.css
+    footer: "KAIST Graduate School of Business"
+    transition: none
+    background-transition: none
+    width: 1600
+    height: 900
+    incremental: false
+---
+
+# 연구 동기 {background-color="#003366"}
+
+## 연구 동기 및 배경
+
+**산업 모멘텀의 수수께끼**
+
+- 과거 산업 수익률이 미래 수익률 예측
+- 전통적 분류(SIC, FnGuide)는 제한적인 모멘텀 수익
+
+**주의력 부족 가설**
+
+- 투자자들이 경제적으로 연계된 기업들에 주의를 기울이지 못함
+- 전통적 분류의 한계:
+  - 정적인 그룹핑
+  - 실제 제품시장 경쟁관계를 놓침
+  - 경제적 연계 ≠ 산업분류 코드
+
+**본 연구의 기여**
+
+- 최초 한국 TNIC 구축
+- 주의력 부족 가설의 표본 외 검증
+
+---
+
+## Hoberg & Phillips (2018) 주요 발견
+
+**미국 시장 결과** (JFQA 2018):
+
+- TNIC 기반 산업 모멘텀이 SIC보다 **100-200% 더 큰 수익**
+- 이는 정보 내용 개선(25-40%)을 훨씬 초과
+- 핵심 메커니즘: **투자자 주의력 부족**
+
+**5가지 핵심 증거**:
+
+1. 경제적 크기가 정보 내용만으로 설명 불가
+2. 덜 가시적인 동료 기업(TNIC-only)에서 더 강한 모멘텀
+3. 타이밍 차이: SIC은 1-2개월, TNIC은 6-12개월 지속
+4. 뮤추얼펀드 공동보유가 적을수록 모멘텀 강함
+5. 국지적 충격(TNIC-4)이 광범위 충격보다 강함
+
+---
+
+## TNIC 개념 설명
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**전통적 산업분류 (SIC, FnGuide)**
+
+- 사전 정의된 코드 체계
+- 정적 (시간에 따라 거의 변하지 않음)
+- 주요 사업 분야 1개만 고려
+:::
+
+::: {.column width="50%"}
+**텍스트 기반 네트워크 산업분류 (TNIC)**
+
+- SEC 10-K 사업내용 기술서 텍스트 분석
+- 기업 간 단어 사용 유사도 측정
+- 시변적: 매년 사업내용 변화에 따라 동료 기업 변경
+- 네트워크: A-B 유사, A-C 유사 ≠ B-C 유사
+:::
+
+::::
+
+**예시**: 삼성전자 vs LG전자
+
+- **공통점**: 둘 다 가전사업 (TV, 냉장고, 세탁기 등)
+  - TNIC: 높은 유사도 (가전 관련 단어 공유)
+- **차이점**: FnGuide/SIC 산업분류
+  - 삼성전자: 반도체 산업으로 분류
+  - LG전자: 반도체 산업 아님 (가전/디스플레이)
+- **결과**: 전통적 분류로는 동료 기업이 아니지만, TNIC으로는 동료 기업
+- **함의**: 삼성 가전사업 충격이 LG에 미치는 영향을 FnGuide는 놓침
+
+**왜 TNIC이 중요한가?**
+
+- 실제 제품시장 경쟁관계 포착
+- 투자자들이 덜 주목하는 "숨겨진 연계" 발견
+- 정보의 지연된 확산 → 모멘텀 수익
+
+# 연구질문 및 가설 {background-color="#003366"}
+
+## 연구질문 및 핵심 가설
+
+**연구질문**:
+
+**"텍스트 기반 산업 모멘텀이 한국 주식시장에서도 재현되는가?"**
+
+**왜 한국인가?**
+
+1. 한국 TNIC이 존재하지 않음 (최초 구축)
+2. 다른 정보 환경 (언어, 제도, 투자자 구성)
+3. 주의력 부족 가설의 표본 외 검증
+
+**4가지 핵심 가설**:
+
+**H1**: 산업 모멘텀은 **덜 가시적인** 동료 기업 충격에 대한 과소반응에서 발생
+
+**H2**: 덜 가시적인 동료 기업(TNIC)이 가시적인 동료(FnGuide)보다 더 강한 예측력
+
+**H3**: 회전율이 지연되어 증가 (FnGuide: t=0 즉각 반응, TNIC-only: t+1~t+12 지연 반응)
+
+**H4**: 고유(idiosyncratic) 충격만이 모멘텀 발생 (체계적 충격은 즉시 반영)
+
+# 데이터 및 방법론 {background-color="#003366"}
+
+## 데이터 출처
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**텍스트 데이터**: DART 사업내용 기술서
+
+- 출처: 금융감독원 전자공시시스템
+- 섹션: "사업의 개요" (SEC 10-K Item 1 해당)
+- 추출: 자체 개발 Python 패키지 `dart-fss-text`
+- 형식: XML 파싱 + MongoDB 저장
+:::
+
+::: {.column width="50%"}
+**시장/재무 데이터**: FnGuide DataGuide 5
+
+- 월별 주식 수익률 (2010-2024)
+- 거래량, 발행주식수 (회전율 계산)
+- 시가총액, 장부가/시가 비율
+- FnGuide 산업분류 (한국의 SIC 대응)
+:::
+
+::::
+
+**표본 필터** (H&P 2018 따름):
+
+- 금융업 제외
+- 주가 < 1,000원 (페니 주식) 제외
+- 사업내용 기술서에 20개 미만 고유 단어 제외
+
+**최종 표본**: 약 10-30만 기업-월 관측치
+
+---
+
+## 한국 TNIC 구축 방법론
+
+**Hoberg & Phillips (2016, JPE) 방법론 준수**
+
+**1단계: 텍스트 전처리** (한국어 적용)
+
+- **Kiwipiepy** 형태소 분석기 (Lee 2024)
+- 명사만 추출 (NNG, NNP, NNB 품사 태그)
+- 필터링: 최소 2글자, 숫자 제거, 전체 기업의 25% 이상 사용 단어 제거
+
+**2단계: TNIC 유사도 계산**
+
+- 기업 × 단어 **이진 행렬** (단어 존재 여부만, 빈도 무시)
+- **코사인 유사도** 계산
+- 문서 길이 조정: 중위 유사도 차감
+- **임계값**: FnGuide 산업 멤버십 쌍 비율에 맞춰 조정
+
+**3단계: TNIC 동료 기업 정의**
+
+- 조정된 유사도 ≥ 임계값 → 동료 기업
+- **시변적**: 매년 업데이트
+- **비대칭적**: A→B 동료 ≠ B→A 동료 (가능)
+
+---
+
+## 변수 정의 및 동료 수익률 계산
+
+**주요 변수**:
+
+- **TNIC 동료 수익률**: **동가중(equal-weighted)** 평균
+- **FnGuide 동료 수익률**: **가치가중(value-weighted)** 평균 (문헌 따름)
+- **회전율**:
+  - $\text{Turnover} = \frac{\sum \text{월간 거래량}}{\text{평균 발행주식수}} = \frac{\sum \text{월간 거래대금}}{\text{평균 시가총액}}$
+- **통제변수**: log(BE/ME), log(Size), 과거 수익률
+
+**동료 수익률 계산 방법** (Focal Firm 단위):
+
+**핵심**: Focal firm 자신을 제외한 동료 기업들의 평균 수익률
+
+**동가중 (TNIC)**:
+$$
+R_{\text{peer},i,t}^{\text{TNIC}} = \frac{\sum_{j \in \text{TNIC}_i, j \neq i} R_{j,t}}{N_{\text{TNIC},i} - 1} = \frac{\text{그룹 수익률 합} - R_{i,t}}{\text{그룹 기업 수} - 1}
+$$
+
+**가치가중 (FnGuide)**:
+$$
+R_{\text{peer},i,t}^{\text{FnGuide}} = \frac{\sum_{j \in \text{FnGuide}_i, j \neq i} w_{j,t} R_{j,t}}{\sum_{j \in \text{FnGuide}_i, j \neq i} w_{j,t}}
+$$
+
+여기서 $w_{j,t}$는 시가총액 가중치
+
+# 기초 통계량 및 데이터 품질 {background-color="#003366"}
+
+## Table 1: 기초통계량
+
+::: {.panel-tabset}
+
+### Panel A: 자기기업 변수
+
+| Variable | Mean | Std Dev | Min | Median | Max | N |
+|----------|------|---------|-----|--------|-----|---|
+| Return (%) | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] |
+| log(BE/ME) | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] |
+| log(Size) | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] |
+
+### Panel B: FnGuide 동료 수익률
+
+| Variable | Mean | Std Dev | Min | Median | Max |
+|----------|------|---------|-----|--------|-----|
+| Peer Return (t-1~t-12) | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] |
+
+### Panel C: TNIC 동료 수익률
+
+| Variable | Mean | Std Dev | Min | Median | Max |
+|----------|------|---------|-----|--------|-----|
+| Peer Return (t-1~t-12) | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] |
+
+### Panel D: 상관관계
+
+| | Own Ret | BE/ME | Size | SIC Peer | TNIC Peer |
+|---|---------|-------|------|----------|-----------|
+| Own Return | 1.00 | [TBD] | [TBD] | [TBD] | [TBD] |
+| log(BE/ME) | | 1.00 | [TBD] | [TBD] | [TBD] |
+| log(Size) | | | 1.00 | [TBD] | [TBD] |
+| SIC Peer | | | | 1.00 | [TBD] |
+| TNIC Peer | | | | | 1.00 |
+
+:::
+
+---
+
+## 데이터 커버리지 분석
+
+**TNIC vs FnGuide 커버리지 비교**
+
+| 지표 | TNIC | FnGuide |
+|------|------|---------|
+| 총 기업 수 (unique) | [TBD] | [TBD] |
+| 평균 동료 기업 수 | [TBD] | [TBD] |
+| 동료 기업이 있는 기업 비율 | [TBD]% | 100% |
+| **고립 노드 비율** | **[TBD]%** | **0%** |
+| 시계열 커버리지 | 완전 | 완전 |
+| 시변성 | 매년 변동 | 제한적 |
+
+::: {.callout-warning}
+## 고립 노드 (Orphan Nodes) 문제
+
+- **정의**: TNIC 유사도가 임계값 미달로 동료 기업이 없는 기업
+- **원인**: 매우 독특한 사업, 텍스트 데이터 부족, 임계값 설정
+- **영향**: TNIC 효과가 실제보다 약하게 측정됨
+:::
+
+::: {.callout-tip}
+## 해결된 문제들
+
+- ~~상장폐지 기업 누락~~ → 과거 데이터 확보로 해결
+- ~~XML 파싱 실패~~ → PDF 파싱 추가로 해결
+:::
+
+---
+
+## 산업 불일치도 (Industry Disparity)
+
+**개념**: TNIC와 FnGuide 동료 기업의 불일치 정도
+
+**정의** (Hoberg & Phillips 2018):
+
+$$
+\text{Disparity} = 1 - \frac{\text{TotalSales}(\text{TNIC-3} \cap \text{FnGuide})}{\text{TotalSales}(\text{TNIC-3} \cup \text{FnGuide})}
+$$
+
+**해석**:
+
+- **Disparity = 0**: TNIC와 FnGuide 동료 기업이 완전히 일치
+- **Disparity = 1**: TNIC와 FnGuide 동료 기업이 완전히 불일치
+- **높은 Disparity**: 정보 전파 경로가 적음 → 더 강한 주의력 부족 효과
+
+**예측**:
+
+- Disparity가 높을수록 정보 확산이 지연됨
+- Disparity가 높은 기업에서 TNIC 모멘텀이 더 강하게 나타남
+- 매출액 가중치 사용 이유: 큰 경쟁사의 충격이 더 중요
+
+**핵심 메커니즘**:
+
+- TNIC-only 동료 (FnGuide에 없음) → 덜 가시적 → 정보 지연
+- Both 동료 (TNIC ∩ FnGuide) → 가시적 → 정보 빠른 전파
+
+# 회전율 분석 {background-color="#003366"}
+
+## Figure 1A: 무조건부 회전율 패턴
+
+**이벤트 정의**:
+
+- **TNIC 이벤트**: TNIC 동료 수익률이 상위 20% (high-quintile)
+- **FnGuide 이벤트**: FnGuide 동료 수익률이 상위 20% (high-quintile)
+
+**분석 설계**:
+
+- **윈도우**: t-3 ~ t+12 (16개월)
+- **정규화**: t=-3 회전율 = 1.0 (이벤트 3개월 전 기준)
+
+![Figure 1A](../../outputs/figure1a_unconditional_turnover.png)
+
+**주요 발견**:
+
+- TNIC 그룹 (파란 선): t=0 즉각 반응, 12개월간 기준선 이상 유지
+- FnGuide 그룹 (빨간 선): t=0 즉각 반응 없음, t+1부터 증가
+- H&P 미국 결과와 차이: 미국은 둘 다 t=0 즉각 반응
+
+---
+
+## Figure 1B: 조건부 회전율 패턴
+
+**이벤트 정의** (조건부):
+
+- **FnGuide-only 이벤트**: FnGuide 동료 수익률 상위 20% **AND** TNIC 동료 수익률 중간 (40%-60%)
+- **TNIC-only 이벤트**: TNIC 동료 수익률 상위 20% **AND** FnGuide 동료 수익률 중간 (40%-60%)
+
+**분석 설계**:
+
+- **윈도우**: t-3 ~ t+12 (16개월)
+- **정규화**: t=-3 회전율 = 1.0 (이벤트 3개월 전 기준)
+
+![Figure 1B](../../outputs/figure1b_conditional_turnover.png)
+
+**핵심 발견** - 주의력 부족 가설 지지:
+
+- **FnGuide-only**: 빠른 감소 (t+1~t+3)
+- **TNIC-only**: 점진적 **증가** (t+1~t+6), 높은 수준 유지 (~t+12)
+- **해석**: TNIC-only는 덜 가시적 → 정보가 천천히 확산
+
+# 수익률 동조화 분석 {background-color="#003366"}
+
+## Table 2: Return Comovement
+
+**Fama-MacBeth Regressions**
+
+종속변수: Month t 자기기업 수익률 | 표준오차: Newey-West (2 lags)
+
+**방법론**: 모든 변수는 **z-score 정규화** (평균 0, 표준편차 1) → 계수의 크기(magnitude) 직접 비교 가능
+
+*앞으로의 모든 회귀분석도 동일한 방법 사용*
+
+| Variable | Spec 1 | Spec 4 | Spec 5 |
+|----------|--------|--------|--------|
+| **tnic_t0** | 0.0120*** | 0.0122*** | 0.0121*** |
+|  | (15.61) | (14.69) | (13.63) |
+| **tnic_t-1** | | 0.0017*** | 0.0014* |
+|  | | (3.36) | (2.24) |
+| **sic_t0** | 0.0210*** | 0.0185*** | 0.0159*** |
+|  | (19.42) | (16.77) | (12.62) |
+| **sic_t-1** | | 0.0024* | 0.0022 |
+|  | | (2.43) | (1.93) |
+| N | 113,402 | 107,176 | 100,951 |
+
+::: {.callout-note}
+## 주요 발견 vs H&P (2018)
+
+- **미국**: TNIC 추가 시 SIC 무의미
+- **한국**: 둘 다 유의 (상호보완적)
+- **원인**: TNIC 고립 노드 문제로 커버리지 낮음
+:::
+
+# 산업 모멘텀 분석 {background-color="#003366"}
+
+## Table 3 Panel A: 1-Year Momentum (전체 표본)
+
+[Table 3 content - TBD]
+
+---
+
+## Table 3 Panel B: COVID 이전 표본
+
+[Table 3 Panel B content - TBD]
+
+---
+
+## Table 4: Split Half-Year Momentum
+
+[Table 4 content - TBD]
+
+# 강건성 검증 {background-color="#003366"}
+
+## Table 5A: Bid-Ask Bounce
+
+[Table 5A content - TBD]
+
+---
+
+## Table 5B: Vertical Links
+
+[Table 5B content - TBD]
+
+---
+
+## Table 5C: Contemporaneous Returns
+
+[Table 5C content - TBD]
+
+---
+
+## Table 6: Various Momentum Horizons
+
+[Table 6 content - TBD]
+
+---
+
+## Table 7: Product Market Breadth
+
+[Table 7 content - TBD]
+
+---
+
+## Table 8: Idiosyncratic vs Systematic
+
+[Table 8 content - TBD]
+
+# 추가 분석 {background-color="#003366"}
+
+## Table 9: Industry Disparity
+
+[Table 9 content - TBD]
+
+---
+
+## Table 10: Peer Group Partitioning
+
+[Table 10 content - TBD]
+
+---
+
+## Table 11: Portfolio Returns
+
+[Table 11 content - TBD]
+
+# 결론 {background-color="#003366"}
+
+## 주요 기여 및 발견
+
+**주요 기여**:
+
+1. **최초 한국 TNIC 구축**
+   - DART 사업내용 기술서 활용
+   - Kiwipiepy 형태소 분석 (한국어)
+   - 2010-2024, 시변적 네트워크
+
+2. **주의력 부족 가설의 표본 외 검증**
+   - 한국 시장에서도 TNIC 모멘텀 확인
+   - 덜 가시적인 연계 → 지연된 정보 확산
+   - Figure 1B: TNIC-only 지속적 회전율 증가
+
+3. **데이터 품질 통찰**
+   - 고립 노드 문제가 주요 한계
+   - TNIC 효과는 보수적 추정치
+
+---
+
+## 한계 및 향후 연구
+
+**한계점**:
+
+1. **TNIC 고립 노드 문제**
+   - 일부 기업이 동료 기업 없음
+   - 영향: TNIC 효과 약하게 측정
+   - 개선: 임계값 조정, 다른 유사도 척도
+
+2. **미완성 분석**
+   - Table 3-11: 진행 중
+   - 뮤추얼펀드 분석: 데이터 가용성 확인 필요
+
+3. **표본 기간**
+   - COVID 충격 포함 (2020-2021)
+
+**향후 연구**:
+
+- TNIC 개선 (고립 노드 최소화)
+- 확장 연구 (거래 전략, 국가 간 비교)
+- 메커니즘 연구 (기관투자자, 애널리스트)
+
+# 감사합니다 {background-color="#003366"}
+
+**질의응답**
+
+---
+
+최재필 | jaechoi@kaist.ac.kr
+
+지도교수: 강장구 교수님
+
+KAIST 금융공학대학원
+
+# 참고문헌 {.smaller}
+
+Cohen, L., & Frazzini, A. (2008). Economic links and predictable returns. *Journal of Finance*, 63(4), 1977-2011.
+
+Fama, E. F., & French, K. R. (1992). The cross-section of expected stock returns. *Journal of Finance*, 47(2), 427-465.
+
+**Hoberg, G., & Phillips, G. M. (2016).** Text-based network industries and endogenous product differentiation. *Journal of Political Economy*, 124(5), 1423-1465.
+
+**Hoberg, G., & Phillips, G. M. (2018).** Text-based industry momentum. *Journal of Financial and Quantitative Analysis*, 53(6), 2355-2388.
+
+Lee, M. C. (2024). Kiwi: Implementation of Korean morphological analyzer using statistical language model and skip-bigram. *Korean Journal of Digital Humanities*, 1(1), 109-136.
+
+Menzly, L., & Ozbas, O. (2010). Market segmentation and cross‐predictability of returns. *Journal of Finance*, 65(4), 1555-1580.
+
+Moskowitz, T. J., & Grinblatt, M. (1999). Do industries explain momentum? *Journal of Finance*, 54(4), 1249-1290.

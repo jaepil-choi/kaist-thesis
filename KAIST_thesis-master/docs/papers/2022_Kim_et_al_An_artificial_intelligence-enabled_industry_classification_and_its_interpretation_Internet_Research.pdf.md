@@ -1,0 +1,1349 @@
+INTR
+32,2
+
+
+406
+
+
+Received 30 May 2020
+Revised 5 February 2021
+6 June 2021
+Accepted 6 June 2021
+
+
+Internet Research
+Vol. 32 No. 2, 2022
+pp. 406-424
+© Emerald Publishing Limited
+1066-2243
+
+[DOI 10.1108/INTR-05-2020-0299](https://doi.org/10.1108/INTR-05-2020-0299)
+
+
+
+The current issue and full text archive of this journal is available on Emerald Insight at:
+https://www.emerald.com/insight/1066-2243.htm
+
+# An artificial intelligence-enabled industry classification and its interpretation
+
+
+Daejin Kim
+School of Business Administration,
+Ulsan National Institute of Science and Technology, Ulsan, Republic of Korea
+Hyoung-Goo Kang
+Department of Finance, Hanyang University, Seoul, Republic of Korea
+Kyounghun Bae
+Department of Fintech, Sungkyunkwan University, Seoul, Republic of Korea, and
+Seongmin Jeon
+College of Business Administration, Gachon University, Seongnam, Republic of Korea
+
+
+Abstract
+
+Purpose – To overcome the shortcomings of traditional industry classification systems such as the Standard
+Industrial Classification Standard Industrial Classification, North American Industry Classification System
+North American Industry Classification System, and Global Industry Classification Standard Global Industry
+Classification Standard, the authors explore industry classifications using machine learning methods as an
+application of interpretable artificial intelligence (AI).
+Design/methodology/approach – The authors propose a text-based industry classification combined with
+a machine learning technique by extracting distinguishable features from business descriptions in financial
+reports. The proposed method can reduce the dimensions of word vectors to avoid the curse of dimensionality
+when measuring the similarities of firms.
+Findings – Using the proposed method, the sample firms form clusters of distinctive industries, thus
+overcoming the limitations of existing classifications. The method also clarifies industry boundaries based on
+lower-dimensional information. The graphical closeness between industries can reflect the industry-level
+relationship as well as the closeness between individual firms.
+
+’
+Originality/value – The authors work contributes to the industry classification literature by empirically
+investigating the effectiveness of machine learning methods. The text mining method resolves issues
+concerning the timeliness of traditional industry classifications by capturing new information in annual
+reports. In addition, the authors’ approach can solve the computing concerns of high dimensionality.
+
+Keywords Industry classification, Text mining, Machine learning, Autoencoder, Dimensionality reduction,
+Firm similarity
+Paper type Research paper
+
+
+1. Introduction
+Industry classification is a useful means of categorizing firms so that similar businesses are
+grouped to identify trends within an industry. Most business databases provide industry
+classifications and allow searches using keywords in a business description. The government
+also needs accurate industry classification for balanced economic development or for fostering
+certain industries. Thus, industry classification is an important issue for practitioners and
+scholars in business and economics (Davis and Duhaime, 1992; Hoberg and Phillips, 2016).
+
+
+This research was supported by the MSIT(Ministry of Science, ICT), Korea, under the National Program
+for Excellence in SW), supervised by the IITP(Institute of Information and communications Technology
+Planning and Evaluation) in 2021 (2021-0-01389).
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+However, traditional industry classification systems such as the Standard Industrial
+Classification (SIC), North American Industry Classification System (NAICS), and Global
+Industry Classification Standard (GICS) have certain limitations. As the contemporary
+economy changes rapidly, a company may enter or exit an industry much faster than ever.
+Moreover, a new industry could emerge and grow at a faster pace. This issue of timeliness
+might be critical when managers use industry classifications to understand their business
+areas or decide on strategic directions.
+As advances in computing power enhance the ability of scholars to deal with complex
+calculations, researchers in information systems have adopted a variety of approaches to
+classify industries for grouping homogeneous firms (Fang et al., 2013; Chowdhuri et al., 2014;
+Yang et al., 2019; Xu et al., 2020). Among many academic works related to alternative industry
+classifications, Hoberg and Phillips (2016) develop the text-based network industry
+classification (TNIC) derived from the firms’ business descriptions of 10-K reports. Using
+the cosine similarity measure to identify how similar a firm’s business description is
+compared with all other firms, they construct 300 industries based on the results of a pairwise
+comparison to categorize a peer firm as a rival and/or a competitor. However, the pairwise
+comparison approach is limited because it provides only one-dimensional information that
+might only represent a firm-to-firm relation. Moreover, the pairwise comparison approach
+cannot infer the overall industry closeness and relationship, although they validate the
+across-industry variation of their final clusters.
+To present an effective method of industry classification, it is necessary to take into
+account the issue of high dimensionality arising from text analyses. As pointed out by
+Radovanovi�c et al. (2010), the cosine similarity measures from high-dimensional word vectors
+may not be successful in discriminating features. That is, as dimensionality increases, the
+mean becomes constant and variance converges to zero resulting in the concentrated cosine
+similarity measures. Because our text data extracted from financial statements consist of
+huge word vectors, we need to address such high-dimensionality problems. We address this
+issue using a machine learning technique. Artificial intelligence (AI) or machine learning is
+transforming the way people approach or understand financial risk management (Aziz and
+Dowling, 2019). AI is defined as intelligence demonstrated by machines to the level of
+intelligence equivalent to humans (Shieber, 2004). Machine learning using text mining is a
+core part of AI, as it involves learning from data. Therefore, this paper presents a new method
+for industry classification using AI with textual analysis.
+We use a method that employs a deep autoencoder to reduce the dimensionality of word
+vectors from the business description of annual 10-K reports. In comparison to previous
+research, this approach mitigates the high dimensionality problem of the clustering method
+based on the cosine similarity measure. Our results show that dimensionally reduced features
+can sufficiently capture the relationship between firms, as well as between industries. We
+apply a spherical k-means algorithm to cluster industries using reduced features from the
+coded layer output of the autoencoder.
+Our proposed industry classification method can overcome the shortcomings of traditional
+industry classifications such as SIC, NAICS and GICS. Hoberg and Phillips (2016) point out that
+existing fixed industry classifications such as SIC or NAICS may have time-fixed location
+restrictions. That is, existing fixed industry classifications might not reflect timely information
+of firms’ industry groups. They develop text-based network industry classification to allow
+product market definitions to change every year by reflecting information in10-K product
+descriptions. Similar to the text-based classifications suggested by Hoberg and Phillips (2016),
+our industry classification system dynamically reflects new information in annual 10-K reports
+asitcan compute new industryclassificationsbasedon companies’ business descriptionsevery
+year. By contrast, the SIC code aggregates firms based on information regarding the sale of end
+products and similar production processes (Chan et al., 2007). Despite the wide application of
+
+
+
+AI-enabled
+industry
+classification
+
+
+407
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+INTR
+32,2
+
+
+408
+
+
+
+SIC codes inpreviousempirical studies,manyresearchershavequestioned theirusefulnessasa
+standard for industry classification (Bhojraj et al., 2003; Kile and Phillips, 2009). For example,
+Walker and Murphy (2001) point out that the SIC classification may not sufficiently reflect
+shifts in main products, business processes, and emerging markets because the system mainly
+emphasizes manufacturing operations relative to service processes. Second, our industry
+classification uses an autoencoder and provides a visual representation of the industry
+classification, which contains information about firm-to-industry and industry-to-industry
+relations as well as firm-to-firm relations. Thus, our method can overcome the limitations of
+previous text-based industry classifications.
+Moreover, our industry classification does not have the high dimensionality problem that
+might exist when measuring the distance between firms because autoencoders can reduce the
+dimension of word vectors. By contrast, Hoberg and Phillips (2016) compute the distance
+between firms with word vectors larger than 60,000 dimensions to classify the industry.
+However, Aggarwal et al. (2001) show that the distance measure (the concept of proximity)
+may not be qualitatively meaningful in a high-dimensional space. The cosine similarity
+measure is mathematically identical to the L2-normalized Euclidean distance. This implies
+that similarity measures by high-dimensional vectors cannot escape the curse of
+dimensionality because the space of the cosine similarity measure remains highly
+dimensional (Skillicorn, 2012).
+The remainder of this article is organized as follows. First, we review related literature.
+Then, we describe our data and methodology and present the results. Finally, we summarize
+our study and discuss its contributions to the literature.
+
+
+2. Literature review
+2.1 Industry classifications
+The US government first developed the SIC in 1937. In 1997, NAICS was developed to
+represent the industries of the United States, Canada, and Mexico. Subsequently, the
+Standard and Poor’s and Morgan Stanley Capital International established GICS, which is
+designed for financial analysts and investment managers to determine which firms are
+financially comparable. In academia, Fama and French (1997) establish their own
+classification schemes by reclassifying existing SIC codes to construct industry portfolios.
+Their scheme is called Fama–French (FF) Industry Classifications, which has fixed industries
+ranging from 5 to 49. This classification system is prevalent in financial and accounting
+research. Bhojraj et al. (2003) and Chan et al. (2007) compare the reliability and accuracy of
+these systems and find that GICS in many cases outperforms SIC and NAICS.
+Recent research in the field of information systems has provided an alternative way to
+classify industries, as researchers are now able to handle large amounts of computing. Fang
+et al. (2013) criticize the SIC and NAICS, as these assume a binary relationship and might not
+measure the degree of similarity. To overcome these issues, the authors use latent Dirichlet
+allocation (LDA) to propose an industry classification methodology that is based on business
+descriptions. Chowdhuri et al. (2014) propose an ontology-based framework that provides
+interoperability between different eXtensible Business Reporting Language (XBRL) filings
+for XBRL mapping and decision-making. Yang et al. (2019) use a graph similarity metric,
+combined with a spectral clustering algorithm, to quantify the similarity of financial
+disclosures. Xu et al. (2020) present an industry classification method by implementing labor
+mobility network using data sets of LinkedIn profiles.
+
+
+2.2 Text mining methods and high dimensionality issues
+Text mining methods have been explored both in research and practice. Classical text mining
+methods typically employ techniques that transform texts into vectors (Aggarwal and Zhai,
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+2012). Other types of classification techniques such as random forests, decision tree
+classifiers, rule-based classifiers and conditional random fields have been used (Xu et al.,
+2012; Harrag et al., 2009; Lafferty et al., 2001).
+An autoencoder is a dimensionality reduction technique based on the deep neural network
+first introduced by Baldi and Hornik (1989). Hinton and Salakhutdinov (2006) improve the
+model to make it generative by applying the greedy layer-wise pre-training technique. Hinton
+and Salakhutdinov (2006, p. 504) describe an autoencoder as “a nonlinear generalization of
+PCA that uses an adaptive, multilayer encoder network to transform the high-dimensional
+data into a low-dimensional code and a similar decoder network to recover the data from
+the code.”
+An autoencoder can transform high-dimensional data into low-dimensional data. Hence, a
+well-trained autoencoder represents the original data closely while ignoring its signal noise.
+An autoencoder contains a small central layer (called “code”) that connects two bigger
+multilayer neural networks on both sides, similar to a butterfly’s wings such that one wing is
+called an encoder and the other is called a decoder. Because the input and output layers have
+the same number of nodes, an autoencoder receives high-dimensional input data at one end
+and reproduces them at the other end. Because an autoencoder does not predict a target value
+but only reconstructs the input data, it performs unsupervised learning and does not require
+labeled data.
+The first step to train an autoencoder is to assign random weights to the two networks at
+each side of a smaller central layer (code). The next step is to minimize the difference between
+the original data plugged into the input layer and the reconstructed version produced from
+the output layer. In practice, Hinton and Salakhutdinov (2006) recommend performing
+procedures that pre-train two adjacent layers (restricted Boltzmann machine) before
+proceeding to layer-by-layer estimation because multiple hidden layers are largely
+untrainable. Once the pre-training stage is completed, a full autoencoder network is
+unrolled and then fine-tuned. Estimating an autoencoder network is simply expressed as
+
+f : X → Y ; g : Y → X ; X [b] ¼ ðg+f ÞX ; ½ [b] f ; bg�¼ argmaxdðX ; X [b] Þ:
+ðf ;gÞ
+
+
+where X is an input space; f is an encoder; g is a decoder; and d (þ) indicates the distance
+metric. In summary, an autoencoder is unsupervised machine learning, where the number
+and shape of the output node are the same as the number and shape of the input node.
+An autoencoder is fundamentally a dimension-reduction technique that facilitates noise
+reduction, classification, visualization, data storage, and a generative approach. Dimension
+reduction aims to represent data from a high-dimensional space to a low-dimensional space.
+Principal component analysis (PCA) is the best-known dimension-reduction technique.
+However, an autoencoder outperforms PCA in classifying and interpreting clusters in the
+original data (Hinton and Salakhutdinov, 2006). Furthermore, an autoencoder outperforms
+latent semantic analysis, a well-known document retrieval method based on PCA, in
+computing the cosine similarity between two vectors (Deerwester et al., 1990). An autoencoder
+also outperforms local linear embedding, a recent nonlinear dimensionality reduction
+algorithm (Roweis and Saul, 2000).
+While Hoberg and Phillips (2016) compute the cosine similarities to use the word vectors
+that contain whole unique words, we calculate the similarities based on the reduced word
+vectors extracted from the autoencoder. In other words, we use the reduced features to divide
+firms into several groups or industries by using a spherical k-means clustering algorithm
+suitable for the vector space model of the corpus. Prior literature shows that our industry
+classification of firms is quite interpretable and intuitive despite the small loss of information
+
+
+
+AI-enabled
+industry
+classification
+
+
+409
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+INTR
+32,2
+
+
+410
+
+
+
+because the autoencoder uses the sparsity of the hidden layers when the model is trained and
+applied to a nonlinear problem beyond the PCA approach.
+In addition, an autoencoder can detect anomalies well. For example, some data points
+could show large reconstruction errors, which are regarded as anomalies while an
+autoencoder reconstructs the original data. To extend this intuition, Misra et al. (2020) use
+an autoencoder to detect anomalous credit card transactions and deem them fraudulent.
+Their approach is two-step: an autoencoder (1) reduces the dimensions of transaction
+attributes, and (2) classifies transactions into clusters based on the feature vector of reduced
+dimensions. Note that this approach is essentially the same as our industry classification
+method.
+Furthermore, the anomaly detection technique can be used to identify mispriced financial
+assets (e.g. undervalued or overvalued stocks; Gu et al., 2021). Hence, intuitively, by
+combining mispriced assets with a small number of communal stocks that tend to co-move
+with their originals, investors can generate excess portfolio performance over a benchmark.
+Indeed, Heaton et al. (2017) define a target return that follows a benchmark index, but with
+downside protection and then construct “deep portfolios” to replicate the target return, that is,
+an enhanced benchmark index. The deep portfolio comprises anomalous and communal
+stocks. Meanwhile, Nakano and Takahashi (2020) construct factors (the central code in an
+autoencoder) that present downside protection and then replicate the factors with dynamic
+hedging strategies to enhance portfolio performance.
+
+
+3. Data and methods
+3.1 Data and sample construction
+We use web-crawling algorithms to collect 10-K annual reports filed with the US Securities
+and Exchange Commission (SEC) from 2013 to 2016. We then extract the business description
+section of each document to arrive at 21,631 10-K reports. The 10-K business description
+section is legally required of all firms by item 101 of Regulation S-K, which instructs firms to
+describes the core products they offer to a market.
+We use the Compustat historical segment database to obtain the corresponding SIC codes
+for each firm. The segment information provided in the Compustat segment data is selfreported by the reporting firms. Since 1976, US firms have been required to provide segment
+information for each industry segment that represents 10% of firm revenues [1]. The
+reporting period and financial activity period of the Compustat segment data may contain
+redundancies because each firm is required to report the information for the past three years
+at every reporting period. Thus, we only keep the latest year for each report. For example, in
+2015, a firm reported its segment information for 2013, 2014 and 2015. In this case, we keep
+only the 2015 information when the reporting year is 2015. We use the primary SIC code for
+the segment information of each firm and year, removing observations when a firm is missing
+a primary code. We merge the Compustat data with the 10-K annual report document that we
+have crawled by using the SEC Central Index Key. After merging the SIC code by individual
+firm and year, our sample consists of 14,560 firm-year observations.
+
+
+3.2 Bag-of-words representation
+We process the 10-K business descriptions to construct bag-of-words and word vectors. The
+words from 10-K business descriptions can contain information about certain business
+processes and products that each firm offers in the markets. The underlying rationale is that
+firms classified in the same industry are expected to use more similar words to describe their
+businesses and products. Table 1 illustrates the 20 most used words extracted from the
+business descriptions of sample firms that belong to different industries. For example,
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+Firm 1: SANDISK CORP (SIC code: 3572)
+Business: Flash Memory Storage
+Core words: memory(67), product(52), technology(44), storage(36), market(31), device(31), solution(28),
+NAND(26), flash(24), drive(20), manufacturer(19), design(19), corporation(18), venture(18), card(18),
+president(17), data(16), wafer(16), cost(15), year(15)
+
+
+Firm 2: SCHEIN (HENRY) INC (SIC code: 5047)
+Business: Healthcare Distribution
+Core words: health(102), product(89), care(65), service(62), state(47), customer(47), law(44), practice(41),
+president(40), business(40), distribution(37), sale(35), drug(33), act(30), vice(30), practitioner(26), officer(25),
+technology(24), order(23), management(23)
+
+
+Firm 3: IMPAC MORTGAGE HOLDINGS INC (SIC code: 6162)
+Business: Long-term Portfolio
+Core words: mortgage(174), loan(159), origination(53), portfolio(49), service(45), estate(34), operation(33),
+channel(33), Mae(30), interest(30), correspondent(29), lending(27), rate(27), credit(21), security(21), broker(20),
+sale(20), borrower(19), seller(18), act(17)
+
+
+Firm 4: TENGASCO INC (SIC code: 1311)
+Business: Oil and Gas
+Core words: company(200), gas(96), methane(44), production(43), well(37), oil(36), agreement(33), Hoactzin(30),
+pipeline(28), management(27), program(26), interest(25), sale(25), property(24), operation(23), swan(23),
+report(22), project(21), price(21), field(21)
+
+
+Firm 5: ACCELRYS INC (SIC code: 7372)
+Business: Software Development
+Core words: product(82), software(54), customer(46), platform(34), development(32), service(29), data(27),
+solution(26), process(24), market(24), acquisition(24), research(24), enterprise(23), industry(23),
+organization(22), quality(19), informatics(19), system(18), management(18), information(17)
+Note(s): This table illustrates the top 20 words frequently used in the business descriptions of sample firms.
+The value in parentheses represents the number of the frequency of each word. For example, SANDISK CORP
+uses the word “memory” 67 times in the business description part of the 10-K annual report in 2013
+
+
+SANDISK used the word “memory” 67 times in the business description section of their 2013
+10-K annual report to describe their business and products.
+For a generalized form, we use a bag-of-words representation to convert the business
+description into a vector form. The bag-of-words representation is widely used in information
+retrieval and text mining (Singhal, 2001). The bag-of-words is a vector where each component
+is the frequency of a given word found in a set of documents. The representation assumes that
+words appear independently, and the order of the words is immaterial. The number of words,
+thus, corresponds to the dimensions in vector space, and each document then becomes an
+individual vector containing non-negative values on each dimension.
+In this study, a conventional text mining process is applied to structure a bag-of-words or
+a set of unique words from preprocessed documents. To remove commonly used words, we
+focus only on nouns and proper nouns that appear in no more than 20% of the business
+descriptions. A threshold of 20% is selected following similar criteria in Hoberg and Phillips
+(2016). They indicate that minor modifications of the threshold do not significantly affect the
+main firm results. We remove geographical words, such as country names and names of the
+world’s popular cities. Business description texts containing fewer than 20 unique words are
+excluded because they lack unique information about firms. We assume that unique words
+exist in the documents reported by the firms in the training samples.
+After excluding common words, we construct a word vector W containing the 2,000 most
+frequently used unique words in all the documents in our sample. We take the vector W and
+convert the individual business descriptions of firms to the corresponding word vectors. The
+words in the business description of each firm i can be represented by the 2,000-dimensional
+binary (coded) vector V i . Each element v ij of vector V i equals one if the given bag-of-words
+
+
+
+AI-enabled
+industry
+classification
+
+
+411
+
+
+Table 1.
+Frequent words in the
+business descriptions
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+INTR
+32,2
+
+
+412
+
+
+Figure 1.
+Word vector
+codification using the
+bag-of-words
+
+
+Figure 2.
+Distribution of the
+number of words used
+in 10-K business
+descriptions
+
+
+
+W contains the word element from the word list of the individual document, and zero
+otherwise. Figure 1 depicts a schematic illustration of the codification of word vectors. For
+example, when the word “memory” appears in the business description of firm i and exists in
+the first row (w 1 ) of the bag-of-words vector W, the element v i1 is coded as a value of one, as the
+bag-of-words has the word “memory” at location w 1 .
+
+
+3.3 Dimensionality reduction
+Hoberg and Phillips (2016) use a cosine similarity measure to compute the pairwise similarity
+between two normalized vectors containing all unique words. They focus on nouns and
+proper nouns with less than 25% of all product descriptions by excluding geographical
+words such as cities, countries, and states. They report that typical firms use approximately
+200 unique words. They then construct each firm’s word vector by assigning the value of one
+for the word contained in the vector of whole unique words, and zero otherwise. In a similar
+way, we extract unique words from the product descriptions of 10-K reports. Figure 2 shows
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2000-length word vector _W_ 2000-length binary vector _V_ _i_
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+the frequencies of the number of unique words in each business report in our sample. Our
+sample shows that 100 to 200 unique words are frequently used in business descriptions, with
+an average of 151 unique words being used.
+The cosine similarity formula can be directly represented in terms of the normalized
+Euclidean distance. However, the cosine similarity measure based on the Euclidean distance
+cannot mitigate the problem of clustering when the vector space has high dimensions. For
+example, Radovanovi�c et al. (2010) point out that the expectation of pairwise cosine similarity
+measure might become constant and the variance of the measure might shrink to zero as
+dimensionality increases. Thus, the high-dimensional vector space may lead to the curse of
+dimensionality when computing the cosine similarity measure.
+To mitigate the high dimensionality problem of the cosine similarity measure, we employ
+a dimensionality reduction method using an autoencoder. The autoencoder is an
+unsupervised machine learning technique in which the number and shape of the output
+node are designed to be the same as those of the input node. An autoencoder is first applied by
+implementing a PCA-like dimensionality reduction using the backpropagation method in a
+shallow neural network. The model consists of two parts: encoding and decoding layers. The
+model can reduce the number of hidden (encoded) nodes while minimizing the difference
+between the input vector and the reconstructed output vector at the end of the model.
+
+Figure 3 illustrates the autoencoder scheme used in this study. We implement the
+autoencoder regime as a dimensionality reduction technique to create a low-dimensional
+vector containing industry information where the firms are classified. The dimension of the
+2,000-word vector can be reduced to 10 dimensions, which are used as the features for the
+clustering step. The layer structure of our learning model is 2,000–500–125–10–125–500–
+2,000 with the rectified linear unit (ReLU) as an activation function of each layer, except for
+the last of the encoding and decoding layers. The last encoding layer uses a linear function
+that unbinds the values of the reduced vector. The sequence of numbers, 2,000–500–125–10–
+
+
+
+AI-enabled
+industry
+classification
+
+
+413
+
+
+Figure 3.
+Schematic structure of
+autoencoder
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+INTR
+32,2
+
+
+414
+
+
+
+125–500–2,000, refers to the number of nodes in each layer of the autoencoder system. The
+numbers prior to the code (2,000–500–125) denote the encoding part in which the autoencoder
+reduces the dimensions from 2,000 to 500, from 500 to 125, and finally from 125 to 10
+dimensions. The autoencoder system then reconstructs each layer from 10 to 2,000, similar to
+the encoding part. We minimize the value of the binary cross-entropy as a loss function used
+in the training stage. To measure the value of the loss function, the sigmoid function is
+selected when computing the loss function at the end of the decoding (output) layer.
+This structure sufficiently discriminates and explains information about the 2,000-word-long
+vectors, although we modify the number of the hidden nodes.
+
+
+3.4 Spherical k-means clustering
+Standard k-means clustering minimizes the mean-squared error of the Euclidean distance
+within the clusters. A well-known underlying probability distribution for the standard k-means
+algorithm is the Gaussian distribution. In this study, we instead use a spherical k-means
+clustering algorithm, which is a suitable clustering algorithm for the vector space model of the
+corpus because the direction of the word vector is more important than the magnitude. For
+high-dimensional data such as text documents, cosine similarity is superior to Euclidean
+distance (Strehl et al., 2000). The spherical k-means algorithm maximizes the average cosine
+similarity measure within the clusters. The main difference from standard k-means is that the
+re-estimated mean vectors must be normalized to unit length, and the underlying probabilistic
+models are not necessarily the Gaussian distribution. We cluster the reduced features into
+several industries by applying the spherical k-means algorithm. The results of the spherical kmeans clusters are directly compared to the SIC, NAICS and GICS codes, and Hoberg and
+Phillips’s (2016) 300 fixed TNIC codes. We also compute the cosine similarity measure between
+thefirms basedon the reduced features. We validate theproposed method bycomparingwithin
+and across the variations in terms of profitability and risk levels.
+
+
+4. Results
+4.1 Graphical analysis
+For a two-dimensional visual representation, we modify the number of hidden nodes in the last
+encoding layer. The modified layer structure is 2,000-500-125-2-125-500-2,000. The structure
+differs from the previous model only in that the number of nodes at the coded layer is two.
+
+Figure 4 shows the two-dimensional scatter plots of the latent values from the last
+encoding layer after training the autoencoder. For a simple comparison, we classify our
+sample into 12 categories, which are analogous to the Fama-French 12 industry
+classifications (FF12). Fama and French (1997) reclassify conventional SIC codes into 48
+industry groupings and add more groupings such as 5, 10, 12, and so on later. Although they
+use existing SIC codes to construct their classifications, the FF industry classifications are
+designed to share common risk characteristics. For example, they assign group 4 as the
+industry “Energy, Oil, Gas, and Coal Extraction and Products,” which includes firms in SIC
+1200–1399 and 2900–2999 although the first two digits of the SIC codes are different.
+
+Figure 4(a) illustrates that firms labeled as FF12 are clustered on a single spike from the
+origin, which indicates that firms in the same industry have similar directions with different
+vector norms. For example, the range of the SIC codes colored yellow–green in Figure 4(a) is
+6000–6999, which are financial firms. This result is consistent with the Hoberg and
+Phillips’(2016) clustering results because they use the cosine similarity to measure the degree
+(distance) between two business descriptions.
+
+Figure 4(b) shows the results of the spherical k-means clustering. The clustering results
+indicate that financial firms and medical-related firms are divided into several sub-industries.
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+**Note(s):** The coordinate of each dot represents the text-based classification after extracting two
+dimensional codes from the autoencoder. The color of each dot in Figure 4(a) represents the
+classification based on Fama-French 12 industry classifications. Figure 4(b) indicates the
+spherical clustering result using the reduced features of the coded layer
+
+
+Some firms happen to be far from their industry groups (spike) according to the FF12
+classification. This result indicates that these firms might use different words to describe
+their business processes and products when compared with other firms that belong to the
+same industry based on the SIC code or the FF12 classification. These firms may have
+improperly reported their business description or their SIC codes are wrongly assigned
+because they may have recently changed their major products or business processes through
+diversification and pivoting.
+The proposed method can resolve the latter problem by identifying more appropriate
+industries based on the list of words appearing in the firm’s business descriptions. Hoberg
+
+
+
+AI-enabled
+industry
+classification
+
+
+415
+
+
+Figure 4.
+The scatter plot of textbased classifications
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+INTR
+32,2
+
+
+416
+
+
+Table 2.
+Comparison of
+clustering results with
+SIC codes and Fama–
+French 12
+classification
+
+
+
+and Phillips (2016) exemplify that their text-based measures can reveal that firms in the
+newspaper publishing and printing industry (three-digit SIC is 271) and firms in the radio and
+broadcasting stations industry (three-digit SIC is 483) are quite similar groups because both
+industries can serve the same customers who want advertising. However, the fixed SIC codes
+may treat these firms differently because of the different starting digits in the SIC codes.
+Thus, text-based measures based on business descriptions can correctly specify the industry
+to which each firm belongs.
+
+
+4.2 Case studies
+This section illustrates that our text-based classification can capture the firms’ industry by
+reflecting their current business areas. That is, our text-based classifications can present
+timely industry classification that reflects the firms’ products or services described in their
+annual reports. For example, Netflix was originally involved in the video rental business but
+has recently expanded its business area to provide online TV programs and movies and to
+create new content. Netflix is still assigned a SIC code of 7841 (video tape rental), which is
+quite out of date. However, our text-based classification shows that Netflix is categorized in a
+similar group as Dish Network, DreamWorks, TiVo, and Outdoor channels. Thus, our
+classification seems to reflect the current business areas of companies better than the
+SIC codes.
+We also provide two cases to illustrate that traditional methods may mislead industry
+classification. Table 2 shows that our proposed method classifies similar firms into the same
+category, but the SIC codes and the FF12 classification may have different results. Table 3
+lists common words belonging to each case to show that our proposed method is suitable for
+identifying each firm’s industry. Figure 5 illustrates that firms with different SIC codes might
+be grouped into the same category based on our proposed method. Because our
+classifications are based on each firm’s actual product descriptions, we can detect
+potential peer firms that offer related products, although they are not currently connected.
+
+
+Firm name SIC code FF12 Classification Clustered code
+
+
+Case 1 – Healthcare,
+Medical Equipment, and Drugs
+TEAM HEALTH HOLDINGS INC 7363 12 Others 11
+WELLCARE HEALTH PLANS INC 6324 11 Money 11
+SELECT MEDICAL HOLDINGS CORP 8069 10 Health 11
+SYMBION INC TN 8011 10 Health 11
+LHC GROUP INC 8082 10 Health 11
+LIFEPOINT HOSPITALS INC 8062 10 Health 11
+TENET HEALTHCARE CORP 8062 10 Health 11
+AMN HEALTHCARE SERVICES INC 8090 10 Health 11
+HCA HOLDINGS INC 8062 10 Health 11
+
+
+Case 2 – Oil, Gas, and
+Coal Extraction and Products
+GENESIS ENERGY LP 5171 9 Shops 4
+CROSSTEX ENERGY LP 5172 9 Shops 4
+HOLLY ENERGY PARTNERS LP 4613 12 Others 4
+GULFPORT ENERGY CORP 1311 4 Energy 4
+CONTINENTAL RESOURCES INC 1311 4 Energy 4
+UNIT CORP 1311 4 Energy 4
+MID CON ENERGY PARTNERS LP 1311 4 Energy 4
+CHEVRON CORP 2911 4 Energy 4
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+Unique words out of 2000 words in the bag-of-words Frequency
+
+
+Case 1 – Healthcare, Medical Equipment, and Drugs
+Hospital, billing, physician, Medicaid, productivity, patient, submission, reimbursement, 9 out of 9
+Medicare, referral documents
+Beneficiary, methodology, recruitment, length, abuse, accountability, authorization, 8 out of 9
+accreditation, CM, associate, prohibition, utilization, therapy, transition, employer, documents
+sanction, eligibility, safeguard, notification, fraud, worker, HIPPA (Health Insurance
+Portability and Accountability Act), spending, portability, admission, antikickback,
+update
+
+
+Case 2 – Oil, Gas, and Coal Extraction and Products
+Crude, commodity, pipeline, hydrocarbon, petroleum, transport 8 out of 8
+documents
+Carrier, cleanup, liquid, pollution, barrel, index, discharge, mile, tank, basin, emergency, 7 out of 8
+exploration, drilling, commerce, injection, FERC(Federal Energy Regulatory documents
+Commission), shale, formation, greenhouse, dioxide, emission, gathering, fuel
+
+
+**Note(s):** The coordinate of each dot represents the text-based classification after extracting two
+dimensional codes from the autoencoder. The color of each dot represents the classification based
+on SIC code
+
+
+Table 2 and Figure 5 illustrate two cases. The first case (Case 1) is related to the healthcare,
+medical equipment, and drugs industry. The second case (Case 2) is related to oil, gas, and
+coal extraction and products. The colors of the dots represent the FF12 classification, whereas
+our classification can be identified by the direction of each spike.
+For Case 1 of Table 2, the SIC code of the firm “TEAM HEALTH HOLDINGS INC” is
+assigned as 7363, and the FF12 classification is 12. Another firm “WELLCARE HEALTH
+
+
+
+AI-enabled
+industry
+classification
+
+
+417
+
+
+Table 3.
+Most frequent words
+within the same
+industry
+
+
+Figure 5.
+Graphical comparison
+between the text-based
+classifications and
+SIC codes
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+INTR
+32,2
+
+
+418
+
+
+
+PLANS INC” has the 6324 SIC code, and the FF12 classification code is 11. The former firm
+provides outsourced healthcare professional staff and administrative services to hospitals,
+while the latter provides managed care services and government-sponsored healthcare
+programs. These two firms may provide similar services in terms of healthcare products.
+This situation is correctly reflected in our classification system of 11, assigning the two firms
+to the same industry. However, the former firm is classified as 11 (Money) and the latter, 12
+(Others) by the FF 12 classification. The other firms clustered with these two firms in Case 1
+have SIC codes starting at 80 and an FF classification of 10. In Figure 5, firms related to
+healthcare products and services are included in the purple ellipse. Most firms (each point) in
+the purple ellipse have the same color, but some firms have different colors, which indicate
+other categories based on the FF12 classification.
+Case 2 is related to the energy and mining industry, including oil, gas, and materials. The
+first two firms of Case 2 in Table 2, GENESIS ENERGY LP and CROSSTEX ENERGY LP,
+belong to the “Shops” industry according to the FF12 classification and “Petroleum stations
+and terminals” based on the SIC codes. However, our proposed method assigns these two
+firms to the same energy-related industry coded as 4. Moreover, Figure 5 illustrates that the
+two firms are closer to “Energy” firms in terms of the products and business processes, and
+many firms involved in the oil, gas, and coal extraction and products are identified by the red
+ellipse.
+
+Table 3 shows the list of words that overlap in the documents reported by the firms in
+Cases 1 and 2. For example, Table 3 shows that for Case 1 nine firms related to healthcare,
+medical equipment, and drugs use the words “hospital,” “billing” and “Medicare,” which
+appear nine times in the 10-K annual reports. Moreover, the words “abuse,” “therapy” and
+“HIPPA” appear eight times across the nine firms. For Case 2, the words “crude,”
+“commodity” and “pipeline” appear eight times and the words “carrier,” “cleanup” and
+“liquid” appear seven times in the documents of eight firms.
+
+Figure 5 also highlights another issue related to the sub-industry (Case 3). Three or four
+groups with spikes are observed within the financial industry, as depicted by the green
+dashed circle. In particular, our method divides the financial industry into three or four subindustries, while the FF12 classification or SIC codes classify these firms into a single
+category. Each spike represents different clusters based on words that appeared in their
+business descriptions, while these firms are all related to money or the financial industry.
+Thus, our method can reveal the closeness of these firms through visualization by dividing
+similar firms into subgroups (sub-industries). Among the subgroups, most of the firms in the
+dashed-green circle (ellipse) are related to insurance such as EMPLOYEE HOLDINGS and
+ALLIED WORLD ASSURANCE CO HOLDINGS. The financial firms in the blue circle are
+related to the security broker and dealer business such as GOLDMAN SACHS, MORGAN
+STANLEY, CBOE HOLDINGS, and CME GROUP. While both insurance and brokerage
+businesses belong to the financial industry, the characteristics of these businesses might be
+different. The business scope of insurance firms may be related to the healthcare business,
+which is represented by the purple circle (Case 1). Moreover, many trading firms employ
+advanced technology in their businesses. For example, high-frequency trading firms or major
+stock exchanges use advanced networks or intensive technology to maintain their core
+businesses. Thus, the security brokers and dealers in the blue circle are possibly more related
+to the IT industry based on their business descriptions.
+
+
+4.3 Comparison based on within or cross standard deviations
+Companies in the same industry may have similar business structures and be exposed to
+similar risks. An economic shock can affect all firms in a certain industry, either negatively or
+positively. For example, the COVID-19 pandemic can affect the aviation or travel industries
+negatively and the electronic education industry positively. Thus, if our method selects
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+similar firms belonging to the same industry, the variations within industries classified by
+our methodology should be less than those within industries classified by other criteria.
+Moreover, if our methodology correctly classifies firms belonging to different industries into
+their respective industries, the across variations calculated by our method should be greater
+than those of other methodologies. Therefore, we verify the effectiveness of our proposed
+method by comparing the standard deviations of profitability and market risk within or
+across industries.
+For the across industry variation, we first compute the weighted mean values of firm
+characteristics within the same industry. Then, we compute the standard deviation of the
+weighted mean values across all industries. For the within-industry variation, we first
+compute the standard deviation of firm characteristics in each industry. Then, we compute
+the industry-size weighted averages of the standard deviations. We expect the proposed
+method to have higher across-industry variation and lower within-industry variation than
+the other classification methods such as the three-digit SIC codes, GICS sub-industries, fourdigit NAICS codes, and TNIC code. We represent profitability by dividing operating income
+(OI) or net income (NI) by asset size or sales: OI/asset, OI/sale, NI/asset, and NI/sale. We also
+use the market beta calculated from daily stock returns during each fiscal year to represent
+firm risk.
+
+Table 4 reports the comparison results. Panel A (B) represents the across-industry (within
+–
+industry) variations of the variables. The first three rows (1 3) show the results of comparing
+our methodology with the existing fixed industry classifications. The numbers in the second
+column represent the number of industries classified by each classification method. For
+example, the firms in our sample are classified into 248 industries by the three-digit SIC codes,
+174 by the sub-industry of GICS, and 243 by the four-digit NAICS codes. The number of
+industries in rows 4 through 7 is 300, which is the number of industries based on the textbased industry classification in Hoberg and Phillips (2016). Moreover, rows 4 through 7
+represent the results of the text-based classifications. In particular, rows 4 and 6 are the
+results of Hoberg and Phillips’s (2016) methodology, and rows 5 and 7 are those of our
+autoencoder-based industry classifications. Moreover, the results in row 4 are based on the
+300 fixed industry classifications calculated from all of the word-of-bags, and those in row 5
+
+
+Number OI/ OI/ NI/ NI/ Market
+Industry classification systems Industries Sale Asset Sale Asset Beta
+
+
+A. Across-Industry standard deviations: firm-size weighted results
+1. SIC 3-digit industries 248 0.358 0.067 0.355 0.060 0.300
+2. GICS subindustries 174 0.171 0.064 0.158 0.066 0.281
+3. NAICS 4-digit industries 243 0.516 0.091 0.518 0.092 0.320
+4. TNIC 300 fixed industries 300 1.433 0.089 1.476 0.087 0.337
+5. Autoencoder þ SKmenas 300 3.299 0.107 3.351 0.101 0.307
+6. Original Intransitive TNIC 300 3.212 0.121 3.232 0.121 0.276
+7. Autoencoder þ Intransitive 300 2.640 0.105 2.562 0.104 0.254
+TNIC
+
+
+B. Within-Industry standard deviations: industry-size weighted results
+1. SIC 3-digit industries 248 2.937 0.137 2.886 0.140 0.400
+2. GICS subindustries 174 2.546 0.138 2.509 0.143 0.379
+3. NAICS 4-digit industries 243 3.346 0.141 3.201 0.146 0.406
+4. TNIC 300 fixed industries 300 2.514 0.140 2.560 0.145 0.402
+5. Autoencoder þ SKmenas 300 1.227 0.104 1.216 0.105 0.354
+6. Original Intransitive TNIC 300 3.206 0.133 3.110 0.137 0.422
+7. Autoencoder þ Intransitive 300 2.538 0.130 2.452 0.136 0.422
+TNIC
+
+
+
+AI-enabled
+industry
+classification
+
+
+419
+
+
+Table 4.
+Across- and withinindustry variations by
+industry classification
+systems
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+INTR
+32,2
+
+
+420
+
+
+
+represent the results from the classification method based on the 10 reduced features
+extracted from the autoencoder. Next, the results in rows 6 and 7 are similar to those in rows 4
+and 5, but these consider the possibility that one firm may belong to multiple industries at the
+same time. That is, rows 6 and 7 randomly select one firm, find firms with similar cosine
+similarities, and repeat this selection process until 300 industries are formed. Meanwhile,
+rows 4 and 5 simply classify our firms to belong to one of the 300 industries. Therefore, the
+last four rows of each panel investigate whether the industry classification can be improved
+when an autoencoder is applied (rows 5 and 7) by comparing row 4 against row 5 or row 6
+against row 7.
+Panel A of Table 4 shows the results of the across-variation comparison. The results show
+that the text-based industry classification method can taxonomize distinctive industries
+better than traditional fixed industry classifications can. For example, the across-industry
+variation for OI/Sale is 0.358, 0.171, and 0.516 for the three-digit SIC, GICS sub-industries, and
+four-digit NAICS, respectively, while that of the TNIC 300 fixed code is 1.433. These results
+imply that the text-based method clearly improves the classification in terms of crossindustry variations. When we apply the dimensionality reduction technique using an
+autoencoder to compute the spherical k-means, the variation is 3.299 (row 5), which is 1.3
+times larger than that of the original TNIC 300 fixed code. We can find similar patterns in the
+results of NI/sale and other measures of profitability, even if the magnitudes of the variations
+are small in the OI/asset or NI/asset values. Moreover, we observe similar improvements in
+the market beta.
+We confirm that considering the business description to determine each firm’s industry
+provides better information than conventional fixed industry classifications. We also find
+that applying the autoencoder can improve the performance of TNIC based on acrossindustry variations of profitability in rows 4 and 5. The results in rows 6 and 7 show that
+applying the autoencoder may not improve the classification method. However, this result
+does not necessarily imply that autoencoders cannot improve the classification because the
+industry formation based on repeated selections should indicate that one firm might be
+selected into multiple industries. Therefore, reducing the dimension of word vectors by
+applying the autoencoder can improve the text-based industry classification approach in
+terms of cross-industry variations, at least when we categorize one firm into one industry.
+Panel B of Table 4 shows the results of the within-industry variation. Similar to the results
+of the cross-industry variation, the results of the within-industry variations also show that
+text-based industry classification systems are an effective way to group homogeneous firms
+in terms of firm characteristics. We find that the within-industry variations for text-based
+
+–
+classifications (rows 4 7) are much lower than those for conventional fixed industry codes
+
+–
+(rows 1 3). For example, the within-industry variation of OI/sales is 2.937, 2.546, and 3.346 for
+three-digit SIC codes, GICS sub-industries, and four-digit NAICS, respectively, while that for
+the TNIC 300 fixed code is 2.514. We also find similar patterns throughout the columns when
+we calculate the within-industry variations by using other measures of profitability.
+Moreover, we confirm that reducing the dimension of word vectors by applying an
+autoencoder improves the informativeness of the text-based industry classification approach.
+When we use the autoencoder and spherical k means, the within-industry variation is reduced
+to 1.227, which is 51.19% smaller than the within-industry variation of the original TNIC 300
+code. These results are maintained even though we construct industries by choosing firms
+repeatedly in rows 6 and 7. Furthermore, we find that the within-industry variations for the
+market beta slightly decrease when we use dimensionally reduced word vectors by applying
+the autoencoder. That is, we find that the within-industry variations calculated using
+different measures of profitability, as well as the market beta, are lower in text-based
+classifications and much lower when using the autoencoder than when conventional fixed
+industry classifications are applied. Therefore, we conclude that overall, reducing the
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+dimension of the vector space increases the informativeness of the text-based industry
+classification system.
+
+
+4.4 Curse of high dimensionality
+Radovanovi�c et al. (2010) show that as dimensionality increases, the ratio between the
+standard deviation and the mean of the pairwise cosine similarities may converge to zero. The
+result implies that the pairwise cosine similarity measures approach a constant value, and its
+variance shrinks as dimensionality increases. Moreover, Aggarwal et al. (2001) show that the
+distance measure may not be qualitatively meaningful in high-dimensional space.
+
+Table 5 shows the summary statistics of cosine similarities by applying different methods.
+We compute the cosine similarities by either using the word vectors from whole unique words
+or using the reduced word vectors extracted from the autoencoder. We use the cosine
+similarities of the original TNIC from the database provided by Hoberg and Phillips (2016).
+The mean and standard deviation of the cosine similarity for the original TNIC approach are
+0.073 and 0.063, respectively, while those for using the autoencoder are 0.521 and 0.173,
+respectively. By computing the ratio between the mean and the standard deviation, the ratios
+for the original TNIC and for using the autoencoder are 1.16 and 3.01, respectively. Based on
+the argument of Radovanovi�c et al. (2010), these statistics reveal that the ratio of the original
+TNIC is small, and thus may fail to distinguish one firm from another because the dimensions
+of the word vectors are very large.
+
+Figure 6 illustrates the distribution of cosine similarities by applying different methods.
+The left panel reflects the distribution when using the original TNIC, and the right panel
+shows that when using the autoencoders. The left panel shows that the cosine similarities of
+all firm-pairs using whole words are skewed under the value of 0.2. The illustration from the
+left panel indicates that cosine similarities based on high dimensions may not distinguish
+firms well because the cosine similarities may have very similar values. However, the right
+panel shows that the cosine similarities are symmetrically and evenly distributed around the
+mean. This illustration suggests that our dimension reduction technique can enhance the
+variation among measures that could successfully distinguish one firm from another.
+
+
+Industry classification systems Mean SD Min Max
+
+
+Original intransitive TNIC 0.073 0.063 0.000 0.904
+Autoencoder þ Intransitive TNIC 0.521 0.173 0.011 0.988
+
+
+
+14
+
+
+12
+
+
+10
+
+
+8
+
+
+6
+
+
+4
+
+
+2
+
+
+0
+0.0
+
+
+
+0.2 0.4 0.6 0.8 1.0 0.0
+
+
+
+0.2 0.4 0.6 0.8 1.0
+
+
+
+AI-enabled
+industry
+classification
+
+
+421
+
+
+Table 5.
+Cosine similarities of
+the original TNIC and
+the applied
+autoencoder of
+the TNIC
+
+
+Figure 6.
+Comparison of cosine
+similarity measures
+
+
+
+Cosine similarity (TNIC) Cosine similarity (Autoencoder)
+
+
+**Note(s):** The left figure represents the distribution of cosine similarities based on the TNIC database.
+The right figure represents the distribution of cosine similarities based on the dimension reduction
+output of the autoencoder
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+INTR
+32,2
+
+
+422
+
+
+
+Therefore, we conclude that applying the autoencoder to high-dimensional word vectors can
+effectively mitigate the curse of high dimensionality.
+
+
+5. Conclusions
+In this paper, we present an alternative method to enhance existing industry classifications.
+While Hoberg and Phillips (2016) propose a text-based network industry classification based
+on 10-K business descriptions, we use a text mining technique to resolve the dimensionality
+problems in high-dimensional texts. We employ a machine learning technique to avoid the
+curse of dimensionality. In particular, we use the autoencoder to extract ten or two features
+that can explain the original input vector without loss.
+A visual representation of the clustered firms shows that firms in similar industries are
+well-clustered. This result indicates that firms grouped in the same industry can have a
+similar radius with different vector norms as the feature of the cosine similarity measure. The
+classification results also show that the similarity and closeness between industries are well
+represented.
+We also show that text-based classification is better than the existing industry
+classification systems. Moreover, our methodology can improve the existing text-based
+industry classification by relaxing the curse of dimensionality. Finally, we verify the
+effectiveness of our method by comparing the standard deviations of profitability and market
+risk within or across industries. We confirm that considering texts in the business
+descriptions to determine each firm’s industry is more informative than traditional industry
+classifications. Moreover, reducing the dimension by applying the autoencoder can improve
+the previous text-based classification.
+Our work contributes to the industry classification literature by empirically investigating
+the effectiveness of the text mining method. We find that product or service descriptions in
+firms’ annual reports are useful for industry classification. The text mining method resolves
+issues concerning the timeliness of traditional industry classifications by capturing new
+information in annual reports. In addition, our approach using autoencoders can solve the
+computing concerns of high dimensionality. The proposed method provides both theoretical
+and practical implications for industry classification.
+Nevertheless, our study has some limitations, in consideration of which future work may
+be conducted. First, we applied our method to a specific setting. We may secure
+generalizability by testing the machine learning method in various geographical and
+chronological contexts. We expect that learning processes will gradually improve the text
+mining method. Second, we input the business descriptions in the 10-K reports. If we add
+additional information, for example, the risk factors contained in other parts of the reports
+and footnotes, we may find more opportunities to advance the method. To enhance the
+proposed method, we suggest future studies to consider analyzing unstructured data in
+financial reports.
+
+
+Note
+
+[1. For more information see www.fasb.org/pds/fas131.pdf.](http://www.fasb.org/pds/fas131.pdf)
+
+
+References
+
+
+Aggarwal, C.C. and Zhai, C. (2012), Mining Text Data, Springer Science & Business Media.
+
+
+Aggarwal, C.C., Hinneburg, A. and Keim, D.A. (2001), “On the surprising behavior of distance metrics
+
+”
+in high dimensional space, International conference on database theory, Berlin, Heidelberg,
+Springer Berlin Heidelberg, pp. 420-434.
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+Aziz, S. and Dowling, M. (2019), “Machine learning and AI for risk management”, in Lynn, T., Mooney,
+J.G., Rosati, P. and Cummins, M. (Eds), Disrupting Finance: FinTech and Strategy in the 21st
+Century, Springer International Publishing, Cham, pp. 33-50.
+
+
+Baldi, P. and Hornik, K. (1989), “Neural networks and principal component analysis: learning from
+examples without local minima”, Neural Networks, Vol. 2 No. 1, pp. 53-58.
+
+
+Bhojraj, S., Lee, C.M. and Oler, D.K. (2003), “What’s my line? A comparison of industry classification
+
+”
+schemes for capital market research, Journal of Accounting Research, Vol. 41 No. 5, pp. 745-774.
+
+
+Chan, L.K.C., Lakonishok, J. and Swaminathan, B. (2007), “Industry classifications and return
+comovement”, Financial Analysts Journal, Vol. 63 No. 6, pp. 56-70.
+
+
+Chowdhuri, R., Yoon, V.Y., Redmond, R.T. and Etudo, U.O. (2014), “Ontology based integration of
+
+”
+XBRL filings for financial decision making, Decision Support Systems, Vol. 68, pp. 64-76.
+
+
+Davis, R. and Duhaime, I.M. (1992), “Diversification, vertical integration, and industry analysis:
+
+”
+new perspectives and measurement, Strategic Management Journal, Vol. 13 No. 7,
+pp. 511-524.
+
+
+Deerwester, S., Dumais, S.T., Furnas, G.W., Landauer, T.K. and Harshman, R. (1990), “Indexing by
+
+”
+latent semantic analysis, Journal of the American Society for Information Science, Vol. 41 No. 6,
+pp. 391-407.
+
+
+Fama, E.F. and French, K.R. (1997), “Industry costs of equity”, Journal of Financial Economics, Vol. 43
+No. 2, pp. 153-193.
+
+
+Fang, F., Dutta, K. and Datta, A. (2013), “LDA-based industry classification”, International Conference
+on Information Systems 2013: Reshaping Society Through Information Systems Design, Milan,
+pp. 2500-2509.
+
+
+Gu, S., Kelly, B. and Xiu, D. (2021), “Autoencoder asset pricing models”, Journal of Econometrics,
+Vol. 222 No. 1, pp. 429-450.
+
+
+Harrag, F., El-Qawasmeh, E. and Pichappan, P. (2009), “Improving Arabic text categorization using
+decision trees”, 2009 First International Conference on Networked Digital Technologies,
+pp. 110-115.
+
+
+Heaton, J.B., Polson, N.G. and Witte, J.H. (2017), “Deep learning for finance: deep portfolios”, Applied
+Stochastic Models in Business and Industry, Vol. 33 No. 1, pp. 3-12.
+
+
+Hinton, G.E. and Salakhutdinov, R.R. (2006), “Reducing the dimensionality of data with neural
+networks”, Science, Vol. 313 No. 5786, pp. 504-507.
+
+
+Hoberg, G. and Phillips, G. (2016), “Text-based network industries and endogenous product
+differentiation”, Journal of Political Economy, Vol. 124 No. 5, pp. 1423-1465.
+
+
+Kile, C.O. and Phillips, M.E. (2009), “Using industry classification codes to sample high-technology
+
+”
+firms: analysis and recommendations, Journal of Accounting, Auditing and Finance, Vol. 24
+No. 1, pp. 35-58.
+
+
+Lafferty, J., McCallum, A. and Pereira, F. (2001), “Conditional random fields: probabilistic models for
+
+”
+segmenting and labeling sequence data, Proceedings of the International Conference on
+Machine Learning, pp. 282-289.
+
+
+Misra, S., Thakur, S., Ghosh, M. and Saha, S.K. (2020), “An autoencoder based model for detecting
+fraudulent credit card transaction”, Procedia Computer Science, Vol. 167, pp. 254-262.
+
+
+Nakano, M. and Takahashi, A. (2020), “A new investment method with AutoEncoder: applications to
+
+”
+crypto currencies, Expert Systems with Applications, Vol. 162, p. 113730.
+
+
+Radovanovi�c, M., Nanopoulos, A. and Ivanovi�c, M. (2010), “On the existence of obstinate results in
+
+”
+vector space models, Proceedings of the 33rd international ACM SIGIR conference on Research
+and development in information retrieval, pp. 186-193.
+
+
+Roweis, S.T. and Saul, L.K. (2000), “Nonlinear dimensionality reduction by locally linear embedding”,
+Science, Vol. 290 No. 5500, pp. 2323-2326.
+
+
+
+AI-enabled
+industry
+classification
+
+
+423
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+
+INTR
+32,2
+
+
+424
+
+
+
+Shieber, S.M. (2004), The Turing Test: Verbal Behavior as the Hallmark of Intelligence, MIT Press,
+Cambridge, MA.
+
+
+Singhal, A. (2001), “Modern information retrieval: a brief overview”, IEEE Data Engineering Bulletin,
+Vol. 24 No. 4, pp. 35-43.
+
+
+Skillicorn, D.B. (2012), Understanding High-Dimensional Spaces, Springer, Heidelberg.
+
+
+Strehl, A., Ghosh, J. and Mooney, R. (2000), “Impact of similarity measures on web-page clustering”,
+AAAI2000L Workshop on Artificial Intelligence for Web Search, Austin, Texas, pp. 58-64.
+
+
+Walker, J.A. and Murphy, J.B. (2001), “Implementing the North American industry classification
+
+”
+system at BLS, Monthly Labor Review, Vol. 124, pp. 15-21.
+
+
+Xu, B., Guo, X., Ye, Y. and Cheng, J. (2012), “An improved random forest classifier for text
+
+”
+categorization, Journal of Computers, Vol. 7 No. 12, pp. 2913-2920.
+
+
+Xu, X., Qian, H., Ge, C. and Lin, Z. (2020), “Industry classification with online resume big data: a design
+
+”
+science approach, Information and Management, Vol. 57 No. 5, 103182.
+
+
+Yang, S.Y., Liu, F.-C., Zhu, X. and Yen, D.C. (2019), “A graph mining approach to identify financial
+reporting patterns: an empirical examination of industry classifications”, Decision Sciences,
+Vol. 50 No. 4, pp. 847-876.
+
+
+Corresponding author
+[Seongmin Jeon can be contacted at: smjeon@gachon.ac.kr](mailto:smjeon@gachon.ac.kr)
+
+
+For instructions on how to order reprints of this article, please visit our website:
+www.emeraldgrouppublishing.com/licensing/reprints.htm
+Or contact us for further details: permissions@emeraldinsight.com
+
+
+
+Downloaded from http://www.emerald.com/intr/article-pdf/32/2/406/1270749/intr-05-2020-0299.pdf by Korea Advanced Institute of Science and Technology user on 19 October 2025
+
+

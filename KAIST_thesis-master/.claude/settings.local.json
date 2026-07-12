@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(poetry run pytest:*)",
+      "Bash(typst compile:*)",
+      "Bash(poetry show:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "WebSearch"
+    ],
+    "deny": [
+      "Bash(pip:*)"
+    ],
+    "ask": [
+      "Bash(rm:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

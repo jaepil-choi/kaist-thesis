@@ -1,0 +1,62 @@
+# Hoberg & Phillips (2016) Text-Based Network Industry (TNIC) Methodology Parameters
+# Source: Hoberg, G., & Phillips, G. M. (2016). Text-based network industries and
+#         endogenous product differentiation. Journal of Political Economy, 124(5), 1423-1465.
+
+# Text filtering parameters
+filtering:
+  # Minimum unique words per firm (H&P 2016, p. 1430)
+  # "We exclude firms having fewer than 20 unique words from our classification algorithm"
+  min_words_per_firm: 20
+
+  # Stopword frequency threshold (H&P 2016, p. 1429)
+  # "we limit attention to nouns...that appear in no more than 25 percent of all product descriptions"
+  frequency_threshold: 0.25
+
+  # Minimum character count for business description (H&P 2016, p. 1434)
+  # "we encountered...firms...that...had fewer than 1,000 characters"
+  min_char_count: 1000
+
+# Binary matrix representation
+matrix:
+  # Representation type: binary vs tf-idf (H&P 2016, footnote 10, p. 1432)
+  # "Our results suggest that uniform weights outperform TF-IDF weights"
+  representation: binary
+
+  # Vector normalization (H&P 2016, Equation 1, p. 1430)
+  # "We then normalize each vector to have unit length"
+  normalization: unit_length
+
+# Similarity computation
+similarity:
+  # Similarity metric (H&P 2016, Equation 2, p. 1430)
+  # "Product Cosine Similarity_{i,j} = (V_i * V_j)"
+  metric: cosine
+
+  # Apply median adjustment for document length control (H&P 2016, p. 1436)
+  # "we compute its median score...We achieve this by subtracting these median scores"
+  median_adjustment: true
+
+# TNIC peer group definition
+peer_groups:
+  # Baseline classification for threshold calibration
+  # H&P used SIC-3; we use FnGuide Industry (62 categories, ~2.95% membership fraction)
+  calibration_baseline: fnguide_industry
+
+  # Threshold search range for calibration
+  # H&P 2016: 21.32% threshold matched SIC-3's 2.05% membership fraction
+  # Korean market: expect 17.5-18% threshold for ~3% membership fraction
+  threshold_search_range: [0.10, 0.30]
+
+  # Granularity for threshold search
+  threshold_step: 0.005
+
+  # Precision requirement for matching membership fraction (percentage points)
+  precision_tolerance: 0.001
+
+# Output settings
+outputs:
+  # Save intermediate results
+  save_intermediate: true
+
+  # Compression for sparse matrices
+  compress_matrices: true

@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="presentation_files/libs/clipboard/clipboard.min.js"></script>
+<script src="presentation_files/libs/quarto-html/tabby.min.js"></script>
+<script src="presentation_files/libs/quarto-html/popper.min.js"></script>
+<script src="presentation_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
+
+  <meta name="author" content="최재필">
+  <meta name="dcterms.date" content="2025-11-17">
+  <title>한국 주식시장에서의 텍스트 기반 산업 모멘텀</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="styles.css">
+  <link href="presentation_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="presentation_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="presentation_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="presentation_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">한국 주식시장에서의 텍스트 기반 산업 모멘텀</h1>
+  <p class="subtitle">Text-Based Industry Momentum in Korean Stock Market</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+최재필 
+</div>
+        <p class="quarto-title-affiliation">
+            KAIST 금융공학대학원
+          </p>
+    </div>
+</div>
+
+  <p class="date">2025-11-17</p>
+</section>
+<section>
+<section id="연구-동기" class="title-slide slide level1 center" data-background-color="#003366">
+<h1>연구 동기</h1>
+
+</section>
+<section id="연구-동기-및-배경" class="slide level2">
+<h2>연구 동기 및 배경</h2>
+<p><strong>산업 모멘텀의 수수께끼</strong></p>
+<ul>
+<li>과거 산업 수익률이 미래 수익률 예측</li>
+<li>전통적 분류(SIC, FnGuide)는 제한적인 모멘텀 수익</li>
+</ul>
+<p><strong>주의력 부족 가설</strong></p>
+<ul>
+<li>투자자들이 경제적으로 연계된 기업들에 주의를 기울이지 못함</li>
+<li>전통적 분류의 한계:
+<ul>
+<li>정적인 그룹핑</li>
+<li>실제 제품시장 경쟁관계를 놓침</li>
+<li>경제적 연계 ≠ 산업분류 코드</li>
+</ul></li>
+</ul>
+<p><strong>본 연구의 기여</strong></p>
+<ul>
+<li>최초 한국 TNIC 구축</li>
+<li>주의력 부족 가설의 표본 외 검증</li>
+</ul>
+</section>
+<section id="hoberg-phillips-2018-주요-발견" class="slide level2">
+<h2>Hoberg &amp; Phillips (2018) 주요 발견</h2>
+<p><strong>미국 시장 결과</strong> (JFQA 2018):</p>
+<ul>
+<li>TNIC 기반 산업 모멘텀이 SIC보다 <strong>100-200% 더 큰 수익</strong></li>
+<li>이는 정보 내용 개선(25-40%)을 훨씬 초과</li>
+<li>핵심 메커니즘: <strong>투자자 주의력 부족</strong></li>
+</ul>
+<p><strong>5가지 핵심 증거</strong>:</p>
+<ol type="1">
+<li>경제적 크기가 정보 내용만으로 설명 불가</li>
+<li>덜 가시적인 동료 기업(TNIC-only)에서 더 강한 모멘텀</li>
+<li>타이밍 차이: SIC은 1-2개월, TNIC은 6-12개월 지속</li>
+<li>뮤추얼펀드 공동보유가 적을수록 모멘텀 강함</li>
+<li>국지적 충격(TNIC-4)이 광범위 충격보다 강함</li>
+</ol>
+</section>
+<section id="tnic-개념-설명" class="slide level2">
+<h2>TNIC 개념 설명</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>전통적 산업분류 (SIC, FnGuide)</strong></p>
+<ul>
+<li>사전 정의된 코드 체계</li>
+<li>정적 (시간에 따라 거의 변하지 않음)</li>
+<li>주요 사업 분야 1개만 고려</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>텍스트 기반 네트워크 산업분류 (TNIC)</strong></p>
+<ul>
+<li>SEC 10-K 사업내용 기술서 텍스트 분석</li>
+<li>기업 간 단어 사용 유사도 측정</li>
+<li>시변적: 매년 사업내용 변화에 따라 동료 기업 변경</li>
+<li>네트워크: A-B 유사, A-C 유사 ≠ B-C 유사</li>
+</ul>
+</div></div>
+<p><strong>예시</strong>: 삼성전자 vs LG전자</p>
+<ul>
+<li><strong>공통점</strong>: 둘 다 가전사업 (TV, 냉장고, 세탁기 등)
+<ul>
+<li>TNIC: 높은 유사도 (가전 관련 단어 공유)</li>
+</ul></li>
+<li><strong>차이점</strong>: FnGuide/SIC 산업분류
+<ul>
+<li>삼성전자: 반도체 산업으로 분류</li>
+<li>LG전자: 반도체 산업 아님 (가전/디스플레이)</li>
+</ul></li>
+<li><strong>결과</strong>: 전통적 분류로는 동료 기업이 아니지만, TNIC으로는 동료 기업</li>
+<li><strong>함의</strong>: 삼성 가전사업 충격이 LG에 미치는 영향을 FnGuide는 놓침</li>
+</ul>
+<p><strong>왜 TNIC이 중요한가?</strong></p>
+<ul>
+<li>실제 제품시장 경쟁관계 포착</li>
+<li>투자자들이 덜 주목하는 “숨겨진 연계” 발견</li>
+<li>정보의 지연된 확산 → 모멘텀 수익</li>
+</ul>
+</section></section>
+<section>
+<section id="연구질문-및-가설" class="title-slide slide level1 center" data-background-color="#003366">
+<h1>연구질문 및 가설</h1>
+
+</section>
+<section id="연구질문-및-핵심-가설" class="slide level2">
+<h2>연구질문 및 핵심 가설</h2>
+<p><strong>연구질문</strong>:</p>
+<p><strong>“텍스트 기반 산업 모멘텀이 한국 주식시장에서도 재현되는가?”</strong></p>
+<p><strong>왜 한국인가?</strong></p>
+<ol type="1">
+<li>한국 TNIC이 존재하지 않음 (최초 구축)</li>
+<li>다른 정보 환경 (언어, 제도, 투자자 구성)</li>
+<li>주의력 부족 가설의 표본 외 검증</li>
+</ol>
+<p><strong>4가지 핵심 가설</strong>:</p>
+<p><strong>H1</strong>: 산업 모멘텀은 <strong>덜 가시적인</strong> 동료 기업 충격에 대한 과소반응에서 발생</p>
+<p><strong>H2</strong>: 덜 가시적인 동료 기업(TNIC)이 가시적인 동료(FnGuide)보다 더 강한 예측력</p>
+<p><strong>H3</strong>: 회전율이 지연되어 증가 (FnGuide: t=0 즉각 반응, TNIC-only: t+1~t+12 지연 반응)</p>
+<p><strong>H4</strong>: 고유(idiosyncratic) 충격만이 모멘텀 발생 (체계적 충격은 즉시 반영)</p>
+</section></section>
+<section>
+<section id="데이터-및-방법론" class="title-slide slide level1 center" data-background-color="#003366">
+<h1>데이터 및 방법론</h1>
+
+</section>
+<section id="데이터-출처" class="slide level2">
+<h2>데이터 출처</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>텍스트 데이터</strong>: DART 사업내용 기술서</p>
+<ul>
+<li>출처: 금융감독원 전자공시시스템</li>
+<li>섹션: “사업의 개요” (SEC 10-K Item 1 해당)</li>
+<li>추출: 자체 개발 Python 패키지 <code>dart-fss-text</code></li>
+<li>형식: XML 파싱 + MongoDB 저장</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>시장/재무 데이터</strong>: FnGuide DataGuide 5</p>
+<ul>
+<li>월별 주식 수익률 (2010-2024)</li>
+<li>거래량, 발행주식수 (회전율 계산)</li>
+<li>시가총액, 장부가/시가 비율</li>
+<li>FnGuide 산업분류 (한국의 SIC 대응)</li>
+</ul>
+</div></div>
+<p><strong>표본 필터</strong> (H&amp;P 2018 따름):</p>
+<ul>
+<li>금융업 제외</li>
+<li>주가 &lt; 1,000원 (페니 주식) 제외</li>
+<li>사업내용 기술서에 20개 미만 고유 단어 제외</li>
+</ul>
+<p><strong>최종 표본</strong>: 약 10-30만 기업-월 관측치</p>
+</section>
+<section id="한국-tnic-구축-방법론" class="slide level2">
+<h2>한국 TNIC 구축 방법론</h2>
+<p><strong>Hoberg &amp; Phillips (2016, JPE) 방법론 준수</strong></p>
+<p><strong>1단계: 텍스트 전처리</strong> (한국어 적용)</p>
+<ul>
+<li><strong>Kiwipiepy</strong> 형태소 분석기 (Lee 2024)</li>
+<li>명사만 추출 (NNG, NNP, NNB 품사 태그)</li>
+<li>필터링: 최소 2글자, 숫자 제거, 전체 기업의 25% 이상 사용 단어 제거</li>
+</ul>
+<p><strong>2단계: TNIC 유사도 계산</strong></p>
+<ul>
+<li>기업 × 단어 <strong>이진 행렬</strong> (단어 존재 여부만, 빈도 무시)</li>
+<li><strong>코사인 유사도</strong> 계산</li>
+<li>문서 길이 조정: 중위 유사도 차감</li>
+<li><strong>임계값</strong>: FnGuide 산업 멤버십 쌍 비율에 맞춰 조정</li>
+</ul>
+<p><strong>3단계: TNIC 동료 기업 정의</strong></p>
+<ul>
+<li>조정된 유사도 ≥ 임계값 → 동료 기업</li>
+<li><strong>시변적</strong>: 매년 업데이트</li>
+<li><strong>비대칭적</strong>: A→B 동료 ≠ B→A 동료 (가능)</li>
+</ul>
+</section>
+<section id="변수-정의-및-동료-수익률-계산" class="slide level2">
+<h2>변수 정의 및 동료 수익률 계산</h2>
+<p><strong>주요 변수</strong>:</p>
+<ul>
+<li><strong>TNIC 동료 수익률</strong>: <strong>동가중(equal-weighted)</strong> 평균</li>
+<li><strong>FnGuide 동료 수익률</strong>: <strong>가치가중(value-weighted)</strong> 평균 (문헌 따름)</li>
+<li><strong>회전율</strong>:
+<ul>
+<li><span class="math inline">\(\text{Turnover} = \frac{\sum \text{월간 거래량}}{\text{평균 발행주식수}} = \frac{\sum \text{월간 거래대금}}{\text{평균 시가총액}}\)</span></li>
+</ul></li>
+<li><strong>통제변수</strong>: log(BE/ME), log(Size), 과거 수익률</li>
+</ul>
+<p><strong>동료 수익률 계산 방법</strong> (Focal Firm 단위):</p>
+<p><strong>핵심</strong>: Focal firm 자신을 제외한 동료 기업들의 평균 수익률</p>
+<p><strong>동가중 (TNIC)</strong>: <span class="math display">\[
+R_{\text{peer},i,t}^{\text{TNIC}} = \frac{\sum_{j \in \text{TNIC}_i, j \neq i} R_{j,t}}{N_{\text{TNIC},i} - 1} = \frac{\text{그룹 수익률 합} - R_{i,t}}{\text{그룹 기업 수} - 1}
+\]</span></p>
+<p><strong>가치가중 (FnGuide)</strong>: <span class="math display">\[
+R_{\text{peer},i,t}^{\text{FnGuide}} = \frac{\sum_{j \in \text{FnGuide}_i, j \neq i} w_{j,t} R_{j,t}}{\sum_{j \in \text{FnGuide}_i, j \neq i} w_{j,t}}
+\]</span></p>
+<p>여기서 <span class="math inline">\(w_{j,t}\)</span>는 시가총액 가중치</p>
+</section></section>
+<section>
+<section id="기초-통계량-및-데이터-품질" class="title-slide slide level1 center" data-background-color="#003366">
+<h1>기초 통계량 및 데이터 품질</h1>
+
+</section>
+<section id="table-1-기초통계량" class="slide level2">
+<h2>Table 1: 기초통계량</h2>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Panel A: 자기기업 변수</a></li><li><a href="#tabset-1-2">Panel B: FnGuide 동료 수익률</a></li><li><a href="#tabset-1-3">Panel C: TNIC 동료 수익률</a></li><li><a href="#tabset-1-4">Panel D: 상관관계</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Mean</th>
+<th>Std Dev</th>
+<th>Min</th>
+<th>Median</th>
+<th>Max</th>
+<th>N</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Return (%)</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+</tr>
+<tr class="even">
+<td>log(BE/ME)</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+</tr>
+<tr class="odd">
+<td>log(Size)</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-2">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Mean</th>
+<th>Std Dev</th>
+<th>Min</th>
+<th>Median</th>
+<th>Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Peer Return (t-1~t-12)</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-3">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Mean</th>
+<th>Std Dev</th>
+<th>Min</th>
+<th>Median</th>
+<th>Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Peer Return (t-1~t-12)</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-4">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th></th>
+<th>Own Ret</th>
+<th>BE/ME</th>
+<th>Size</th>
+<th>SIC Peer</th>
+<th>TNIC Peer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Own Return</td>
+<td>1.00</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+</tr>
+<tr class="even">
+<td>log(BE/ME)</td>
+<td></td>
+<td>1.00</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+</tr>
+<tr class="odd">
+<td>log(Size)</td>
+<td></td>
+<td></td>
+<td>1.00</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+</tr>
+<tr class="even">
+<td>SIC Peer</td>
+<td></td>
+<td></td>
+<td></td>
+<td>1.00</td>
+<td>[TBD]</td>
+</tr>
+<tr class="odd">
+<td>TNIC Peer</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>1.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="데이터-커버리지-분석" class="slide level2">
+<h2>데이터 커버리지 분석</h2>
+<p><strong>TNIC vs FnGuide 커버리지 비교</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>지표</th>
+<th>TNIC</th>
+<th>FnGuide</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>총 기업 수 (unique)</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+</tr>
+<tr class="even">
+<td>평균 동료 기업 수</td>
+<td>[TBD]</td>
+<td>[TBD]</td>
+</tr>
+<tr class="odd">
+<td>동료 기업이 있는 기업 비율</td>
+<td>[TBD]%</td>
+<td>100%</td>
+</tr>
+<tr class="even">
+<td><strong>고립 노드 비율</strong></td>
+<td><strong>[TBD]%</strong></td>
+<td><strong>0%</strong></td>
+</tr>
+<tr class="odd">
+<td>시계열 커버리지</td>
+<td>완전</td>
+<td>완전</td>
+</tr>
+<tr class="even">
+<td>시변성</td>
+<td>매년 변동</td>
+<td>제한적</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>고립 노드 (Orphan Nodes) 문제</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><strong>정의</strong>: TNIC 유사도가 임계값 미달로 동료 기업이 없는 기업</li>
+<li><strong>원인</strong>: 매우 독특한 사업, 텍스트 데이터 부족, 임계값 설정</li>
+<li><strong>영향</strong>: TNIC 효과가 실제보다 약하게 측정됨</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>해결된 문제들</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><del>상장폐지 기업 누락</del> → 과거 데이터 확보로 해결</li>
+<li><del>XML 파싱 실패</del> → PDF 파싱 추가로 해결</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="산업-불일치도-industry-disparity" class="slide level2">
+<h2>산업 불일치도 (Industry Disparity)</h2>
+<p><strong>개념</strong>: TNIC와 FnGuide 동료 기업의 불일치 정도</p>
+<p><strong>정의</strong> (Hoberg &amp; Phillips 2018):</p>
+<p><span class="math display">\[
+\text{Disparity} = 1 - \frac{\text{TotalSales}(\text{TNIC-3} \cap \text{FnGuide})}{\text{TotalSales}(\text{TNIC-3} \cup \text{FnGuide})}
+\]</span></p>
+<p><strong>해석</strong>:</p>
+<ul>
+<li><strong>Disparity = 0</strong>: TNIC와 FnGuide 동료 기업이 완전히 일치</li>
+<li><strong>Disparity = 1</strong>: TNIC와 FnGuide 동료 기업이 완전히 불일치</li>
+<li><strong>높은 Disparity</strong>: 정보 전파 경로가 적음 → 더 강한 주의력 부족 효과</li>
+</ul>
+<p><strong>예측</strong>:</p>
+<ul>
+<li>Disparity가 높을수록 정보 확산이 지연됨</li>
+<li>Disparity가 높은 기업에서 TNIC 모멘텀이 더 강하게 나타남</li>
+<li>매출액 가중치 사용 이유: 큰 경쟁사의 충격이 더 중요</li>
+</ul>
+<p><strong>핵심 메커니즘</strong>:</p>
+<ul>
+<li>TNIC-only 동료 (FnGuide에 없음) → 덜 가시적 → 정보 지연</li>
+<li>Both 동료 (TNIC ∩ FnGuide) → 가시적 → 정보 빠른 전파</li>
+</ul>
+</section></section>
+<section>
+<section id="회전율-분석" class="title-slide slide level1 center" data-background-color="#003366">
+<h1>회전율 분석</h1>
+
+</section>
+<section id="figure-1a-무조건부-회전율-패턴" class="slide level2">
+<h2>Figure 1A: 무조건부 회전율 패턴</h2>
+<p><strong>이벤트 정의</strong>:</p>
+<ul>
+<li><strong>TNIC 이벤트</strong>: TNIC 동료 수익률이 상위 20% (high-quintile)</li>
+<li><strong>FnGuide 이벤트</strong>: FnGuide 동료 수익률이 상위 20% (high-quintile)</li>
+</ul>
+<p><strong>분석 설계</strong>:</p>
+<ul>
+<li><strong>윈도우</strong>: t-3 ~ t+12 (16개월)</li>
+<li><strong>정규화</strong>: t=-3 회전율 = 1.0 (이벤트 3개월 전 기준)</li>
+</ul>
+
+<img data-src="../../outputs/figure1a_unconditional_turnover.png" class="r-stretch quarto-figure-center"><p class="caption">Figure 1A</p><p><strong>주요 발견</strong>:</p>
+<ul>
+<li>TNIC 그룹 (파란 선): t=0 즉각 반응, 12개월간 기준선 이상 유지</li>
+<li>FnGuide 그룹 (빨간 선): t=0 즉각 반응 없음, t+1부터 증가</li>
+<li>H&amp;P 미국 결과와 차이: 미국은 둘 다 t=0 즉각 반응</li>
+</ul>
+</section>
+<section id="figure-1b-조건부-회전율-패턴" class="slide level2">
+<h2>Figure 1B: 조건부 회전율 패턴</h2>
+<p><strong>이벤트 정의</strong> (조건부):</p>
+<ul>
+<li><strong>FnGuide-only 이벤트</strong>: FnGuide 동료 수익률 상위 20% <strong>AND</strong> TNIC 동료 수익률 중간 (40%-60%)</li>
+<li><strong>TNIC-only 이벤트</strong>: TNIC 동료 수익률 상위 20% <strong>AND</strong> FnGuide 동료 수익률 중간 (40%-60%)</li>
+</ul>
+<p><strong>분석 설계</strong>:</p>
+<ul>
+<li><strong>윈도우</strong>: t-3 ~ t+12 (16개월)</li>
+<li><strong>정규화</strong>: t=-3 회전율 = 1.0 (이벤트 3개월 전 기준)</li>
+</ul>
+
+<img data-src="../../outputs/figure1b_conditional_turnover.png" class="r-stretch quarto-figure-center"><p class="caption">Figure 1B</p><p><strong>핵심 발견</strong> - 주의력 부족 가설 지지:</p>
+<ul>
+<li><strong>FnGuide-only</strong>: 빠른 감소 (t+1~t+3)</li>
+<li><strong>TNIC-only</strong>: 점진적 <strong>증가</strong> (t+1~t+6), 높은 수준 유지 (~t+12)</li>
+<li><strong>해석</strong>: TNIC-only는 덜 가시적 → 정보가 천천히 확산</li>
+</ul>
+</section></section>
+<section>
+<section id="수익률-동조화-분석" class="title-slide slide level1 center" data-background-color="#003366">
+<h1>수익률 동조화 분석</h1>
+
+</section>
+<section id="table-2-return-comovement" class="slide level2">
+<h2>Table 2: Return Comovement</h2>
+<p><strong>Fama-MacBeth Regressions</strong></p>
+<p>종속변수: Month t 자기기업 수익률 | 표준오차: Newey-West (2 lags)</p>
+<p><strong>방법론</strong>: 모든 변수는 <strong>z-score 정규화</strong> (평균 0, 표준편차 1) → 계수의 크기(magnitude) 직접 비교 가능</p>
+<p><em>앞으로의 모든 회귀분석도 동일한 방법 사용</em></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Spec 1</th>
+<th>Spec 4</th>
+<th>Spec 5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>tnic_t0</strong></td>
+<td>0.0120***</td>
+<td>0.0122***</td>
+<td>0.0121***</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>(15.61)</td>
+<td>(14.69)</td>
+<td>(13.63)</td>
+</tr>
+<tr class="odd">
+<td><strong>tnic_t-1</strong></td>
+<td></td>
+<td>0.0017***</td>
+<td>0.0014*</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td>(3.36)</td>
+<td>(2.24)</td>
+</tr>
+<tr class="odd">
+<td><strong>sic_t0</strong></td>
+<td>0.0210***</td>
+<td>0.0185***</td>
+<td>0.0159***</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>(19.42)</td>
+<td>(16.77)</td>
+<td>(12.62)</td>
+</tr>
+<tr class="odd">
+<td><strong>sic_t-1</strong></td>
+<td></td>
+<td>0.0024*</td>
+<td>0.0022</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td>(2.43)</td>
+<td>(1.93)</td>
+</tr>
+<tr class="odd">
+<td>N</td>
+<td>113,402</td>
+<td>107,176</td>
+<td>100,951</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>주요 발견 vs H&amp;P (2018)</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><strong>미국</strong>: TNIC 추가 시 SIC 무의미</li>
+<li><strong>한국</strong>: 둘 다 유의 (상호보완적)</li>
+<li><strong>원인</strong>: TNIC 고립 노드 문제로 커버리지 낮음</li>
+</ul>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="산업-모멘텀-분석" class="title-slide slide level1 center" data-background-color="#003366">
+<h1>산업 모멘텀 분석</h1>
+
+</section>
+<section id="table-3-panel-a-1-year-momentum-전체-표본" class="slide level2">
+<h2>Table 3 Panel A: 1-Year Momentum (전체 표본)</h2>
+<p>[Table 3 content - TBD]</p>
+</section>
+<section id="table-3-panel-b-covid-이전-표본" class="slide level2">
+<h2>Table 3 Panel B: COVID 이전 표본</h2>
+<p>[Table 3 Panel B content - TBD]</p>
+</section>
+<section id="table-4-split-half-year-momentum" class="slide level2">
+<h2>Table 4: Split Half-Year Momentum</h2>
+<p>[Table 4 content - TBD]</p>
+</section></section>
+<section>
+<section id="강건성-검증" class="title-slide slide level1 center" data-background-color="#003366">
+<h1>강건성 검증</h1>
+
+</section>
+<section id="table-5a-bid-ask-bounce" class="slide level2">
+<h2>Table 5A: Bid-Ask Bounce</h2>
+<p>[Table 5A content - TBD]</p>
+</section>
+<section id="table-5b-vertical-links" class="slide level2">
+<h2>Table 5B: Vertical Links</h2>
+<p>[Table 5B content - TBD]</p>
+</section>
+<section id="table-5c-contemporaneous-returns" class="slide level2">
+<h2>Table 5C: Contemporaneous Returns</h2>
+<p>[Table 5C content - TBD]</p>
+</section>
+<section id="table-6-various-momentum-horizons" class="slide level2">
+<h2>Table 6: Various Momentum Horizons</h2>
+<p>[Table 6 content - TBD]</p>
+</section>
+<section id="table-7-product-market-breadth" class="slide level2">
+<h2>Table 7: Product Market Breadth</h2>
+<p>[Table 7 content - TBD]</p>
+</section>
+<section id="table-8-idiosyncratic-vs-systematic" class="slide level2">
+<h2>Table 8: Idiosyncratic vs Systematic</h2>
+<p>[Table 8 content - TBD]</p>
+</section></section>
+<section>
+<section id="추가-분석" class="title-slide slide level1 center" data-background-color="#003366">
+<h1>추가 분석</h1>
+
+</section>
+<section id="table-9-industry-disparity" class="slide level2">
+<h2>Table 9: Industry Disparity</h2>
+<p>[Table 9 content - TBD]</p>
+</section>
+<section id="table-10-peer-group-partitioning" class="slide level2">
+<h2>Table 10: Peer Group Partitioning</h2>
+<p>[Table 10 content - TBD]</p>
+</section>
+<section id="table-11-portfolio-returns" class="slide level2">
+<h2>Table 11: Portfolio Returns</h2>
+<p>[Table 11 content - TBD]</p>
+</section></section>
+<section>
+<section id="결론" class="title-slide slide level1 center" data-background-color="#003366">
+<h1>결론</h1>
+
+</section>
+<section id="주요-기여-및-발견" class="slide level2">
+<h2>주요 기여 및 발견</h2>
+<p><strong>주요 기여</strong>:</p>
+<ol type="1">
+<li><strong>최초 한국 TNIC 구축</strong>
+<ul>
+<li>DART 사업내용 기술서 활용</li>
+<li>Kiwipiepy 형태소 분석 (한국어)</li>
+<li>2010-2024, 시변적 네트워크</li>
+</ul></li>
+<li><strong>주의력 부족 가설의 표본 외 검증</strong>
+<ul>
+<li>한국 시장에서도 TNIC 모멘텀 확인</li>
+<li>덜 가시적인 연계 → 지연된 정보 확산</li>
+<li>Figure 1B: TNIC-only 지속적 회전율 증가</li>
+</ul></li>
+<li><strong>데이터 품질 통찰</strong>
+<ul>
+<li>고립 노드 문제가 주요 한계</li>
+<li>TNIC 효과는 보수적 추정치</li>
+</ul></li>
+</ol>
+</section>
+<section id="한계-및-향후-연구" class="slide level2">
+<h2>한계 및 향후 연구</h2>
+<p><strong>한계점</strong>:</p>
+<ol type="1">
+<li><strong>TNIC 고립 노드 문제</strong>
+<ul>
+<li>일부 기업이 동료 기업 없음</li>
+<li>영향: TNIC 효과 약하게 측정</li>
+<li>개선: 임계값 조정, 다른 유사도 척도</li>
+</ul></li>
+<li><strong>미완성 분석</strong>
+<ul>
+<li>Table 3-11: 진행 중</li>
+<li>뮤추얼펀드 분석: 데이터 가용성 확인 필요</li>
+</ul></li>
+<li><strong>표본 기간</strong>
+<ul>
+<li>COVID 충격 포함 (2020-2021)</li>
+</ul></li>
+</ol>
+<p><strong>향후 연구</strong>:</p>
+<ul>
+<li>TNIC 개선 (고립 노드 최소화)</li>
+<li>확장 연구 (거래 전략, 국가 간 비교)</li>
+<li>메커니즘 연구 (기관투자자, 애널리스트)</li>
+</ul>
+</section></section>
+<section>
+<section id="감사합니다" class="title-slide slide level1 center" data-background-color="#003366">
+<h1>감사합니다</h1>
+<p><strong>질의응답</strong></p>
+</section>
+<section class="slide level2">
+
+<p>최재필 | jaechoi@kaist.ac.kr</p>
+<p>지도교수: 강장구 교수님</p>
+<p>KAIST 금융공학대학원</p>
+</section></section>
+<section id="참고문헌" class="title-slide slide level1 smaller center">
+<h1>참고문헌</h1>
+<p>Cohen, L., &amp; Frazzini, A. (2008). Economic links and predictable returns. <em>Journal of Finance</em>, 63(4), 1977-2011.</p>
+<p>Fama, E. F., &amp; French, K. R. (1992). The cross-section of expected stock returns. <em>Journal of Finance</em>, 47(2), 427-465.</p>
+<p><strong>Hoberg, G., &amp; Phillips, G. M. (2016).</strong> Text-based network industries and endogenous product differentiation. <em>Journal of Political Economy</em>, 124(5), 1423-1465.</p>
+<p><strong>Hoberg, G., &amp; Phillips, G. M. (2018).</strong> Text-based industry momentum. <em>Journal of Financial and Quantitative Analysis</em>, 53(6), 2355-2388.</p>
+<p>Lee, M. C. (2024). Kiwi: Implementation of Korean morphological analyzer using statistical language model and skip-bigram. <em>Korean Journal of Digital Humanities</em>, 1(1), 109-136.</p>
+<p>Menzly, L., &amp; Ozbas, O. (2010). Market segmentation and cross‐predictability of returns. <em>Journal of Finance</em>, 65(4), 1555-1580.</p>
+<p>Moskowitz, T. J., &amp; Grinblatt, M. (1999). Do industries explain momentum? <em>Journal of Finance</em>, 54(4), 1249-1290.</p>
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>KAIST Graduate School of Business</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="presentation_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="presentation_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="presentation_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': true,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1600,
+
+        height: 900,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

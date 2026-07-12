@@ -1,0 +1,1403 @@
+ 
+ 
+Risk, Return, and Equilibrium: Empirical Tests
+Author(s): Eugene F. Fama and  James D. MacBeth
+Source: Journal of Political Economy, Vol. 81, No. 3 (May - Jun., 1973), pp. 607-636
+Published by: The University of Chicago Press
+Stable URL: https://www.jstor.org/stable/1831028
+Accessed: 03-11-2025 12:51 UTC
+ 
+JSTOR is a not-for-profit service that helps scholars, researchers, and students discover, use, and build upon a wide
+range of content in a trusted digital archive. We use information technology and tools to increase productivity and
+facilitate new forms of scholarship. For more information about JSTOR, please contact support@jstor.org.
+ 
+Your use of the JSTOR archive indicates your acceptance of the Terms & Conditions of Use, available at
+https://about.jstor.org/terms
+The University of Chicago Press is collaborating with JSTOR to digitize, preserve and
+extend access to Journal of Political Economy
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+Risk, Return, and Equilibrium:
+Empirical Tests
+Eugene F. Fama and James D. MacBeth
+University of Chicago
+This paper tests the relationship between average return and risk for
+New York Stock Exchange common stocks. The theoretical basis of
+the tests is the "two-parameter" portfolio model and models of market
+equilibrium derived from the two-parameter portfolio model. We can-
+not reject the hypothesis of these models that the pricing of common
+stocks reflects the attempts of risk-averse investors to hold portfolios
+that are "efficient" in terms of expected value and dispersion of return.
+Moreover, the observed "fair game" properties of the coefficients and
+residuals of the risk-return regressions are consistent with an "efficient
+capital market"-that is, a market where prices of securities fully
+reflect available information.
+I. Theoretical Background
+In the two-parameter portfolio model of Tobin (1958), Markowitz (1959),
+and Fama (1965b), the capital market is assumed to be perfect in the
+sense that investors are price takers and there are neither transactions
+costs nor information costs. Distributions of one-period percentage returns
+on all assets and portfolios are assumed to be normal or to conform to
+some other two-parameter member of the symmetric stable class. Investors
+are assumed to be risk averse and to behave as if they choose among
+portfolios on the basis of maximum expected utility. A perfect capital
+market, investor risk aversion, and two-parameter return distributions
+imply the important "efficient set theorem": The optimal portfolio for
+any investor must be efficient in the sense that no other portfolio with the
+same or higher expected return has lower dispersion of return.1
+Received August 24, 1971. Final version received for publication September 2, 1972.
+Research supported by a grant from the National Science Foundation. The com-
+ments of Professors F. Black, L. Fisher, N. Gonedes, M. Jensen, M. Miller, R. Officer,
+H. Roberts, R. Roll, and M. Scholes are gratefully acknowledged. A special note of
+thanks is due to Black, Jensen, and Officer.
+1 Although the choice of dispersion parameter is arbitrary, the standard deviation
+607
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+6o8 JOURNAL OF POLITICAL ECONOMY
+In the portfolio model the investor looks at individual assets only in
+terms of their contributions to the expected value and dispersion, or risk,
+of his portfolio return. With normal return distributions the risk of port-
+folio p is measured by the standard deviation, cY(Rp), of its return, Rp,2
+and the risk of an asset for an investor who holds p is the contribution of
+the asset to cY(Rp). If xip is the proportion of portfolio funds invested in
+asset i, ij - cov(Ri, Rj) is the covariance between the returns on assets i
+and j, and N is the number of assets, then
+N -N 1 Ntv
+i (Rp a;= E ILi j = cov (Rs Rp)
+Thus, the contribution of asset i to o(Rp)-that is, the risk of asset i in
+the portfolio p- is proportional to
+N
+E xjpaij/6(Rpu) cov (Ri, Rp)/ R)
+a R) = == ip aA
+Note that since the weights xj, vary from portfolio to portfolio, the risk
+of an asset is different for different portfolios.
+For an individual investor the relationship between the risk of an asset
+and its expected return is implied by the fact that the investor's optimal
+portfolio is efficient. Thus, if he chooses the portfolio m, the fact that m
+is efficient means that the weights xim, i -1, 2, .. ., N, maximize expected
+portfolio return
+N
+E(Rm) - Z Xir E(Ri),
+i==
+subject to the constraints
+is common when return distributions are assumed to be normal, whereas an inter-
+fractile range is usually suggested when returns are generated from some other
+symmetric stable distribution.
+It is well known that the mean-standard deviation version of the two-parameter
+portfolio model can be derived from the assumption that investors have quadratic
+utility functions. But the problems with this approach are also well known. In any
+case, the empirical evidence of Fama (1965a), Blume (1970), Roll (1970), K. Miller
+(1971), and Officer (1971) provides support for the "distribution" approach to the
+model. For a discussion of the issues and a detailed treatment of the two-parameter
+model, see Fama and Miller (1972, chaps. 6-8).
+We also concentrate on the special case of the two-parameter model obtained with
+the assumption of normally distributed returns. As shown in Fama (1971) or Fama
+and Miller (1972, chap. 7), the important testable implications of the general sym-
+metric stable model are the same as those of the normal model.
+2 Tildes (~) are used to denote random variables. And the one-period percentage
+return is most often referred to just as the return.
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+RISK, RETURN, AND EQUILIBRIUM 609
+N
+a(Rp) =(Rm) and Xim - 1.
+i==1
+Lagrangian methods can then be used to show that the weights xjm must
+be chosen in such a way that for any asset i in m
+N
+E(Ri) - E(Rm) - SmL Z X1mij ]n (1)
+where Sm is the rate of change of E(R') with respect to a change in
+o(Rp) at the point on the efficient set corresponding to portfolio m. If
+there are nonnegativity constraints on the weights (that is, if short selling
+is prohibited), then (1) only holds for assets i such that xim > 0.
+Although equation (1) is just a condition on the weights xjm that is re-
+quired for portfolio efficiency, it can be interpreted as the relationship be-
+tween the risk of asset i in portfolio m and the expected return on the asset.
+The equation says that the difference between the expected return on the
+asset and the expected return on the portfolio is proportional to the differ-
+ence between the risk of the asset and the risk of the portfolio. The pro-
+portionality factor is Snl, the slope of the efficient set at the point corres-
+ponding to the portfolio m. And the risk of the asset is its contribution to
+total portfolio risk, 6( R,)-
+II. Testable Implications
+Suppose now that we posit a market of risk-averse investors who make
+portfolio decisions period by period according to the two-parameter model.3
+We are concerned with determining what this implies for observable
+properties of security and portfolio returns. We consider two categories of
+implications. First, there are conditions on expected returns that are im-
+plied by the fact that in a two-parameter world investors hold efficient
+portfolios. Second, there are conditions on the behavior of returns through
+time that are implied by the assumption of the two-parameter model that
+the capital market is perfect or frictionless in the sense that there are
+neither transactions costs nor information costs.
+A. Expected Returns
+The implications of the two-parameter model for expected returns derive
+from the efficiency condition or expected return-risk relationship of equa-
+tion ( 1 ). First, it is convenient to rewrite ( 1 ) as
+3A multiperiod version of the two-parameter model is in Fama (1970a) or Fama
+and Miller (1972, chap. 8).
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+6io JOURNAL OF POLITICAL ECONOMY
+E(Ri) [E(Rm) - Sn, 0(Rm)] + Sm (Rm)f3i, (2)
+where
+N
+~~ 2 e ~xjmaij ~o
+cov(Ri, Rn,) =Zj cov(Ri, Rm)/y(Rm)
+2(RG ) - 0(Pa) (Rm)
+The parameter Pi can be interpreted as the risk of asset i in the portfolio
+m, measured relative to o(R,,), the total risk of m. The intercept in (2),
+E (RO) =-:E (Rsn) -Sm a (Rm), (4)
+is the expected return on a security whose return is uncorrelated with
+Rm-that is, a zero-0 security. Since ( 0 implies that a security con-
+tributes nothing to y(Rt,,), it is appropriate to say that it is riskless in this
+portfolio. It is well to note from (3), however, that since xim G.i . Xim
+o2(RI) is just one of the N terms in Pi, Hi 0 does not imply that security
+i has zero variance of return.
+From (4), it follows that
+E(Rnb) E(RO)
+Sm~ (R) ' (5)
+so that (2) can be rewritten
+E(Ri) E(R) + [E(Ril) E(R,)](3. (6)
+In words, the expected return on security i is E(R0,), the expected return
+on a security that is riskless in the portfolio m, plus a risk premium that
+is Pi times the difference between E(R,,.) and E(R)).
+Equation (6) has three testable implications: (Cl) The relationship
+between the expected return on a security and its risk in any efficient port-
+folio m is linear. (C2) Pi is a complete measure of the risk of security i in
+the efficient portfolio m; no other measure of the risk of i appears in (6).
+(C3) In a market of risk-averse investors, higher risk should be associated
+with higher expected return; that is, E(Real ) - E(R0) > 0.
+The importance of condition C3 is obvious. The importance of C1 and
+C2 should become clear as the discussion proceeds. At this point suffice it
+to say that if C1 and C2 do not hold, market returns do not reflect the
+attempts of investors to hold efficient portfolios: Some assets are syste-
+matically underpriced or overpriced relative to what is implied by the
+expected return-risk or efficiency equation (6).
+B. Market Equilibrium and the Efficiency of the Market Portfolio
+To test conditions C l-C3 we must identify some efficient portfolio m.
+This in turn requires specification of the characteristic of market equi-
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+RISK, RETURN, AND EQUILIBRIUM 6i i
+librium when investors make portfolio decisions according to the two-
+parameter model.
+Assume again that the capital market is perfect. In addition, suppose
+that from the information available without cost all investors derive the
+same and correct assessment of the distribution of the future value of any
+asset or portfolio-an assumption usually called "homogeneous expecta-
+tions." Finally, assume that short selling of all assets is allowed. Then
+Black (1972) has shown that in a market equilibrium, the so-called
+market portfolio, defined by the weights
+total market value of all units of asset i
+Xtm total market value of all assets
+is always efficient.
+Since it contains all assets in positive amounts, the market portfolio is
+a convenient reference point for testing the expected return-risk conditions
+C 1-C3 of the two-parameter model. And the homogeneous-expectations
+assumption implies a correspondence between ex ante assessments of
+return distributions and distributions of ex post returns that is also re-
+quired for meaningful tests of these three hypotheses.
+C. A Stochastic Model for Returns
+Equation (6) is in terms of expected returns. But its implications must be
+tested with data on period-by-period security and portfolio returns. We
+wish to choose a model of period-by-period returns that allows us to use
+observed average returns to test the expected-return conditions C1-C3,
+but one that is nevertheless as general as possible. We suggest the follow-
+ing stochastic generalization of (6):
+Rit = YOt + Alto + 7'2/j2 + '3tSi + Nit. (7)
+The subscript t refers to period t, so that Rit is the one-period percent-
+age return on security i from t - 1 to t. Equation (7) allows yet and yit
+to vary stochastically from period to period. The hypothesis of condition
+C3 is that the expected value of the risk premium 'it, which is the slope
+[E(Rn11) - E(R<t)] in (6), is positive-that is, E(71t) -E(Rmt) -
+E(R(t) > 0.
+The variable P12 is included in (7) to test linearity. The hypothesis of
+condition C1 is E(y.2t) .0 although yet is also allowed to vary stochasti-
+cally from period to period. Similar statements apply to the term involving
+sj in (7), which is meant to be some measure of the risk of security i that
+is not deterministically related to Pi. The hypothesis of condition C2 is
+E(7 t) - 0, but y3t can vary stochastically through time.
+The disturbance is assumed to have zero mean and to be independent
+of all other variables in (7). If all portfolio return distributions are to be
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+612 JOURNAL OF POLITICAL ECONOMY
+normal (or symmetric stable), then the variables Nt ?'t, 'y ht, Y2t and y3t
+must have a multivariate normal (or symmetric stable) distribution.
+D. Capital Market Efficiency: The Behavior of Returns through Time
+C1-C3 are conditions on expected returns and risk that are implied by
+the two-parameter model. But the model, and especially the underlying
+assumption of a perfect market, implies a capital market that is efficient in
+the sense that prices at every point in time fully reflect available informa-
+tion. This use of the word efficient is, of course, not to be confused with
+portfolio efficiency. The terminology, if a bit unfortunate, is at least
+standard.
+Market efficiency in combination with condition CI requires that scrutiny
+of the time series of the stochastic nonlinearity coefficient '2t does not
+lead to nonzero estimates of expected future values of y2t. Formally, Y2t
+must be a fair game. In practical terms, although nonlinearities are ob-
+served ex post, because Y2t is a fair game, it is always appropriate for the
+investor to act ex ante under the presumption that the two-parameter
+model, as summarized by (6), is valid. That is, in his portfolio decisions
+he always assumes that there is a linear relationship between the risk of
+a security and its expected return. Likewise, market efficiency in the two-
+parameter model requires that the non-( risk coefficient y t and the time
+series of return disturbances nit are fair games. And the fair-game hypo-
+thesis also applies to the time series of lit - [E(Rmt) - E(Rot)], the
+difference between the risk premium for period t and its expected value.
+In the terminology of Fama (1970b), these are "weak-form" proposi-
+tions about capital market efficiency for a market where expected returns
+are generated by the two-parameter model. The propositions are weak since
+they are only concerned with whether prices fully reflect any information
+in the time series of past returns. "Strong-form" tests would be concerned
+with the speed-of-adjustment of prices to all available information.
+E. Market Equilibrium with Riskless Borrowing and Lending
+We have as yet presented no hypothesis about y t in (7). In the general
+two-parameter model, given E(' t) E(73t) E("Qit) - 0 then, from
+(6), E(y)t) is just E(Rt), the expected return on any zero-d security.
+And market efficiency requires that t - E(R(t) be a fair game.
+But if we add to the model as presented thus far the assumption that
+there is unrestricted riskless borrowing and lending at the known rate R1t,
+then one has the market setting of the original two-parameter "capital asset
+pricing model" of Sharpe (1964) and Lintner (1965). In this world, since
+At 0, E(` t) - Rft. And market efficiency requires that $1t - Rft be
+a fair game.
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+RISK, RETURN, AND EQUILIBRIUM 613
+It is well to emphasize that to refute the proposition that E(7Yot) - Rft
+is only to refute a specific two-parameter model of market equilibrium.
+Our view is that tests of conditions C1-C3 are more fundamental. We
+regard C1-C3 as the general expected return implications of the two-
+parameter model in the sense that they are the implications of the fact
+that in the two-parameter portfolio model investors hold efficient portfolios,
+and they are consistent with any two-parameter model of market equi-
+librium in which the market portfolio is efficient.
+F.i The Hypotheses
+To summarize, given the stochastic generalization of (2) and (6) that is
+provided by (7), the testable implications of the two-parameter model
+for expected returns are:
+C1 (linearity)-E('2t)-- 0.
+C2 (no systematic effects of non-0 risk)-E(y:jt) - 0.
+C3 (positive expected return-risk tradeoff) E('1t) - E(R'1,)
+E(Rot) > 0.
+Sharpe-Lintner (S-L) Hypothesis-E(7 t) Rft.
+Finally, capital market efficiency in a two-parameter world requires
+ME (market efficiency) the stochastic coefficients Y2't, Y.-It, 7t
+[E(R,,,t) - E(R(t) j, 7f,- E(Rot), and the disturbances IVt are fair
+games.4
+III. Previous Work5
+The earliest tests of the two-parameter model were done by Douglas
+(1969), whose results seem to refute condition C2. In annual and quarterly
+return data, there seem to be measures of risk, in addition to (, that con-
+tribute systematically to observed average returns. These results, if valid,
+are inconsistent with the hypothesis that investors attempt to hold efficient
+portfolios. Assuming that the market portfolio is efficient, premiums are
+paid for risks that do not contribute to the risk of an efficient portfolio.
+Miller and Scholes (1972) take issue both with Douglas's statistical
+techniques and with his use of annual and quarterly data. Using different
+methods and simulations, they show that Douglas's negative results could
+be expected even if condition C2 holds. Condition C2 is tested below with
+extensive monthly data, and this avoids almost all of the problems dis-
+cussed by Miller and Scholes.
+If Y'Y.f and Y are fair games, then E(y.,,) = E( -t) -0. Thus, C1 and C2 are
+implied by ME. Keeping the expected return conditions separate, however, better
+emphasizes the economic basis of the various hypotheses.
+5 A comprehensive survey of empirical and theoretical work on the two-parameter
+model is in Jensen (1972).
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+6I4 JOURNAL OF POLITICAL ECONOMY
+Much of the available empirical work on the two-parameter model is
+concerned with testing the S-L hypothesis that E(70ot) - Rft. The tests of
+Friend and Blume (1970) and those of Black, Jensen, and Scholes (1972)
+indicate that, at least in the period since 1940, on average yot is system-
+atically greater than Rft. The results below support this conclusion.
+In the empirical literature to date, the importance of the linearity condi-
+tion C1 has been largely overlooked. Assuming that the market portfolio
+m is efficient, if E('2t) in (7) is positive, the prices of high-( securities
+are on average too low-their expected returns are too high-relative to
+those of low-0 securities, while the reverse holds if E(2't) is negative. In
+short, if the process of price formation in the capital market reflects the
+attempts of investors to hold efficient portfolios, then the linear relation-
+ship of (6) between expected return and risk must hold.
+Finally, the previous empirical work on the two-parameter model has
+not been concerned with tests of market efficiency.
+IV. Methodology
+The data for this study are monthly percentage returns (including divi-
+dends and capital gains, with the appropriate adjustments for capital
+changes such as splits and stock dividends) for all common stocks traded
+on the New York Stock Exchange during the period January 1926 through
+June 1968. The data are from the Center for Research in Security Prices
+of the University of Chicago.
+A. General Approach
+Testing the two-parameter model immediately presents an unavoidable
+"errors-in-the-variables" problem: The efficiency condition or expected
+return-risk equation (6) is in terms of true values of the relative risk
+measure Pi, but in empirical tests estimates, Hi, must be used. In this paper
+A cov (Ri, Rm )
+where cov(Ri, R,,,) and a'(Rm) are estimates of cov(Ri, R,,) and 62(Rm)
+obtained from monthly returns, and where the proxy chosen for Rmt is
+"Fisher's Arithmetic Index," an equally weighted average of the returns
+on all stocks listed on the New York Stock Exchange in month t. The
+properties of this index are analyzed in Fisher (1966).
+Blume (1970) shows that for any portfolio p, defined by the weights
+xip, i - 1, 2, . . . , NN
+g cov(Rp, Rr) v cov(Ri, Rm) Z
+I p- 0*'(Rn) (R,) x ~i=1
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+RISK, RETURN, AND EQUILIBRIUM 615
+If the errors in the 1 are substantially less than perfectly positively cor-
+related, the Rt's of portfolios can be much more precise estimates of true
+P's than the 03's for individual securities.
+To reduce the loss of information in the risk-return tests caused by
+using portfolios rather than individual securities, a wide range of values
+of portfolio it's is obtained by forming portfolios on the basis of ranked
+values of jb for individual securities. But such a procedure, naYvely exe-
+cuted could result in a serious regression phenomenon. In a cross section
+of V, high observed j tend to be above the corresponding true fPj and low
+observed ^Pi tend to be below the true Pi. Forming portfolios on the basis
+of ranked /j thus causes bunching of positive and negative sampling errors
+within portfolios. The result is that a large portfolio jUp would tend to over-
+state the true PP, while a low Pp would tend to be an underestimate.
+The regression phenomenon can be avoided to a large extent by forming
+portfolios from ranked ,j computed from data for one time period but then
+using a subsequent period to obtain the 'P for these portfolios that are
+used to test the two-parameter model. With fresh data, within a portfolio
+A
+errors in the individual security P3 are to a large extent random across
+securities, so that in a portfolio %p the effects of the regression phenomenon
+are, it is hoped, minimized.6
+B. Details
+The specifics of the approach are as follows. Let N be the total number of
+securities to be allocated to portfolios and let int(N/20) be the largest
+integer equal to or less than N120. Using the first 4 years (1926-29) of
+monthly return data, 20 portfolios are formed on the basis of ranked i
+for individual securities. The middle 18 portfolios each has int(N/20)
+securities. If N is even, the first and last portfolios each has int(N/20) +
+-') [N - 20 int(N/20) ] securities. The last (highest ^3) portfolio gets an
+additional security if N is odd.
+The following 5 years (1930-34) of data are then used to recompute
+the Hi, and these are averaged across securities within portfolios to obtain
+20 initial portfolio Apt for the risk-return tests. The subscript t is added to
+indicate that each month t of the following four years (1935-38) these
+1pt are recomputed as simple averages of individual security Pi, thus ad-
+justing the portfolio jpt month by month to allow for delisting of securi-
+ties. The component Ad for securities are themselves updated yearly-that
+6 The errors-in-the-variables problem and the technique of using portfolios to
+solve it were first pointed out by Blume (1970). The portfolio approach is also used
+by Friend and Blume (1970) and Black, Jensen, and Scholes (1972). The regression
+phenomenon that arises in risk-return tests was first recognized by Blume (1970)
+and then by Black, Jensen, and Scholes (1972), who offer a solution to the problem
+that is similar in spirit to ours.
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+6i6 JOURNAL OF POLITICAL ECONOMY
+is, they are recomputed from monthly returns for 1930 through 1935,
+1936, or 1937.
+As a measure of the non-0 risk of security i we use s('tj), the standard
+deviation of the least-squares residuals 'it from the so-called market model
+Rit = ai + Pi Rmt + Zjt. (8)
+The standard deviation s(ti.) is a measure of non-0 risk in the following
+sense. One view of risk, antithetic to that of portfolio theory, says that
+the risk of a security is measured by the total dispersion of its return
+distribution. Given a market dominated by risk averters, this model would
+predict that a security's expected return is related to its total return dis-
+persion rather than just to the contribution of the security to the dispersion
+in the return on an efficient portfolio.7 If Bi Go cov (Ri, R,) /a2(Rf), then
+in (8) cov( Eii, Rm) - 0, and
+(Ri) -- i32o2(Rm) + E2(i) + 2 Picov(Rm, A). (9)
+Thus, from (9), one can say that s(ti) is an estimate of that part of the
+dispersion of the distribution of the return on security i that is not directly
+related to P3i.
+The month-by-month returns on the 20 portfolios, with equal weighting
+of individual securities each month, are also computed for the 4-year
+period 1935-38. For each month t of this period, the following cross-
+sectional regression-the empirical analog of equation (7)-is run:
+Rpt = cot + fit Apt-l + 72t 2 + ?3tSpstl-(hi) + Pt (10)
+p - 1,2,... ,20.
+The independent variable Ap t-l is the average of the A* for securities in
+portfolio p discussed above; i92pt_ is the average of the squared values
+of these fi, (and is thus somewhat mislabeled); and Tpjt_-(?i.) is likewise
+the average of s(,X) for securities in portfolio p. The s(^E) are computed
+from data for the same period as the component Pi of kt-1, and like these
+ti, they are updated annually.
+The regression equation (10) is (7) averaged across the securities in a
+portfolio, with estimates (plt-1, 32p't-1, and spjt_('u) used as explanatory
+variables, and with least-squares estimates of the stochastic coefficients
+Ybt, Yet, ?2t, and y3t. The results from (10)-the time series of month-by-
+month values of the regression coefficients 9ot, ?11t, t2t, and at for the
+4-year period 1935-38-are the inputs for our tests of the two-parameter
+model for this period. To get results for other periods, the steps described
+7 For those accustomed to the portfolio viewpoint, this alternative model may
+seem so naive that it should be classified as a straw man. But it is the model of risk
+and return implied by the "liquidity preference" and "market segmentation" theories
+of the term structure of interest rates and by the Keynesian "normal backwardation"
+theory of commodity futures markets. For a discussion of the issues with respect to
+these markets, see Roll (1970) and K. Miller (1971).
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+RISK, RETURN, AND EQUILIBRIUM 617
+above are repeated. That is, 7 years of data are used to form portfolios;
+the next 5 years are used to compute initial values of the independent
+variables in (10); and then the risk-return regressions of (10) are fit
+month by month for the following 4-year period.
+The nine different portfolio formation periods (all except the first 7
+years in length), initial 5-year estimation periods, and testing periods (all
+but the last 4 years in length) are shown in table 1. The choice of 4-year
+testing periods is a balance of computation costs against the desire to
+reform portfolios frequently. The choice of 7-year portfolio formation
+periods and 5-8-year periods for estimating the independent variables
+Ppst-l and sp,tI (f) in the risk-return regressions reflects a desire to bal-
+ance the statistical power obtained with a large sample from a stationary
+process against potential problems caused by any nonconstancy of the Pit.
+The choices here are in line with the results of Gonedes (1973). His
+results also led us to require that to be included in a portfolio a security
+available in the first month of a testing period must also have data for all
+5 years of the preceding estimation period and for at least 4 years of the
+portfolio formation period. The total number of securities available in the
+first month of each testing period and the number of securities meeting
+the data requirement are shown in table 1.
+C. Some Observations on the Approach
+Table 2 shows the values of the 20 portfolios fkvt-1 and their standard
+errors s(0ptj) for four of the nine 5-year estimation periods. Also shown
+are: r(RA, R, )2, the coefficient of determination between Rpt and Rest;
+s(Rp), the sample standard deviation of Rp; and s(Ep), the standard devia-
+tion of the portfolio residuals from the market model of (8), not to be
+confused with spvt1 (h), the average for individual securities, which is also
+shown. The jkt- and -S E ) are the independent variables in the risk
+return regressions of (10) for the first month of the 4-year testing periods
+following the four estimation periods shown.
+Under the assumptions that for a given security the disturbances Ejt in
+(8) are serially independent, independent of Rmt, and identically distrib-
+uted through time, the standard error of NI is
+( N/fl ( Rm )
+where n is the number of months used to compute Pi. Likewise,
+/ (it t1 ) 5 -" -
+Thus, the fact that in table 2, s(Ep) is generally on the order of one-third
+to one-seventh sp'tE(fi,) implies that s(Nj-1) is one-third to one-seventh
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+6i8 JOURNAL OF POLITICAL ECONOMY
+TABLE 1
+PORTFOLIO FORMATION, ESTIMATION, AND TESTING PERIODS
+PERIODS
+1 2 3 4 5
+Portfolio formation period ... 1926-29 1927-33 1931-37 1935-41 1939-45
+Initial estimation period . 1930-34 1934-38 1938-42 1942-46 1946-50
+Testing period .1935-38 1939-42 1943-46 1947-50 1951-54
+No. of securities available 710 779 804 908 1,011
+No. of securities meeting
+data requirement .435 576 607 704 75 1
+s(f,). Estimates of ( for portfolios are indeed more precise than those for
+individual securities.
+Nevertheless, it is interesting to note that if the disturbances 3jt in (8)
+were independent from security to security, the relative increase in the
+precision of the AP obtained by using portfolios rather than individual
+securities would be about the same for all portfolios. We argue in the
+Appendix, however, that the results from (10) imply that the fit in (8) are
+interdependent, and the interdependence is strongest among high-0 secu-
+rities and among low-e securities. This is evident in table 2: The ratios
+s('p) /pt-1 ('i) are always highest at the extremes of the pt-I range and
+lowest for Ppet_1 close to 1.0. But it is important to emphasize that since
+these ratios are generally less than .33, interdependence among the fit of
+different securities does not destroy the value of using portfolios to reduce
+the dispersion of the errors in estimated 0's.
+Finally, all the tests of the two-parameter model are predictive in the
+sense that the explanatory variables (,t-1 and Spt-1('(i) in (10) are com-
+puted from data for a period prior to the month of the returns, the Rpt, on
+which the regression is run. Although we are interested in testing the two-
+parameter model as a positive theory that is, examining the extent to
+which it is helpful in describing actual return data-the model was initially
+developed by Markowitz (1959) as a normative theory-that is, as a model
+to help people make better decisions. As a normative theory the model only
+has content if there is some relationship between future returns and esti-
+mates of risk that can be made on the basis of current information.
+Now that the predictive nature of the tests has been emphasized, to
+simplify the notation, the explanatory variables in (10) are henceforth
+referred to as fp (3p2, and s('~).
+V. Results
+The major tests of the implications of the two-parameter model are in
+table 3. Results are presented for 10 periods: the overall period 1935-
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+RISK, RETURN, AND EQUILIBRIUM 6I9
+TABLE 1 (Continued)
+PERIODS
+6 7 8 9
+Portfolio formation period ... 1943-49 1947-53 1951-57 1955-61
+Initial estimation period ...... 1950-54 1954-58 1958-62 1962-66
+Testing period .............. 1955-58 1959-62 1963-66 1967-68
+No. of securities available ... . 1,053 1,065 1,162 1,261
+No. of securities meeting
+data requirement .......... 802 856 858 845
+6/68; three long subperiods, 1935-45, 1946-55, and 1956-6/68; and six
+subperiods which, except for the first and last, cover 5 years each. This
+choice of subperiods reflects the desire to keep separate the pre- and post-
+WVorld War II periods. Results are presented for four different versions of
+the risk-return regression equation (10): Panel D is based on (10) itself,
+but in panels A-C, one or more of the variables in (10) is suppressed.
+For each period and model, the table shows: ^j, the average of the month-
+by-month regression coefficient estimates, Yjt; s(9j), the standard devia-
+tion of the monthly estimates; and r' and s(r2), the mean and standard
+deviation of the month-by-month coefficients of determination, rt2, which
+are adjusted for degrees of freedom. The table also shows the first-order
+serial correlations of the various monthly Vjt computed either about the
+sample mean of jt [in which case the serial correlations are labeled
+p,1(I) ] or about an assumed mean of zero [in which case they are labeled
+p(,(j)]. Finally, t-statistics for testing the hypothesis that \j = 0 are pre-
+sented. These t-statistics are
+s (% ) / 'n
+where n is the number of months in the period, which is also the number
+of estimates ?jt used to compute %j and s(9j).
+In interpreting these t-statistics one should keep in mind the evidence
+of Fama (1965a) and Blume (1970) which suggests that distributions of
+common stock returns are "thick-tailed" relative to the normal distribu-
+tion and probably conform better to nonnormal symmetric stable distribu-
+tions than to the normal. From Fama and Babiak (1968), this evidence
+means that when one interprets large t-statistics under the assumption that
+the underlying variables are normal, the probability or significance levels
+obtained are likely to be overestimates. But it is important to note that,
+with the exception of condition C3 (positive expected return-risk tradeoff),
+upward-biased probability levels lead to biases toward rejection of the
+hypotheses of the two-parameter model. Thus, if these hypotheses cannot
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+620 JOURNAL OF POLITICAL ECONOMY
+TABLE 2
+SAMPLE STATISTICS FOR FOUR SELECTED ESTIMATION PERIODS
+Statistic 1 2 3 4 5 6 7 8 9 10
+Portfolios for Estimation Period 1934-38
+p't-l ... ........ .322 .508 .651 .674 .695 .792 .921 .942 .970 1.005
+S( t 1) ........ .027.027 027 .025 .023 .028 .026 .032 .029 .034 .02 7
+r(Rp, Rm) 2 ....... .709 .861 .921 .936 .912 .941 .932 .946 .933 .958
+s (R p) ............ .040 .058 .072 .074 .077 .087 .101 .103 .106 .109
+S (p ............. .022 .022 .020 .019 .023 .021 .026 .024 .028 .022
+p -t _1 () .......... . 085 .075 .083 .078 .090 .095 .109 .106 .111 .097
+S ('tp) I' t- 1 (,i~) .. .259 .293 .241 .244 .256 .221 .238 .226 .252 .227
+Portfolios for Estimation Period 1942-46
+ftp.t-1 .467 .537 .593 .628 .707 .721 .770 .792 .805 .894
+s (pt-1) ......... .045 .041 .044 .037 .02 7 .032 .035 .035 .028 .040
+r(Rp, Rm) 2 ....... .645 .745 .753 .829 .919 .898 .889 .898 .934 .896
+s (R p)........... .035 .037 .041 .041 .044 .046 .049 .050 .050 .057
+step) ............. .021 .019 .020 .017 .013 .015 .016 .016 .013 .018
+SP - 1 () . . 055 .055 .063 .058 .058 .063 .064 .064 .062 .069
+S (2p) /Sp t 1 . . .382 .345 .317 .293 .224 .238 .250 .250 .210 .261
+Portfolios for Estimation Period 1950-54
+P t_ 1 ............ .418 .590 .694 .751 .777 .784 .929 .950 .996 1.014
+s t_) ........ .042 .047 .045 .037 .038 .035 .050 .038 .035 .029
+r (Rp, Rm) 2 ....... .629 .723 .798 .872 .878 .895 .856 .913 .933 .954
+s (R p)............ .019 .025 .028 .029 .030 .030 .036 .036 .037 .038
+S(fp) ............. .012 .013 .013 .010 .010 .010 .014 .011 .010 .008
+PsIt l1(d.).*---* .040 .044 .046 .048 .051 .051 .052 .053 .054 .057
+S (' p )Ip ~ t - (i) .300 .295 .283 .208 .196 .196 .269 .208 .185 .140
+Portfolios for Estimation Period 1958-62
+t ........... .626 .635 .719 .801 .817 .860 .920 .950 .975 .995
+S _(Pt- 1) ........ 043 .048 .039 .046 .047 .033 .037 .038 .032 .037
+r(Ry, Rm) 2 ....... .783 .745 .851 .835 .838 .920 .913 .915 .939 .925
+s (R ,) ............ .030 .031 .033 .037 .038 .038 .041 .042 .043 .044
+S (e) ............. .014 .016 .013 .015 .015 .011 .012 .012 .011 .012
+p. t - 1 () ............. .049 .052 .056 .059 .064 .061 .070 .069 .068 .064
+S (I'p) /.p, t (i) . . .286 .308 .232 .254 .234 .180 .171 .174 .162 .188
+be rejected when t-statistics are interpreted under the assumption of nor-
+mality, the hypotheses are on even firmer ground when one takes into
+account the thick tails of empirical return distributions.
+Further justification for using t-statistics to test hypotheses on monthly
+common stock returns is in the work of Officer (1971). Under the assump-
+tion that distributions of monthly returns are symmetric stable, he esti-
+mates that in the post-World War II period the characteristic exponent
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+RISK, RETURN, AND EQUILIBRIUM 62 1
+TABLE 2 (Continued)
+Statistic 11 12 13 14 15 16 17 18 19 20
+Portfolios for Estimation Period 1934-38
+SPPt- I ............. 1.046 1.122 1.181 1.192 1.196 1.295 1.335 1.396 1.445 1.458
+s(p t 1) ........ .028 .031 .035 .028 .029 .032 .032 .053 .039 .053
+r(Rp1 Rm)2 ....... ,. 959 .956 .951 .969 .966 .966 .967 .922 .958 .92 7
+s(Rp)............ .113 .122 .128 .128 .129 .140 .144 .154 .156 .160
+s (iUp) .............. . 023 .026 .029 .023 .024 .026 .026 .043 .032 .043
+P. t_ . 1 ......... .094 .124 .120 .122 .132 .125 .129 .158 .145 .170
+s P (p p -1) . .245 .210 .242 .188 .182 .208 .202 .272 .221 .253
+Portfolios for Estimation Period 1942-46
+SP. t I ......... .949 .952 1.010 1.038 1.254 1.312 1.316 1.473 1.631 1.661
+S (P. t - I) ....... . .031 .036 .040 .030 .034 .039 .041 .084 .083 .077
+r (Rp, Rm) 2 ....... .942 .923 .917 .954 .958 .951 .945 .839 .867 .887
+s(Rp) ............ .059 .060 .063 .064 .077 .081 .081 .097 .105 .106
+S (2p ............. .014 .016 .018 .014 .016 .018 .019 .039 .038 .036
+TP, t-- 1 (f ........ .073 .074 .085 .077 .096 .083 .086 .134 .117 .122
+sagp) sp, t _1(t . . .192 .216 .212 .182 .167 .217 .221 .291 .325 .295
+Portfolios for Estimation Period 1950-54
+............ 1.117 1.123 1.131 1.134 1.186 1.235 1.295 1.324 1.478 1.527
+S( t -1 ) .......... . 039 .02 7 .044 .033 .03 7 .049 .045 .046 .058 .086
+r (R p Rol) 2 ....... .934 .968 .919 .952 .944 .915 .933 .934 .917 .841
+s (R p ).. .......... .042 .041 .043 .042 .044 .047 .049 .050 .056 .060
+s(1p) ............. .011 .007 .012 .009 .010 .014 .013 .013 .016 .024
+Tp t- I (hi) ........ .066 .057 .066 .060 .064 .064 .065 .068 .076 .088
+SpSs) t-l~g) . . .167 .123 .182 .150 .156 .219 .200 .192 .210 .273
+Portfolios for Estimation Period 1958-62
+OptsI ............ 1.013 1.019 1.037 1.048 1.069 1.081 1.092 1.098 1.269 1.388
+s ( [p tI ) ......... .038 .031 .036 .033 .036 .038 .045 .045 .048 .065
+r(Ray R1") 2 ....... .922 .948 .934 .945 .936 .93 1 .907 .910 .922 .886
+s (R p )............ .045 .045 .046 .046 .047 .048 .049 .049 .056 .063
+s(2p) ............. .013 .010 .012 .011 .012 .013 .015 .015 .016 .02 1
+P- t - I ('h) ............ .069 .066 .067 .062 .070 .072 .076 .068 .070 .078
+S (e'P) /S X t l(i) . .188 .152 .179 .177 .171 .180 .197 .220 .228 .269
+for these distributions is about 1.8 (as compared with a value of 2.0 for a
+normal distribution). From Fama and Roll (1968), for values of the char-
+acteristic exponent so close to 2.0 stable nonnormal distributions differ
+noticeably from the normal only in their extreme tails-that is, beyond
+the .05 and .95 fractiles. Thus, as long as one is not concerned with pre-
+cise estimates of probability levels (always a somewhat meaningless activ-
+ity), interpreting t-statistics in the usual way does not lead to serious errors.
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+0 C, s0 C0 0 t - -- 0 0 CDO0 C- CO
+o2~~~~~~~~~~~oC
+In C) to 0),1o C) t q e s w C) )) t 1
+0_ 00 ) t0 --1 0 0n n ,t 00In
+. ! .. . ... ... ..... . ....
+K: t/ 00)0) 0 ... .. -0 0 )h s ............... 14 t-) 0)0C- t. - .o .........., 00 _
+e b' C'- . --t1 ...... -l ...In In 1t'
+6 ~~~~~~~~~ 0 0)00~~~~~~~CDI I t , '
+O~~~~~~~~~~~~~~~~~~~~1 -C0 C~lr CC
+Ct.r- )00 ) Ch I _ 1t ) 00 0)00D
+<> CN 0~ tLtL tL 1/ / )00 t- s t s tt
+in C D oc t_ t.- CDo CD I CD In _t.00000000
+z .
+7-1 ~ ~ ~
+z - I~~~~~~~~~~~~~~~~~~~~~~In I )n r
+<:0) 0) 00)0) 0)0)000)~~~~~~~~~~~~) 0 C0 ) C) C0) 0) -0-t C
+<o 00 t- I ,I -)00 0 00 a, - ) 00
+-- . 0, - 1 - 00 0 000 0
+<:0
+~~~~. )-.- - -.. . .0 O .... Q- o..... g )t
+O + <0 0 0 0 00 0 - 0- - 00
+0 C) -t-. o t ,- .o o0 0) D- CDO CD00
+X~~~~~~~~~~~C C: CH CCC ~C !C ! C ! ~C ~C ~C ~
+0 00 0000000 0 0 000 00 n00 00 C
+0) 0 0 t_ r-) -0-0 C) "-t
+0) " 000- 0-0-00"
+U . .0 . ... . ..... . . . ) c -0 C
+0) .00).0 *I- oo 0 0C t 00 1 00-0
+[a.;~ 00 000000. ......... 0 000 000000
+0 0 0 0.000)0,) CDV-0 oo0 .I 0),n )- )0
+C. C 0)). 0)C00 ) -0 0- I C00 ) - '0-000) o
+s | . i 000 000t--/ 0 ........ 0 00140 0-00-/\3100
+000 0D 0 IC _ 00000 0.00 . 00 00-0
+gi - ~~~~~~~~0t In 00 0 C,] t- h In t ......... _ 'o - ,t ) t-D " "
+>~ ~ ~ ~ ~~~~~~C C)C'-) C C) 1ne e -e .......... CD C C c) -C)C) C
+o) R o0) 00 00 0) 00 00
+o .t t 0t0 10 .0 .0 0) 10
+- .. >I) oo Ct-0) 10 C) t-_0 0to00
+0 0 oJ-n 0 ,I- -'n .0.0 .o 0 I-n. I-')o.0
+0 0.00 0~0)0-- 0 00)0 0-0-0-0
+0 000 000000 0 000 000000
+0 -0 n 1-0
+0>I In .1 ' . '1
+, a, o 111, o
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+-lk - ~ cr 0 0 0' . C C o D O _
+)). - 0)0)0) /o~ 0) 0) 0)0 ) C0o ) o 0
+In C7 O7 _ , r o 00 ,d- 'O C0
+2 >
+00 0000 o--.-o0~~~~~~~t - CDo C-4 00
+C CD Cxco , I o~o - 0 0 ) r) - 00
+K ,-- l- .- - C T00 C,~ rl l -I C n"-I
+~~~~~~I KfIU I~~ N ~mx
+0 0000 00-0 co 1-c r)-0 _- I00000)
+- 0)-0 r)0 0 CD CD _ t0 0-0,- CD )
+1 K I - o C r _ i 4 c 4 co C4 In
+Co C! O C~e cCE
+1<b'. o . .00 0 ))).-~ 0 . 0 -. oo __ord
+0 00 000-. -11 1o~ --.)
+_ _ N~ - -)0 1) 00
+I CO. 0000 0o000 0 00 . D000 -.0
+OA - 00-- ,00-- -0 _- _ 0 C
+H 10 1 11 1 1111 1
+. . . o00 00
+00 t - t 4o ,0- 0)- O 0-0-0)-
+<b I C C O O -.o C0 00C 0 00io n 00o
+0 ...........
+g <Z"? I l ~~~~~~~~~~~~~~~ll C ll C ll
+0) C,0 00 0)0In )NC0 C4 0)
+X \0 00 0 -0000 Ch O O \0 -00-31 0 _ 0 r- I In In ruX
+o :)0 0--0 000--0 0- 00 r- 0 0 00 - 000
+00 .~ . . Oo rooo 00 db-000 en)0-
+0 . 0 IC, ) . .- . 00 CD tri 00 t-o ) - C0
+- 00000 , -0 C 'n0 0 -000 0 - 0 o00 -
+000 0 0 0-0 0 000 000000
+-\ . .. .. ..
+ll, ~ ~ 0 000 00)0)00
+In C] 0 0 Ct- 0-0 D ,)- * )t
+o o)C0 0 0. O0 . 0 0r0) -) -.)-. r00 o t- o C,
+0 000 -0000 - -00- -0-0C00
+(,A, 0 000 00000 . . C0 0 00 0 - 0 0 0 00 00
+_ O -- t- tr)00 .C - 0 , 0-t-r > -
+K2 0 0-0 000--0 ~~~~~~~0 CD000 0000-00
+4(< tr) t_ e t r~~~t u0 e C) t t~ C C C C_ C> t C) C t-
+-0 000 000000 0 000 "00000
+0 _0 00 > t 00 00 00 00
+0 00 00 CD0 0 , 00 00 0
+0 0000 0 0)00000 00 0)00 )000000
+00 0000000 0 0 00 5 .0 00 00000 00-00..00
+0 000 000000 C0 000 000000
+X _ ey O e s 1 0 t0 t0
+-- > -) CD n CD t _ t) CD In CD \0 t-t
+ON ON ON ON C0 C r C>_ Ct C ) C, C> Cr aC> C, tC C, rC> aC
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+624 JOURNAL OF POLITICAL ECONOMY
+Inferences based on approximate normality are on even safer ground if
+one assumes, again in line with the results of Officer (1971), that although
+they are well approximated by stable nonnormal distributions with a -- 1.8,
+distributions of monthly returns in fact have finite variances and converge-
+but very slowly-toward the normal as one takes sums or averages of indi-
+vidual returns. Then the distributions of the means of month-by-month
+regression coefficients from the risk-return model are likely to be close to
+normal since each mean is based on coefficients for many months.
+A. Tests of the Major Hypotheses of the Two-Parameter Model
+Consider first condition C2 of the two-parameter model, which says that
+no measure of risk, in addition to I, systematically affects expected
+returns. This hypothesis is not rejected by the results in panels Cand D
+of table 3. The values of t(y3) are small, and the signs of the t(y3) are
+randomly positive and negative.
+Likewise, the results in panels B and D of table 3 do not reject condi-
+tion C1 of the two-parameter model, which says that the relationship be-
+tween expected return and ( is linear. In panel B, the value of t(y2) for
+the overall period 1935-6/68 is only -.29. In the 5-year subperiods,
+t(r2) for 1951-55 is approximately -2.7, but for subperiods that do not
+cover 1951-55, the values of t(^2) are much closer to zero.
+So far, then, the two-parameter model seems to be standing up well to
+the data. All is for naught, however, if the critical condition C3 is rejected.
+That is, we are not happy with the model unless there is on average a
+positive tradeoff between risk and return. This seems to be the case. For
+the overall period 1935-6/68, t(71) is large for all models. Except for the
+period 1956-60, the values of t(^y,) are also systematically positive in the
+subperiods, but not so systematically large.
+The small t-statistics for subperiods reflect the substantial month-to-
+month variability of the parameters of the risk-return regressions. For
+example, in the one-variable regressions summarized in panel A, for the
+period 1935-40, 9- .0109. In other words, for this period the average
+incremental return per unit of ( was almost 1.1 percent per month, so that
+on average, bearing risk had substantial rewards. Nevertheless, because of
+the variability of ^it-in this period s(51) is 11.6 percent per month (!)-
+t(?1) is only .79. It takes the statistical power of the large sample for the
+overall period before values of 9i that are large in practical terms also
+yield large t-values.
+But at least with the sample of the overall period t(Q,) achieves values
+supportive of the conclusion that on average there is a statistically observ-
+able positive relationship between return and risk. This is not the case with
+respect to t(92) and t(Y3). Even, or indeed especially, for the overall
+period, these t-statistics are close to zero.
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+RISK, RETURN, AND EQUILIBRIUM 62 5
+The behavior through time of t 9u, and 9:t is also consistent with
+hypothesis ME that the capital market is efficient. The serial correlations
+pr,,(91), pO(Q)), and p,,(':j), are always low in terms of explanatory power
+and generally low in terms of statistical significance. The proportion of
+the variance of 'Yt explained by first-order serial correlation is estimated
+by p(7j)2 which in all cases is small. As for statistical significance, under
+the hypothesis that the true serial correlation is zero, the standard devia-
+tion of the sample coefficient can be approximated by a(p) - 1/ n. For
+the overall period, a(^) is approximately .05, while for the 10- and 5-year
+subperiods G(,) is approximately .09 and .13, respectively. Thus, the
+values of pjlr(?), pf,("y't), and po(q:j) in table 3 are generally statistically
+close to zero. The exceptions involve primarily periods that include the
+1935-40 subperiod, and the results for these periods are not independent.8
+A
+To conserve space, the serial correlations of the portfolio residuals, ivt,
+are not shown. In these serial correlations, negative values predominate.
+But like the serial correlations of the 9's, those of the ?'s are close to zero.
+Higher-order serial correlations of the "'s and -l's have been computed, and
+these also are never systematically large.
+In short, one cannot reject the hypothesis that the pricing of securities
+is in line with the implications of the two-parameter model for expected
+returns. And given a two-parameter pricing model, the behavior of returns
+through time is consistent with an efficient capital market.
+B. The Behavior of the Market
+Some perspective on the behavior of the market during different periods
+and on the interpretation of the coefficients Yot and Vit in the risk-return
+regressions can be obtained from table 4. For the various periods of table 3,
+table 4 shows the sample means (and with some exceptions), the standard
+M The serial correlations of 9.> and A about means that are assumed to be zero
+provide a test of the fair game property of an efficient market, given that expected
+returns are generated by the two-parameter model-that is, given E(t.,t) =E(y )
+0. Likewise, P)()ty - Rft) provides a test of market efficiency with respect to the
+behavior of 9" through time, given the validity of the Sharpe-Lintner hypothesis
+(about which we have as yet said nothing). But, at least for Dot and A computing
+the serial correlations about sample means produces essentially the same results.
+To test the market efficiency hypothesis on '-t [E(R,1t) - E(1R%)) I, the sample
+mean of the ylt is used to estimate E(Rm) - E(Rlf~), thus implicitly assuming that
+the expected risk premium is constant. That this is a reasonable approximation [in
+the sense that the pAd (%) are small ], probably reflects the fact that variation in
+E(R111 - E(Rf,1) is trivial relative to the month-by-month variation in l
+Finally, it is well to note that in terms of the implications of the serial correlations
+for making good portfolio decisions-and thus for judging whether market efficiency
+is a workable representation of reality-the fact that the-serial correlations are low
+in terms of explanatory power is more important than whether or not they are low
+in terms of statistical significance.
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+626 JOURNAL OF POLITICAL ECONOMY
+TABLE 4
+THE BEHAVIOR OF THE MARKET
+STATISTIC*
+RR_-Rt t
+PERIOD Rm Rm-Rt A Q Rt s(Rm) s(Rm) s(Rrn) s(Rm)
+1935-6/68 ..... .0143 .0130 .0085 .0061 .0013 .2 136 .1388 .061 .066
+1935-45 ....... .0197 .0195 .0163 .0039 .0002 .2207 .1844 .089 .098
+1946-55 . 0112 .0103 .0027 .0087 .0009 .2378 .0614 .043 .041
+1956-6/68 . 0121 .0095 .0062 .0060 .0026 .2387 .1560 .040 .044
+1935-40 ....... . 0132 .0132 .0109 .0024 .0001 .1221 .1009 .108 .116
+1941-45 ....... . 0274 .0272 .0229 .0056 .0002 .4715 .3963 .058 .069
+1946-50 ....... . 0077 .0070 .0029 .0050 .0007 .1351 .0564 .052 .047
+1951-55 ....... .0148 .0136 .0024 .0123 .0012 .4174 .0735 .033 .035
+1956-60 ....... .0090 .0070 --.7.0059 .0148 .0020 .2080 -.1755 .034 .034
+1961-6/68 .0141 .0111 .0143 .0001 .0030 .2567 .3294 .043 .048
+* Since s(R,) is so small relative to s(R.n) s(Rrn - which is not shown, is essentially the same
+as s(Rl). The standard deviations of (Rm - R)/s(R?,t) and 9l/s(R.), also not shown, can be
+obtained directly from s(RnL - R,) s(A ) and s(Rm). Finally, the t-statistics for (Rm, - Rt)s(Rm,,)
+and 91/S(Rrl) are identical with those for R,-, and -Ra
+deviations, t-statistics for sample means, and first-order serial correlations
+for the month-by-month values of the following variables and coefficients:
+the market return R,,,t; the riskless rate of interest Rft, taken to be the
+yield on 1-month Treasury bills; Rmt - Rft; (Rmt - Rft)ls(Rn); got
+and "yt, repeated from panel A of table 3; and Alt/s(R,,,). The t-statistics
+on sample means are computed in the same way as those in table 3.
+If the two-parameter model is valid, then in equation (7), E(7st)
+E(R0t), where E(Rot) is the expected return on any zero- security or
+portfolio. Likewise, the expected risk premium per unit of P is E(Rmt)
+E(Rot) E(ffi t). In fact, for the one-variable regressions of panel A,
+table 3, that is,
+Rpt =yt + Vt PP + %~tl
+we have, period by period,
+Rmt _- R tyot- ( 12)
+This condition is obtained by averaging (11) over p and making use of
+the least-squares constraint
+E i~pt 0.5
+p
+Moreover, the least-squares estimate 9,t can always be interpreted as the
+return for month t on a zero-[i portfolio, where the weights given to each
+'There is some degree of approximation in (12). The averages over p of Rpt and
+N are R,,,t and 1.0, respectively, only if every security in the market is in some port-
+folio. With our methodology (see table 1) this is never true. But the degree of
+approximation turns out to be small: The average of the Rpt is always close to Rm1t
+and the average jp is always close to 1.0.
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+RISK, RETURN, AND EQUILIBRIUM 62 7
+TABLE 4 (Continued)
+STATISTIC*
+s(@(,) s(R,) t(R.) t(R.-Rf) t(al") t(&O) pm(R,,) pM(R,,,-Rr) pm('1 Pgt)Ps(r
+.038 .0012 4.71 4.28 2.57 3.24 -.01 -.01 .02 .14 .98
+.052 .0001 2.56 2.54 1.92 .86 -.07 -.07 --.03 .10 .88
+.026 .0004 2.84 2.60 .70 3.71 .09 .09 .07 .10 .94
+.030 .0009 3.72 2.92 1.73 2.45 .14 .14 .15 .2 5 .92
+.064 .0001 1.04 1.04 .79 .32 --.13 -.13 -.09 .07 .72
+.034 .0001 3.68 3.65 2.55 1.27 .14 .14 .15 .21 .83
+.031 .0003 1.15 1.05 .48 1.2 7 .09 .09 .04 .18 .97
+.019 .0004 3.51 3.22 .53 5.06 -.02 -.01 .08 -.07 .89
+.020 .0007 2.07 1.60 -1.37 5.68 .12 .13 .18 .13 .80
+.034 .0008 3.08 2.44 2.81 .03 .13 .13 .09 .21 .93
+of the 20 portfolios to form this zero-3j portfolio are the least-squares
+weights that are applied to the Rpt in computing ot.10
+In the Sharpe-Lintner two-parameter model of market equilibrium
+E(fy-ot) - E(Rot) - Rft and E(7 t) E(Rmnt) - E(R0t) E(Rmt) -
+Rft. In the period 1935-40 and in the most recent period 1961-6/68, yet is
+close to Rm - Rf and the t-statistics for the two averages are similar. In
+other periods, and especially in the period 1951-60, YJ is substantially less
+than Rfl - Rf. This is a consequence of the fact that for these periods yo
+is noticeably greater than Rf. In economic terms, the tradeoff of average
+return for risk between common stocks and short-term bonds has been
+more consistently large through time than the tradeoff of average return
+for risk among common stocks. Testing whether the differences between
+R,,- Rf and 9y are statistically large, however, is equivalent to testing
+the S-L hypothesis E(y)t) Rft, which we prefer to take up after exam-
+ining further the stochastic process generating monthly returns.
+Finally, although the differences between values of R - Rf for different
+periods or between values of yj are never statistically large, there is a hint
+in table 4 that average-risk premiums declined from the pre- to the post-
+XVorld War II periods. These are average risk premiums per unit of j,
+however, which are not of prime interest to the investor. In making his
+portfolio decision, the investor is more concerned with the tradeoff of
+expected portfolio return for dispersion of return-that is, the slope of
+the efficient set of portfolios. In the Sharpe-Lintner model this slope is
+I0 That 9o is the return on a zero-8 portfolio can be shown to follow from the
+unbiasedness of the least-squares coefficients in the cross-sectional risk-return regres-
+sions. If one makes the Gauss-Markov assumptions that the underlying disturbances
+'1pt of (11) have zero means, are uncorrelated across p, and have the same variance
+for all p, then it follows almost directly from the Gauss-Markov Theorem that the
+least-squares estimate Y is also the return for month t on the minimum variance
+zero-8 portfolio that can be constructed from the 20 portfolio UP.
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+628 JOURNAL OF POLITICAL ECONOMY
+~~~~~ ~~I
+always [E(Rmt) -Rft] 1s(Rmt), and in the more general model of Black
+(1972), it is [E(Rmt) - E(R(t)]1a(Rmt) at the point on the efficient set
+corresponding to the market portfolio m. In table 4, especially for the three
+long subperiods, dividing R,, - Rf and ^y, by s(R,,) seems to yield esti-
+mated risk premiums that are more constant through time. This results
+from the fact that any declines in 7, or Rm -Rf are matched by a quite
+noticeable downward shift in s(Rm) from the early to the later periods
+(cf. Blume [1970] or Officer [1971]).
+C. Errors and True Variation in the Coefficients Vjt
+Each cross-sectional regression coefficient ^jt in (10) has two components:
+the true ?it and the estimation error, -jt _ Ajt - 7t. A natural question
+is: To what extent is the variation in 9jt through time due to variation in
+yjt and to what extent is it due to Aft? In addition to providing important
+information about the precision of the coefficient estimates used to test the
+two-parameter model, the answer to this question can be used to test
+hypotheses about the stochastic process generating returns. For example,
+although we cannot reject the hypothesis that E(7 t) 0, does including
+the term involving j%2 in (10) help in explaining the month-by-month
+behavior of returns? That is, can we reject the hypothesis that for all t,
+Y2t 0? Likewise, can we reject the hypothesis that month-by-month
+'It - 0? And is the variation through time in 9ot due entirely to bi)t and
+to variation in Rft?
+The answers to these questions are in table 5. For the models and time
+periods of table 3, table 5 shows for each 7j: S2(j ^), the sample variance
+of the month-by-month 9jt; s2(j), the average of the month-by-month
+values of S2 '(t), where s('jt) is the standard error of ?jt from the cross-
+sectional risk-return regression of (10) for month t; S2(1) S2(j)
+s2(j); and the F-statistic F -2 (sIj) IS2(+), which is relevant for testing
+the hypothesis, S2(^j) s2('1(). The numerator of F has n - 1 df where
+n is the number of months in the sample period; and the denominator has
+n(20 - K) df, where K is the number of coefficients 9j in the model."
+11 The standard error of t/jt' S( 't), is proportional to the standard error of the
+risk-return residuals, for month t, which has 20 - K df. And n values of S2('1t)
+are averaged to get s2(-,), so that the latter has n(20-K) df. Note that if the
+underlying return disturbances apt of (10) are independent across p and have identical
+normal distributions for all p, then "it is the sample mean of a normal distribution
+and s2("jt) is proportional to the sample variance of the same normal distribution.
+If the process is also assumed to be stationary through time, it then follows that
+S2(9jt) and s2($'t) are independent, as required by the F-test. Finally, in the F-
+statistics of table 5, the values of n are 60 or larger, so that, since K is from 2 to 4,
+n(20 - K) >3 960. From Mood and Graybill (1963), some upper percentage points
+of the F-distribution are:
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+RISK, RETURN, AND EQUILIBRIUM 629
+One clear-cut result in table 5 is that there is a substantial decline in
+the reliability of the coefficients y,,t and y9lt-that is, a substantial increase
+in s'()) and s2($ )-when jp2 and/or p('hj) are included in the risk-
+return regressions. The variable j%2 is obviously collinear with jce and, as
+can be seen from table 2, Sp(ti) likewise increases with -. From panels B
+and C of table 5, the collinearity with ^,p is stronger for Ap2 than for
+In spite of the loss in precision that arises from multicollinearity, how-
+ever, the F-statistics for y,, (the coefficient of j2) and 9;: [the coefficient
+of -Sp(,) ] are generally large for the models of panels B and C of table 5,
+and for the model of panel D which includes both variables. From the F-
+statistics in panel D, it seems that, except for the period 1935-45, the
+variation through time of is statistically more noticeable than that of
+'tY, but there are periods (1941-45, 1956-60) when the values of F for
+both cot and t are large.
+The F-statistics for ^It - ylt + b t also indicate that 7 t has substan-
+tial variation through time. This is not surprising, however, since it is
+always directly related to R,,W. For example, from equation (12), for the
+one-variable model of panel A, )i t- Rf i -
+Finally, the F-statistics for AOt 'ot + rot are also in general large.
+And the month-by-month variation in ,yt cannot be accounted for by
+variation in Rft. The variance of Rft is so small relative to S2(,t), S (y(t),
+and s2($,}t) that doing the F-tests in terms of )t - Rft produces results
+almost identical with those for '%'t.
+Rejection of the hypothesis that 7ot-Rft - 0 does not imply rejection
+of the S-L hypothesis-to be tested next-that E(,fft) Rft. Likewise,
+to find that month-by-month y2t # 0 and 'Yfit z 0 does not imply rejection
+of hypotheses C1 and C2 of the two-parameter model. These hypotheses,
+which we are unable to reject on the basis of the results in table 3, say
+that E(y.t) - 0 and E(Q:it) - 0.
+What we have found in table 5 is that there are variables in addition
+to fp that systematically affect period-by-period returns. Some of these
+omitted variables are apparently related to Spj and 9 (-f). But the latter
+are almost surely proxies, since there is no economic rationale for their
+presence in our stochastic risk-return model.
+F . . ....F F. F,) F,()q
+60 (120) ............ 1.35 1.47 1.58 1.73 1.83
+60 () .1.29 1.39 1.48 1.60 1.69
+120 (120) . 1.26 1.35 1.43 1.53 1.61
+120 (oo) .............. 1.19 1.25 1.31 1.38 1.43
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+630 JOURNAL OF POLITICAL ECONOMY
+TABLE 5
+COMPONENTS OF THE X ARIANCES OF THE 9jt
+PERIOD S2(.y) S2(90) S2(o) F 2 s2(a) s2(51) F
+Panel A:
+1935-6/68 ... .00105 .00142 .00037 3.84 .00401 .00436 .00035 12.46
+1935-45 . .00182 .00273 .00091 3.00 .00863 .00950 .00087 10.92
+1946-55 .00057 .00066 .00009 7.33 .00163 .00171 .00008 21.38
+1956-6/68 .0007 7 .00090 .00013 6.92 .00181 .00193 .00012 16.08
+1935-40 ..... .00265 .00404 .00139 2.91 .01212 .01347 .00135 9.98
+1941-45 ..... .00086 .00118 .00032 3.69 .00452 .00481 .00029 16.59
+1946-50 ..... .00086 .00094 .00008 11.75 .00216 .00224 .00008 28.00
+1951-55 ..... .00027 .00036 .00009 4.00 .00113 .00121 .00008 15.12
+1956-60 ..... .00032 .00041 .00009 4.56 .00104 .00112 .00008 21.50
+1961-6/68 .00100 .00114 .00014 8.14 .00217 .00231 .00014 16.50
+Panel B:
+1935-6/68 ... .00092 .00267 .00175 1.52 .00564 .01403 .00839 1.67
+1935-45 . .0005 7 .003 7 7 .00320 1.18 .00372 .01941 .01569 1.24
+1946-55 . 00053 .00112 .00059 1.90 .00651 .00897 .00245 3.66
+1956-6/68 .00155 .00294 .00139 2.12 .00667 .01338 .00671 1.99
+1935-40 .. 00018 .00476 .00458 1.04 .00374 .02555 .02181 1.17
+1941-45 ..... .00101 .00254 .00153 1.66 .00389 .01225 .00836 1.46
+1946-50 ..... .00084 .00136 .00052 2.62 .00862 .01071 .00209 5.12
+1951-55 ..... .00024 .00090 .00066 1.36 .00447 .00729 .00282 2.58
+1956-60 ..... .00037 .00087 .00050 1.74 .00289 .005 17 .00228 2.2 7
+1961-6/68 .00232 .00431 .00199 2.16 .00928 .01894 .00966 1.96
+Panel C:
+1935-6/68 ... .00192 .00266 .00075 3.55 .00285 .00428 .00142 3.01
+1935-45 . 00394 .00533 .00139 3.83 .00433 .00717 .00283 2.52
+1946-55 . 00083 .00101 .00018 5.61 .00261 .00310 .00050 6.20
+1956-6/68 . 00100 .00164 .00063 2.60 .00178 .00270 .00092 2.93
+1935-40 ..... .00473 .00669 .00196 3.41 .00732 .01094 .00362 3.02
+1941-45 ..... .00307 .00377 .00070 5.38 .00085 .002 74 .00189 1.45
+1946-50 ..... .00103 .00117 .00014 8.36 .00386 .00439 .00053 8.28
+1951-55 ..... .00061 .00083 .00022 3.77 .00140 .00188 .00047 4.00
+1956-60 . . .00079 .00134 .00055 2.44 .00106 .00204 .00098 2.08
+1961-6/68 .00109 .00177 .00068 2.60 .00212 .00300 .00088 3.41
+Panel D:
+1935-6/68 ... .00150 .00566 .00406 1.39 .00608 .01521 .00913 1.66
+1935-45 . .00233 .01065 .00832 1.28 .00402 .02118 .01716 1.23
+1946-55 . .00013 .00176 .00163 1.08 .00647 .00916 .00269 3.41
+1956-6/68 .00194 .00420 .00226 1.86 .00763 .01485 .00722 2.06
+1935-40 ..... . .00157 .01263 .01106 1.14 .00457 .02910 .02453 1.19
+1941-45 ..... .00340 .00843 .00503 1.68 .00365 .01196 .00832 1.44
+1946-50 ..... .00023 .00220 .00197 1.12 .00858 .01119 .00261 4.29
+1951-55 ..... .00006 .00136 .00130 1.05 .00442 .00719 .00277 2.60
+1956-60 ..... .00092 .00239 .00147 1.62 .00328 .00602 .002 74 2.20
+1961-6/68 .00260 .00539 .00279 1.93 .01060 .02081 .01021 2.04
+D. Tests of the S-L Hypothesis
+In the Sharpe-Lintner two-parameter model of market equilibrium one
+has, in addition to conditions C1-C3, the hypothesis that E('tt) Rft.
+The work of Friend and Blume (1970) and Black, Jensen, and Scholes
+(1972) suggests that the S-L hypothesis is not upheld by the data. At
+least in the post-World War II period, estimates of E('Y/,t) seem to be
+significantly greater than Rft.
+Each of the four models of table 3 can be used to test the S-L hypothe-
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+RISK, RETURN, AND EQUILIBRIUM 631I
+TABLE 5 (Continued)
+PERIOD ~ ~ S2(y.,) s2(9A ) s2 ~ F S2(-3 s2(93 S2( ) F
+Panel A:
+19 456-50 .. ... . . . . . . . . .
+19356-60 .... ... ... ... ... ... ... . .
+19561-6/68 ... ... ... ... ... ... ... ..
+1935-6/6 ..... .002. 038.017 16 ... ... ..
+1945-45 .. 0071 .05 ..0077 .45 .. . ... .. ..
+1946-55 .. 0063 .012.004.229.. ... .. ..
+1956-6/68 ... .002. 028.016 17 ... ... ... ..
+19356-40.. 0041 .056 .054..0 ... .. ..
+1941-45603268057 .0020 2.62. . ... ... ..
+194566-50 .00066 .003103 .00037 2.78 ... ... ..
+1951-55.....00058 .001120 .00062 1.294 ... .....
+1956-6068....00033 .000783 .00050 1.66 ... ..
+1961-6/6 ....00018 .00410 .005227 1.81 ... ... .
+19315-66 ... .....037 .002 .000 2..62 .341 .753 .41. 18
+1935-450.. .0006 .0010 .0003 2.78 .3 87 33 27
+1 946-5 5 . .. .005 .0012 .006. 19 ... .16 30 .20 1.80
+1956-6/6 .00033 .083 .05 1..66 .304 .968 .66. 14
+1935-408 . .008 . 040 .027 1 ... ..20 .553 .282 1.96
+1941-456 ... ... . 341 .753.840 1.18839 3.4
+193546 50 ... ... .. . ... ... .118 .2547 .3136 1.871
+1951-55 . .. . . . ... .... .2175 .437 .276 1.79
+1956-606 . ... ... .. . .. .622 1.355 .734 1.85
+1961-6/6 .... . .. .. . .. ... .140 1.722 .617 1.417
+19365-66 .... .006 032 .030.121 .276 .864 .588 1.47
+1935-45 5 . .. ... .002. 004.9 .321 1.001 .6136 1.63
+1946-556060.04 008 .0 .028 1.383 .7355 1.08
+19561-6/68 ..0134 .0030 .006. 18 .374 1.1252 .7517 1.50
+1935-408 . .0006 .007623 .00886 1.821 .1206 .8682 .562 1.21
+1941-45 .. 00162. .00515 .00353 1.46 .7920 1.395 .675 2.07
+1946-50 .... 00083 .001480 .00096 1.870 .023 .3483 .325 1.07
+195 1-55.....00039 .00116 .00077 1.51 .038 .424 .386 1.10
+1956-60.....00037 .00103 .00066 1.56 .712 1.654 .941 1.76
+1961-6/68 ...00202 .00440 .00238 1.85 .163 .78 7 .624 1.26
+sis. 12 The most efficient tests, however, are provided by the one-variable
+12 The least-squares intercepts %~)t in the four cross-sectional risk-return regressions
+can always be interpreted as returns for month t on zero-A_ portfolios (n. 10). For the
+three-variable model of panel D, table 3, the unbiasedness of the least-squares co-
+efficients can be shown to imply that in computing 7,t negative and positive weights
+are assigned to the 20 portfolios in such a way that the resulting portfolio has not
+only zero-j~ but also zero averages of the 20 2 and of the 20 _S(~) Analogous
+statements apply to the two-variable models of panels B and C.
+Black, Jensen, and Scholes test the AS-L hypothesis with a time series of monthly
+returns on a "minimum variance zero-O portfolio" which they derive directly. It turns
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+632 JOURNAL OF POLITICAL ECONOMY
+model of panel A, since the values of s(^9,) for this model [which are
+nearly identical with the values of s(,, - Rif)] are substantially smaller
+than those for other models. Except for the most recent period 1961-6/68,
+the values of 9y,, Rf in panel A are all positive and generally greater than
+0.4 percent per month. The value of t(9o - Rf) for the overall period
+1935-6/68 is 2.55, and the t-statistics for the subperiods 1946-55, 1951-
+55, and 1956-60 are likewise large. Thus, the results in panel A, table 3,
+support the negative conclusions of Friend and Blume (1970) and Black,
+Jensen, and Scholes (1972) with respect to the S-L hypothesis.
+The S-L hypothesis seems to do somewhat better in the two-variable
+quadratic model of panel B, table 3 and especially in the three-variable
+model of panel D. The values of t(, - Rf) are substantially closer to
+zero for these models than for the model of panel A. This is due to values
+of 0 - Rf that are closer to zero, but it also reflects the fact that s(90)
+is substantially higher for the models of panels B and D than for the
+model of panel A.
+But the effects of jp2 and sP(^) on tests of the S-L hypothesis are in
+fact not at all so clear-cut. Consider the model
+Rit - 'Ot + '1tfi + y2t(1 - (i)2 + 3tSi + Nit- (13)
+Equations (7) and (13) are equivalent representations of the stochastic
+process generating returns, with y - 1 t - 2` t and yot - y'ot + Y2t.
+Moreover, if the steps used to obtain the regression equation (10) from
+the stochastic model (7) are applied to (13), we get the regression equa-
+tion,
+Rpt -_*ot + 2'*Jp + 22t(l - jp)2 + y3tSP(Ei) + %pt, (14)
+where, just as jp2 in (10) is the average of ^P-2 for securities i in portfolio
+p, (1 - )2 is the average of (1 - 2. The values of the estimates
+art and y3t are identical in (10) and (14); in addition, ^it - Q'lt - 22t
+and yet - ot + %.t But although the regression equations (10) and
+(14) are statistically indistinguishable, tests of the hypothesis E('ot)
+out, however, that this portfolio is constructed under what amounts to the assumptions
+of the Gauss-Markov Theorem on the underlying disturbances of the one-variable
+risk-return regression (11). With these assumptions the least-squares estimate yot,
+obtained from the cross-sectional risk-return regression of (11) for month t, is pre-
+cisely the return for month t on the minimum variance zero4j portfolio that can be
+constructed from the 20 portfolio OP. Thus, the tests of the S-L hypothesis in panel A
+of table 3 are conceptually the same as those of Black, Jensen, and Scholes.
+If one makes the assumptions of the Gauss-Markov Theorem on the underlying
+disturbances of the models of panels B-D of table 3, the regression intercepts for these
+models can likewise be interpreted as returns on minimum-variance zero-13 portfolios.
+These portfolios then differ in terms of whether or not they also constrain the averages
+of the 20 > 2 and of the 20 S (1i) to be zero. Given the collinearity of 0pI Ag2, and
+Sp('d), however, the assumptions of the Gauss-Markov Theorem cannot apply to all
+four of the models.
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+RISK, RETURN, AND EQUILIBRIUM 633
+Rft from (10) do not yield the same results as tests of the hypothesis
+E(^yt) - Rft from (14). In panel D of table 3, % -Rf is never statisti-
+cally very different from zero, whereas in tests (not shown) from (14), the
+results are similar to those of panel A, table 3. That is, y -Rf is system-
+atically positive for all periods but 1961-6/68 and statistically very
+different from zero for the overall period 1935-6/68 and for the 1946-55,
+1951-55, and 1956-60 subperiods.
+Thus, tests of the S-L hypothesis from our three-variable models are
+ambiguous. Perhaps the ambiguity could be resolved and more efficient
+tests of the hypothesis could be obtained if the omitted variables for which
+sp('i), hp. or (1-Up)2 are almost surely proxies were identified. As indi-
+cated above, however, at the moment the most efficient tests of the S-L
+hypothesis are provided by the one-variable model of panel A, table 3, and
+the results for that model support the negative conclusions of others.
+Given that the S-L hypothesis is not supported by the data, tests of the
+market efficiency hypothesis that ot- E(Rot) is a fair game are difficult
+since we no longer have a specific hypothesis about E(R,,t). And using
+the mean of the ant as an estimate of E(Rt) does not work as well in this
+case as it does for the market efficiency tests on Yit. One should note,
+however, that although the serial correlations pm(^o) in table 4 are often
+large relative to estimates of their standard errors, they are small in terms
+of the proportion of the time series variance of Q(,t that they explain, and
+the latter is the more important criterion for judging whether market
+efficiency is a workable representation of reality (see n. 8).
+VI. Conclusions
+In sum our results support the important testable implications of the two-
+parameter model. Given that the market portfolio is efficient or, more
+specifically, given that our proxy for the market portfolio is at least ap-
+proximately efficient we cannot reject the hypothesis that average returns
+on New York Stock Exchange common stocks reflect the attempts of risk-
+averse investors to hold efficient portfolios. Specifically, on average there
+seems to be a positive tradeoff between return and risk, with risk mea-
+sured from the portfolio viewpoint. In addition, although there are "sto-
+chastic nonlinearities" from period to period, we cannot reject the hy-
+pothesis that on average their effects are zero and unpredictably different
+from zero from one period to the next. Thus, we cannot reject the hy-
+pothesis that in making a portfolio decision, an investor should assume
+that the relationship between a security's portfolio risk and its expected
+return is linear, as implied by the two-parameter model. We also cannot
+reject the hypothesis of the two-parameter model that no measure of risk,
+in addition to portfolio risk, systematically affects average returns. Finally,
+the observed fair game properties of the coefficients and residuals of the
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+634 JOURNAL OF POLITICAL ECONOMY
+risk-return regressions are consistent with an efficient capital market
+that is, a market where prices of securities fully reflect available informa-
+tion.
+Appendix
+Some Related Issues
+Al. Market Models and Tests of Market Efficiency
+The time series of regression coefficients from (10) are, of course, the inputs
+for the tests of the two-parameter model. But these coefficients can also be
+useful in tests of capital market efficiency-that is, tests of the speed of price
+adjustment to different types of new information. Since the work of Fama et al.
+(1969), such tests have commonly been based on the "one-factor market model":
+Rit= -a+ Rmt +'it (15)
+In this regression equation, the term involving R,,t is assumed to capture the
+effects of market-wide factors. The effects on returns of events specific to
+company i, like a stock split or a change in earnings, are then studied through
+the residuals fit.
+But given that there is period-to-period variation in iOt. YAt, and %t in (10)
+that is above and beyond pure sampling error, then these coefficients can be
+interpreted as market factors, (in addition to R,,t) that influence the returns
+on all securities. To see this, substitute (12) into (11) to obtain the "two-
+factor market model":
+R Pt ( 1_ - ) + Up Rmt + pt. 16
+In like fashion, from equation (10) itself we easily obtain the "four-factor
+market model":
+Rpt- (t ( 1 Upp) + - pR1- (Ipt (% (2p - p j') + 9'3t
+[Spfi) p(i] + apt,
+(17)
+where 2 and s are the averages over p of the j%' and the sp('i).
+Comparing equations (15-17) it is clear that the residuals tit from the
+one-factor market model contain variation in the market factors %,t 9t, and
+9:t Thus, if one is interested in the effect on a security's return of an event
+specific to the given company, this effect can probably be studied more precisely
+from the residuals of the two- or even the four-factor market models of (16)
+and ('17) than from the one-factor model of (15). This has in fact already
+been done in a study of changes in accounting techniques by Ball (1972), in
+a study of insider trading by Jaffe ( 1972), and in a study of mergers by
+Mandelker (1972).
+Ball, Jaffe, and Mandelker use the two-factor rather than the four-factor
+market model, and there is probably some basis for this. First, one can see
+from table 5 that because of the collinearity of (3p, (3p', and Sp(j;), the coei-
+cient estimates ,, and %/ t have much smaller standard errors in the two-
+factor model. Second, we have computed residual variances for each of our
+20 portfolios for various time periods from the time series of ipt and apt from
+(15), ('16), and (173. The decline in residual variance that is obtained in
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+RISK, RETURN, AND EQUILIBRIUM 635
+going from (15) to (16) is as predicted: That is, the decline is noticeable over
+more or less the entire range of Up and it is proportional to (1 - jp)2. On the
+other hand, in going from the two- to the four-factor model, reductions in
+residual variance are generally noticeable only in the portfolios with the lowest
+and highest j%, and the reductions for these two portfolios are generally small.
+Moreover, including Sp(tj) as an explanatory variable in addition to p and j 2
+never results in a noticeable reduction in residual variances.
+A2. Multifactor Models and Errors in the j
+If the return-generating process is a multifactor market model, then the usual
+estimates of Pi from the one-factor model of (15) are not most efficient. For
+example, if the return-generating process is the population analog of (16),
+more efficient estimates of Pi could in principle be obtained from a constrained
+regression applied to
+Rit -ot =Pi(Rmt -ot) + Cut
+But this approach requires the time series of the true yot. All we have are
+estimates 9n, themselves obtained from estimates of (p from the one-factor
+model of (15).
+It can also be shown that with a multifactor return-generating process the
+errors in the f computed from the one-factor market model of (8) and (15)
+are correlated across securities and portfolios. This results from the fact that if
+the true process is a multifactor model, the disturbances of the one-factor
+model are correlated across securities and portfolios. Moreover, the inter-
+dependence of the errors in the f is higher the farther the true (3's are from
+1.0. This was already noted in the discussion of table 2 where we found that
+the relative reduction in the standard errors of the 3's obtained by using port-
+folios rather than individual securities is lower the farther fA1p is from 1.0.
+Interdependence of the errors in the A~ also complicates the formal analysis
+of the effects of errors-in-the-variables on properties of the estimated coeffi-
+cients (the 7jt) in the risk-return regressions of (10). This topic is considered
+in detail in an appendix to an earlier version of this paper that can be made
+available to the reader on request.
+References
+Ball, R. "Changes in Accounting Techniques and Stock Prices." Ph.D. disserta-
+tion, University of Chicago, 1972.
+Black, F. "Capital Market Equilibrium with Restricted Borrowing." J. Bus. 45
+(July 1972): 444-55.
+Black, F.; Jensen, M.; Scholes, M. "The Capital Asset Pricing Model: Some
+Empirical Results." In Studies in the Theory of Capital Markets, edited by
+Michael Jensen. New York: Praeger, 1972.
+Blume, M. E. "Portfolio Theory: A Step toward Its Practical Application." J.
+Bus. 43 (April 1970): 152-73.
+Douglas, G. W. "Risk in the Equity Markets: An Empirical Appraisal of
+Market Efficiency." Yale Econ. Essays 9 (Spring 1969): 3-45.
+Fama, E. F. "The Behavior of Stock Market Prices." J. Bus. 38 (January 1965):
+34-105. (a)
+. "Portfolio Analysis in a Stable Paretian Market." Management Sci. 11
+(January 1965): 404-19. (b)
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms
+
+636 JOURNAL OF POLITICAL ECONOMY
+- "Multiperiod Consumption-Investment Decisions." A.E.R. 60 (March
+1970): 163-74. (a)
+. "Efficient Capital Markets: A Review of Theory and Empirical Work."
+J. Finance 25 (May 1970): 383-417. (b)
+. "Risk, Return and Equilibrium." J.P.E. 79 (January/February 1971):
+30-55.
+Fama, E. F., and Babiak, H. "Dividend Policy: An Empirical Analysis." J.
+American Statis. Assoc. 48 (December 1968): 1132-61.
+Fama, E. F.; Fisher, L.; Jensen, M.; Roll, R. "The Adjustment of Stock Prices
+to New Information." Internat. Econ. Rev. 10 (February 1969): 1-21.
+Fama, E. F., and Miller, M. The Theory of Finance. New York: Holt, Rinehart
+& Winston, 1972.
+Fama, E. F., and Roll, R. "Some Properties of Symmetric Stable Distributions."
+J. American Statis. Assoc. 48 (September 1968): 817-36.
+Fisher, L. "Some New Stock Market Indexes." J. Bus. 39 (January 1966): 191-
+225.
+Friend, I., and Blume, M. "Measurement of Portfolio Performance under Un-
+certainty." A.E.R. 60 (September 1970): 561-75.
+Gonedes, N. J. "Evidence on the Information Content of Accounting Numbers:
+Accounting-based and Market-based Estimates of Systematic Risk." J.
+Financial and Quantitative Analysis (1973): in press.
+Jaffe, J. "Security Regulation, Special Information, and Insider Trading." Ph.D.
+dissertation, University of Chicago, 1972.
+Jensen, M. "The Foundations and Current State of Capital Market Theory."
+Bell J. Econ. and Management Sci. 3 (Autumn 1972): 357-98.
+Lintner, J. "The Valuation of Risk Assets and the Selection of Risky Invest-
+ments in Stock Portfolios and Capital Budgets." Rev. Econ. and Statis. 47
+(February 1965): 13-37.
+Mandelker, G. "Returns to Stockholders from Mergers." Ph.D. proposal, Uni-
+versity of Chicago, 1972.
+Markowitz, H. Portfolio Selection: Efficient Diversification of Investments.
+New York: Wiley, 1959.
+Miller, K. D. "Futures Trading and Investor Returns: An Investigation of Com-
+modity Market Risk Premiums." Ph.D. dissertation, University of Chicago,
+1971.
+Miller, M., and Scholes, M. "Rates of Return in Relation to Risk: A Re-Exami-
+nation of Some Recent Findings." In Studies in the Theory of Capital Mar-
+kets, edited by Michael Jensen. New York: Praeger, 1972.
+Mood, A. M., and Graybill, F. A. Introduction to the Theory of Statistics.
+New York: McGraw-Hill, 1963.
+Officer, R. R. "A Time Series Examination of the Market Factor of the New
+York Stock Exchange." Ph.D..dissertation, University of Chicago, 1971.
+Roll, R. The Behavior of Interest Rates. New York: Basic, 1970.
+Sharpe, W. F. "Capital Asset Prices: A Theory of Market Equilibrium under
+Conditions of Risk." J. Finance 19 (September 1964): 425-42.
+Tobin, J. "Liquidity Preference as Behavior towards Risk." Rev. Econ. Studies
+25 (February 1958): 65-86.
+This content downloaded from 137.68.154.71 on Mon, 03 Nov 2025 12:51:09 UTC
+All use subject to https://about.jstor.org/terms

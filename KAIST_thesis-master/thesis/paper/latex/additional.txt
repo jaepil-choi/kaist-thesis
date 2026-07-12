@@ -1,0 +1,32 @@
+    \renewcommand{\@affFullNameKor}{% 학과/전공 한글이름
+        \ifthenelse{\equal{\@parentDeptNameKor}{}}
+        {\@childDeptNameKor}{%
+            \ifthenelse{\equal{\@degreeversion}{a}}{\@parentDeptNameKor}{}%
+            \ifthenelse{\equal{\@degreeversion}{b}}{\@parentDeptNameKor \ (\@childDeptNameKor)}{}%
+            \ifthenelse{\equal{\@degreeversion}{c}}{\@childDeptNameKor}{}}
+    }
+    \renewcommand{\@affFullNameEng}{% 학과/전공 영문이름
+        \ifthenelse{\equal{\@parentDeptNameEng}{}}
+        {\@childDeptNameEng}{%
+            \ifthenelse{\equal{\@degreeversion}{a}}{\@parentDeptNameEng}{}%
+            \ifthenelse{\equal{\@degreeversion}{b}}{\@parentDeptNameEng \ (\@childDeptNameEng)}{}%
+            \ifthenelse{\equal{\@degreeversion}{c}}{\@childDeptNameEng}{}}
+    }
+    \renewcommand{\@appFullAcademName}{% 학문 승인서용 영문이름
+        \ifthenelse{\equal{\@parentAcademNameEng}{}}
+        {\@childAcademNameEng}{%
+            \ifthenelse{\equal{\@degreeversion}{a}}{\@parentAcademNameEng}{}%
+            \ifthenelse{\equal{\@degreeversion}{b}}{\@parentAcademNameEng \ (\@childAcademNameEng)}{}%
+            \ifthenelse{\equal{\@degreeversion}{c}}{\@childAcademNameEng}{}}
+    }
+    \renewcommand{\@degreeName}{% 학위 영문이름
+        \ifthenelse{\boolean{@isDoctor}}
+        {Doctor of Philosophy} {% 박사는 모두 Ph.D.
+            \ifthenelse{\equal{\@degreeField}{science}}
+            {Master of Science}{}% 이학석사는 M.S.
+            \ifthenelse{\equal{\@degreeField}{engineering}}
+            {Master of Science}{}% 공학석사는 M.S.
+            \ifthenelse{\equal{\@degreeField}{business}}
+            {Master of Business Administration}{}% 경영학석사는 M.B.A.
+        }
+    }

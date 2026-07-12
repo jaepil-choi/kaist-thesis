@@ -1,0 +1,88 @@
+# Deep Learning TNIC Configuration
+# Kim et al. (2020) Deep Autoencoder Methodology
+
+tnic_dl:
+  # Deep Autoencoder (Kim et al. 2020) configuration
+  autoencoder:
+    architecture:
+      input_dim: 2000                # Vocabulary size (top 2000 words)
+      encoder_hidden: [500, 125]     # Encoder hidden layer sizes
+      latent_dim: 10                 # Bottleneck/coded layer dimension
+      decoder_hidden: [125, 500]     # Decoder hidden layer sizes (symmetric)
+      output_dim: 2000               # Output dimension (same as input)
+
+    activation:
+      encoder: relu                  # ReLU for encoder hidden layers
+      latent: linear                 # Linear for bottleneck layer
+      decoder: relu                  # ReLU for decoder hidden layers
+      output: sigmoid                # Sigmoid for output layer (binary reconstruction)
+
+    training:
+      loss: binary_crossentropy      # Binary cross-entropy loss
+      optimizer: adam                # Adam optimizer
+      learning_rate: 0.001           # Initial learning rate
+      batch_size: 64                 # Batch size for training
+      epochs: 100                    # Maximum epochs
+      early_stopping_patience: 10    # Stop if no improvement for N epochs
+      validation_split: 0.1          # 10% validation split
+      device: cpu                    # CPU only (no GPU)
+      save_best_only: true           # Save only the best model
+      verbose: true                  # Print training progress
+      use_svd_init: true             # SVD layer-wise pre-init (replaces Kim et al. 2020 RBM)
+
+  # Vocabulary building (Kim et al. 2020 methodology)
+  vocabulary:
+    top_n_words: 2000                      # Select top 2000 most frequent words
+    max_document_frequency: 0.20           # Exclude words in >20% of documents
+    min_document_frequency: 2              # Exclude words in <2 documents
+    min_words_per_document: 20             # Exclude documents with <20 unique words
+    exclude_geographic: true               # Exclude geographic terms
+    save_word_frequencies: true            # Save word frequency statistics
+
+  # Clustering configuration
+  clustering:
+    algorithm: spherical_kmeans    # Spherical k-means (cosine distance)
+    # K=75 rationale: Kim et al. (2020) used K=300 for ~4,000 US firms (TNIC-300 granularity).
+    # Korean market has ~2,000 firms → proportionally ~150, but FnGuide has ~62 top-level
+    # and ~150 detail-level groups. K=75 sits between these, matching comparable granularity.
+    # Use find_optimal_k() in spherical_kmeans.py to validate with Elbow/Silhouette before
+    # committing to this value.
+    n_clusters: 75                 # Default for Korean market (~2,000 firms); tune with elbow
+    max_iter: 300                  # Maximum iterations
+    n_init: 10                     # Number of initializations
+    random_state: 42               # Random seed for reproducibility
+    tolerance: 0.0001              # Convergence tolerance (1e-4)
+
+  # Similarity computation
+  similarity:
+    metric: cosine                 # Cosine similarity
+    threshold: 0.20                # Default threshold for peer groups
+    save_sparse: true              # Save as sparse matrix
+    batch_size: 1000               # Batch size for similarity computation
+    min_similarity: 0.0            # Minimum similarity to store (for sparsity)
+
+  # Output paths (all relative to project root)
+  paths:
+    base_dir: "data/korean_tnic_dl"
+    # Note: Other paths are computed automatically from base_dir if not specified
+    # models_dir: Defaults to "{base_dir}/models"
+    # training_logs_dir: Defaults to "{base_dir}/models/training_logs"
+    # embeddings_dir: Defaults to "{base_dir}/by_year/{year}"
+    # similarity_dir: Defaults to "{base_dir}/by_year/{year}"
+    # figures_dir: Defaults to "{base_dir}/outputs/figures"
+    # peer_groups_dir: Defaults to "{base_dir}/outputs/peer_groups"
+    # input_noun_data: Defaults to "data/korean_texts/by_year/{year}/firm_word_sets_{year}.parquet"
+
+  # Logging and output
+  logging:
+    level: INFO                    # Logging level (DEBUG, INFO, WARNING, ERROR)
+    save_logs: true                # Save logs to file
+    log_dir: "logs"                # Directory for log files
+
+  # K-search configuration (used by find_optimal_k() in spherical_kmeans.py)
+  k_search:
+    k_min: 30                      # Minimum K to try
+    k_max: 150                     # Maximum K to try
+    k_step: 10                     # Step size
+    method: elbow                  # 'elbow' or 'silhouette'
+    silhouette_sample_size: 2000   # Subsample size for silhouette (speed vs. accuracy)

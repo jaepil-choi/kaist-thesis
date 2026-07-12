@@ -1,0 +1,95 @@
+# File Paths and Directory Configuration
+
+# Base directories
+directories:
+  base: data/
+  korean_texts: data/korean_texts/
+  korean_tnic: data/korean_tnic/
+  fnguide: data/fnguide/processed/
+  outputs: outputs/
+
+# Input files
+inputs:
+  # Korean business descriptions RAW (from Phase 1: Data Extraction)
+  # This is the raw extraction from MongoDB before cleaning
+  business_descriptions: data/korean_texts/business_descriptions_raw.parquet
+
+  # Korean business descriptions CLEANED (from Phase 1b: Data Cleaning)
+  # This is the cleaned data after truncation and deduplication
+  business_descriptions_clean: data/korean_texts/business_descriptions_clean.parquet
+
+  # Filled business descriptions (from Phase 1.5: Universe Matching)
+  # This is the output of Phase 1.5 and input to Phase 2 (Corpus Building)
+  business_descriptions_filled: data/korean_texts/business_descriptions_filled.parquet
+
+  # FnGuide financial data
+  price_data: data/fnguide/processed/price_wide.parquet
+  turnover_data: data/fnguide/processed/turnover_listed_wide.parquet
+  dataguide: data/fnguide/processed/dataguide_filtered.parquet
+
+  # MongoDB raw data (if re-extraction needed)
+  # Connection details are configured in mongodb.yaml
+
+# Output paths (by year)
+# Use {year} placeholder for year-specific outputs
+outputs:
+  # Phase 1b: Data Cleaning
+  cleaning:
+    cleaned_descriptions: data/korean_texts/business_descriptions_clean.parquet
+    cleaning_stats: data/korean_texts/cleaning_stats.json
+
+  # Phase 1.5: Universe Matching and Data Filling
+  universe_matching:
+    filled_descriptions: data/korean_texts/business_descriptions_filled.parquet
+    matching_stats: data/korean_texts/universe_matching_stats.json
+    coverage_by_year: data/korean_texts/universe_coverage_by_year.csv
+
+  # Phase 2: Corpus Building
+  corpus:
+    base_dir: data/korean_texts/by_year/{year}/
+    firm_word_sets: data/korean_texts/by_year/{year}/firm_word_sets_{year}.parquet
+    vocabulary: data/korean_texts/by_year/{year}/corpus_vocabulary_{year}.csv
+    statistics: data/korean_texts/by_year/{year}/corpus_statistics_{year}.json
+
+  # Phase 3: Binary Matrices
+  binary_matrix:
+    base_dir: data/korean_tnic/by_year/
+    matrix: data/korean_tnic/by_year/binary_matrix_{year}.npz
+    metadata: data/korean_tnic/binary_matrices_metadata.json
+
+  # Phase 4: Similarity Matrices
+  similarity:
+    base_dir: data/korean_tnic/by_year/
+    matrix: data/korean_tnic/by_year/similarity_matrix_{year}.npz
+    firms: data/korean_tnic/by_year/similarity_firms_{year}.csv
+    metadata: data/korean_tnic/similarity_matrices_metadata.json
+
+  # Phase 5: TNIC Peer Groups
+  peers:
+    base_dir: data/korean_tnic/by_year/
+    tnic_peers: data/korean_tnic/by_year/tnic_peers_{year}.csv
+    comparison: data/korean_tnic/by_year/tnic_vs_fnguide_{year}.csv
+    metadata: data/korean_tnic/by_year/tnic_metadata_{year}.json
+
+  # Final outputs
+  figures:
+    base_dir: outputs/
+    figure1a: outputs/figure1a_turnover_peer_shock.png
+    figure1b: outputs/figure1b_turnover_conditional.png
+
+# Temporary/intermediate files
+temp:
+  base_dir: data/temp/
+  extraction: data/temp/extraction/
+  processing: data/temp/processing/
+
+# Year range
+years:
+  start: 2010
+  end: 2025
+
+  # Pilot years for testing (2010-2011)
+  pilot: [2010, 2011]
+
+  # Full range (all years)
+  full: null  # null means use all years from start to end

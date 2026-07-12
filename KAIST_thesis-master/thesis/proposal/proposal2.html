@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>proposal2.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="%ED%95%9C%EA%B5%AD-%EC%A3%BC%EC%8B%9D%EC%8B%9C%EC%9E%A5%EC%97%90%EC%84%9C%EC%9D%98-%ED%85%8D%EC%8A%A4%ED%8A%B8-%EA%B8%B0%EB%B0%98-%EC%82%B0%EC%97%85-%EB%AA%A8%EB%A9%98%ED%85%80">한국 주식시장에서의 텍스트 기반 산업 모멘텀</h1>
+<p><strong>학생</strong>: 최재필
+<strong>지도교수</strong>: 강장구 교수님</p>
+<h2 id="1-%EC%A0%9C%EB%AA%A9-title">1. 제목 (Title)</h2>
+<p><strong>한국 주식시장에서의 텍스트 기반 산업 모멘텀</strong></p>
+<p>Text-Based Industry Momentum in Korean Stock Market</p>
+<h2 id="2-%EC%97%B0%EA%B5%AC-%EB%8F%99%EA%B8%B0-motivation">2. 연구 동기 (Motivation)</h2>
+<p>모멘텀 전략의 수익성은 자산가격결정 문헌에서 광범위하게 입증되었으나, 이러한 초과 수익을 발생시키는 메커니즘에 대해서는 여전히 논쟁이 계속되고 있다. 최근 연구들은 경제적으로 연계된 기업들에 대한 투자자의 주의력 부족(inattention)이 산업 모멘텀 수익을 발생시키는 핵심 역할을 한다고 제시한다 (Hoberg and Phillips, 2018). SIC 코드나 Fama-French 산업분류와 같은 전통적인 산업분류 체계는 사전에 정의된 정적인 그룹핑에 의존하며, 기업 간의 실제 제품시장 경쟁과 경제적 연계를 충분히 포착하지 못할 수 있다.</p>
+<p>Hoberg and Phillips (2016)는 SEC 10-K 보고서의 사업내용 기술서를 활용하여 텍스트 기반 네트워크 산업분류(Text-based Network Industry Classifications, TNIC)를 개발하였으며, 이는 시간에 따라 변화하는 제품시장 관계를 유연하게 포착한다. 그들의 후속 연구(2018)는 TNIC 기반 산업 모멘텀이 미국 시장에서 전통적인 분류 기반 전략을 크게 능가함을 보여준다. 그 경제적 크기는 주목할 만하다: TNIC 모멘텀 수익은 SIC 기반 모멘텀보다 100-200% 더 크며, 이는 그들의 이전 연구에서 입증된 25-40%의 정보 내용 개선폭을 훨씬 초과한다. 이는 순수한 정보 내용보다는 주의력 부족 메커니즘이 우수한 성과를 견인함을 시사한다.</p>
+<p>핵심 통찰은 덜 가시적인 경제적 연계가 더 강한 모멘텀 효과를 발생시킨다는 것이다. 동료 기업(peer firms)이 수익률 충격을 경험하지만 동일한 전통적 산업 그룹으로 분류되지 않을 때, 투자자들은 이 정보를 해당 기업(focal firm)의 가치평가에 반영하는 속도가 느리다. 이는 6-12개월 동안 지속되는 활용 가능한 수익률 예측성을 창출한다.</p>
+<p><strong>본 논문은 이러한 발견이 한국 주식시장에서도 일반화되는지 검증하고자 한다.</strong> 만약 텍스트 기반 산업분류가 투자자들의 주의력 부족으로 인해 과소반응되는 &quot;숨겨진 동료 기업&quot;을 발견한다면, 이 현상은 서로 다른 시장 환경에서도 강건해야 한다. 한국 시장에서 이 연구를 수행하는 주요 동기는 다음과 같다:</p>
+<ol>
+<li>
+<p><strong>한국 TNIC의 부재</strong>: 한국에서 텍스트 기반 금융에 대한 관심이 증가하고 있음에도 불구하고, 한국 사업내용 기술서를 이용한 TNIC를 구축한 연구가 없다.</p>
+</li>
+<li>
+<p><strong>다른 정보 환경</strong>: 한국 시장은 미국과 다른 제도적 특성, 언어 장벽, 투자자 구성을 가지며, 이는 주의력 부족 기반 이상현상의 강도에 영향을 미칠 수 있다.</p>
+</li>
+</ol>
+<p>한국에서 Hoberg and Phillips (2018)의 성공적인 재현은 텍스트 기반 산업 네트워크가 투자자들에 의해 전 세계적으로 체계적으로 과소평가되는 근본적인 경제적 연계를 포착한다는 표본 외 증거를 제공할 것이다.</p>
+<h2 id="3-%EC%A3%BC%EC%9A%94-%EB%85%BC%EB%AC%B8-key-papers">3. 주요 논문 (Key Papers)</h2>
+<p><strong>재현 대상 주요 논문:</strong></p>
+<ul>
+<li>Hoberg, G., &amp; Phillips, G. M. (2018). Text-based industry momentum. <em>Journal of Financial and Quantitative Analysis</em>, 53(6), 2355-2388.</li>
+</ul>
+<p><strong>TNIC 방법론:</strong></p>
+<ul>
+<li>Hoberg, G., &amp; Phillips, G. (2016). Text-based network industries and endogenous product differentiation. <em>Journal of Political Economy</em>, 124(5), 1423-1465.</li>
+</ul>
+<h2 id="4-%EA%B0%80%EC%84%A4-%EB%B0%8F-%EB%85%BC%EB%A6%AC%EC%A0%81-%EA%B7%BC%EA%B1%B0-hypotheses-and-their-reasoning">4. 가설 및 논리적 근거 (Hypotheses and Their Reasoning)</h2>
+<h3 id="h1-%EC%82%B0%EC%97%85-%EB%AA%A8%EB%A9%98%ED%85%80%EC%9D%80-%EB%8D%9C-%EA%B0%80%EC%8B%9C%EC%A0%81%EC%9D%B8-%EA%B2%BD%EC%A0%9C%EC%A0%81-%EC%97%B0%EA%B3%84%EB%A5%BC-%EA%B0%80%EC%A7%84-%EB%8F%99%EB%A3%8C-%EA%B8%B0%EC%97%85-%EA%B7%B8%EB%A3%B9%EC%97%90-%EB%8C%80%ED%95%9C-%EC%B6%A9%EA%B2%A9%EC%9D%98-%EA%B3%BC%EC%86%8C%EB%B0%98%EC%9D%91%EC%97%90%EC%84%9C-%EB%B0%9C%EC%83%9D%ED%95%9C%EB%8B%A4">H1: 산업 모멘텀은 덜 가시적인 경제적 연계를 가진 동료 기업 그룹에 대한 충격의 과소반응에서 발생한다</h3>
+<p><strong>논리적 근거</strong>: 투자자들은 전통적 산업분류에 포함되지 않은 경제적으로 연계된 기업들을 인지하는 데 시간이 걸린다. TNIC으로 식별되지만 FnGuide 산업분류에는 속하지 않은 동료 기업들의 수익률 충격은 해당 기업의 가격에 즉시 반영되지 않고, 시간이 지남에 따라 점진적으로 반영될 것이다. 따라서 덜 가시적인 동료 기업들의 과거 수익률은 해당 기업의 미래 수익률을 예측할 것이다.</p>
+<h3 id="h2-%EB%8D%9C-%EA%B0%80%EC%8B%9C%EC%A0%81%EC%9D%B8-%EB%8F%99%EB%A3%8C-%EA%B8%B0%EC%97%85%EC%9D%98-%EA%B3%BC%EA%B1%B0-%EC%88%98%EC%9D%B5%EB%A5%A0%EC%9D%80-%EA%B0%80%EC%8B%9C%EC%A0%81%EC%9D%B8-%EB%8F%99%EB%A3%8C-%EA%B8%B0%EC%97%85%EC%9D%98-%EA%B3%BC%EA%B1%B0-%EC%88%98%EC%9D%B5%EB%A5%A0%EB%B3%B4%EB%8B%A4-%EB%AF%B8%EB%9E%98-%EC%88%98%EC%9D%B5%EB%A5%A0-%EC%98%88%EC%B8%A1%EC%97%90-%EC%9E%88%EC%96%B4-%EB%8D%94-%EA%B0%95%ED%95%9C-%EC%84%A4%EB%AA%85%EB%A0%A5%EC%9D%84-%EA%B0%80%EC%A7%84%EB%8B%A4">H2: 덜 가시적인 동료 기업의 과거 수익률은 가시적인 동료 기업의 과거 수익률보다 미래 수익률 예측에 있어 더 강한 설명력을 가진다</h3>
+<p><strong>논리적 근거</strong>: 미래 수익률을 예측하는 동시 회귀분석에서, 덜 가시적인 동료 기업(TNIC 전용)의 과거 수익률은 가시적인 동료 기업(FnGuide)의 과거 수익률보다 더 크고 통계적으로 유의한 계수를 가질 것이다. 또한 덜 가시적인 동료 기업 충격으로부터의 모멘텀 수익은 가시적인 동료 기업 충격으로부터의 수익보다 경제적으로 더 클 것이다. 구체적으로:</p>
+<ul>
+<li>TNIC 전용 동료 기업 충격: 지연된 전달(6-12개월), 큰 모멘텀 수익</li>
+<li>FnGuide 전용 동료 기업 충격: 빠른 전달(1-2개월), 작은 모멘텀 수익</li>
+<li>중복 동료 기업(TNIC ∩ FnGuide): 중간 크기의 효과</li>
+</ul>
+<h3 id="h3-%EC%A3%BC%EC%8B%9D-%ED%9A%8C%EC%A0%84%EC%9C%A8%EC%9D%80-%EB%8D%9C-%EA%B0%80%EC%8B%9C%EC%A0%81%EC%9D%B8-%EB%8F%99%EB%A3%8C-%EA%B8%B0%EC%97%85-%EC%B6%A9%EA%B2%A9-%EC%9D%B4%ED%9B%84-%EC%A7%80%EC%97%B0%EB%90%98%EC%96%B4-%EC%A6%9D%EA%B0%80%ED%95%9C%EB%8B%A4">H3: 주식 회전율은 덜 가시적인 동료 기업 충격 이후 지연되어 증가한다</h3>
+<p><strong>논리적 근거</strong>: 회전율은 투자자 주의력의 직접적인 측정치이다. 만약 주의력 부족이 모멘텀을 견인한다면:</p>
+<ul>
+<li>FnGuide 동료 기업이 높은 수익률을 경험할 때: 즉각적인 회전율 급증 (t=0)</li>
+<li>TNIC 전용 동료 기업이 높은 수익률을 경험할 때: 지연된 회전율 증가 (t=0부터 t+12까지 점진적 증가)</li>
+</ul>
+<p>이러한 시간적 차이는 투자자들이 전통적 산업분류에 포함되지 않은 경제적으로 연계된 기업들에 초기에 주의를 기울이지 않음을 확인할 것이다.</p>
+<h3 id="h4-%EB%AA%A8%EB%A9%98%ED%85%80-%EC%88%98%EC%9D%B5%EC%9D%80-%EB%8F%99%EB%A3%8C-%EA%B8%B0%EC%97%85%EC%9D%98-%EA%B3%A0%EC%9C%A0-%EC%B6%A9%EA%B2%A9-%EC%9D%B4%ED%9B%84-%EA%B0%80%EC%9E%A5-%ED%81%AC%EB%A9%B0-%EA%B0%80%EC%8B%9C%EC%A0%81%EC%9D%B8-%EC%B2%B4%EA%B3%84%EC%A0%81-%EC%B6%A9%EA%B2%A9-%EC%9D%B4%ED%9B%84%EC%97%90%EB%8A%94-%EB%8D%94-%EC%9E%91%EB%8B%A4">H4: 모멘텀 수익은 동료 기업의 고유 충격 이후 가장 크며, 가시적인 체계적 충격 이후에는 더 작다</h3>
+<p><strong>논리적 근거</strong>: 고유 충격(firm-specific shocks)은 체계적 충격(market-wide or factor-driven shocks)보다 덜 가시적이고, 따라서 투자자들이 주의를 기울일 가능성이 낮다. 동료 기업 수익률을 체계적(Fama-French-Carhart 팩터) 및 고유 구성요소로 분해할 때, 고유 TNIC 동료 기업 수익률만이 유의한 모멘텀 수익을 발생시킬 것이다. 체계적 수익률 구성요소는 광범위하게 관찰되고 보도되므로 즉시 가격에 반영될 것이다.</p>
+<h2 id="5-%EB%8D%B0%EC%9D%B4%ED%84%B0-data">5. 데이터 (Data)</h2>
+<h3 id="%ED%85%8D%EC%8A%A4%ED%8A%B8-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%95%9C%EA%B5%AD-%EC%82%AC%EC%97%85%EB%82%B4%EC%9A%A9-%EA%B8%B0%EC%88%A0%EC%84%9C">텍스트 데이터: 한국 사업내용 기술서</h3>
+<p><strong>출처</strong>: 금융감독원이 관리하는 전자공시시스템 DART (Data Analysis, Retrieval and Transfer System)</p>
+<p><strong>범위</strong>: 2010-2024년 사업보고서</p>
+<p><strong>섹션</strong>: 사업의 개요 섹션 (SEC 10-K Item 1에 해당)</p>
+<p><strong>추출 방법</strong>: 본 논문을 위해 개발한 Python 패키지 <code>dart-fss-text</code></p>
+<ul>
+<li>Open DART API를 통해 보고서 조회</li>
+<li>XBRL 형식 XML 파일 파싱</li>
+<li>목표 사업내용 기술 섹션 추출</li>
+<li>분석을 위해 MongoDB에 저장</li>
+</ul>
+<h3 id="%EC%8B%9C%EC%9E%A5-%EB%B0%8F-%EC%9E%AC%EB%AC%B4-%EB%8D%B0%EC%9D%B4%ED%84%B0">시장 및 재무 데이터</h3>
+<p><strong>출처</strong>: FnGuide DataGuide 5 (Excel 애드인)</p>
+<p><strong>변수</strong>:</p>
+<ul>
+<li>월별 주식 수익률 (2010-2024)</li>
+<li>거래량 및 발행주식수 (회전율 계산용)</li>
+<li>시가총액 (규모 팩터)</li>
+<li>장부가-시가 비율 (가치 팩터)</li>
+<li>FnGuide 산업분류 (한국 전통 분류 체계)</li>
+</ul>
+<p><strong>표본 제한</strong> (Hoberg &amp; Phillips 2018 방법론 따름):</p>
+<ul>
+<li>금융업 제외</li>
+<li>주가 &lt; 1,000원 (페니 주식) 제외</li>
+<li>사업내용 기술서에 20개 미만의 고유 단어를 가진 기업 제외</li>
+<li>시차 변수를 위해 최소 2년 이상의 데이터 필요</li>
+</ul>
+<h3 id="%ED%95%9C%EA%B5%AD-tnic-%EA%B5%AC%EC%B6%95-%EB%B0%A9%EB%B2%95%EB%A1%A0">한국 TNIC 구축 방법론</h3>
+<p>TNIC 구축 방법론은 전적으로 Hoberg and Phillips (2016)를 따른다. 주요 단계는 다음과 같다:</p>
+<p><strong>텍스트 전처리</strong>:</p>
+<ul>
+<li>Kiwipiepy 형태소 분석기를 이용한 한국어 토크나이징 (Lee, 2024)</li>
+<li>명사만 추출 (품사 태그: NNG, NNP, NNB)</li>
+<li>최소 길이 2자 이상 단어만 유지</li>
+<li>숫자, 단일 문자, 일반 불용어 제거</li>
+<li>전체 기업의 25% 이상이 사용하는 일반적인 단어 제외</li>
+</ul>
+<p><strong>TNIC 유사도 계산</strong>:</p>
+<ul>
+<li>기업 × 단어 이진 행렬 구축 (단어 존재 여부만 표시)</li>
+<li>코사인 유사도를 이용한 기업 간 쌍별 유사도 계산</li>
+<li>각 기업의 중위 유사도를 차감하여 문서 길이 효과 완화</li>
+<li>FnGuide 산업분류의 멤버십 쌍 비율에 맞춰 유사도 임계값 조정</li>
+</ul>
+<p><strong>TNIC 동료 기업 정의</strong>:</p>
+<ul>
+<li>조정된 유사도가 임계값 이상인 기업들을 동료 기업으로 정의</li>
+<li>연간 업데이트되는 시변 네트워크 구조</li>
+<li>비대칭적 동료 관계 허용 (A가 B의 동료이지만 B가 A의 동료가 아닐 수 있음)</li>
+</ul>
+<h3 id="%EC%B5%9C%EC%A2%85-%ED%8C%A8%EB%84%90-%EB%8D%B0%EC%9D%B4%ED%84%B0">최종 패널 데이터</h3>
+<p><strong>관측치 수</strong>: 약 100,000-300,000 기업-월 관측치 (2010-2024)</p>
+<p><strong>주요 변수</strong>:</p>
+<ul>
+<li>종속변수: 월별 주식 수익률</li>
+<li>독립변수:
+<ul>
+<li>TNIC 동료 기업 수익률 (동가중, 해당 기업 제외)</li>
+<li>FnGuide 동료 기업 수익률 (가치가중, 해당 기업 제외)</li>
+<li>통제변수: log(장부가/시가), log(시가총액), 과거 수익률 (t-1, t-2 to t-12)</li>
+</ul>
+</li>
+</ul>
+<h2 id="6-%ED%95%B5%EC%8B%AC-%EC%8B%A4%EC%A6%9D-%EA%B2%B0%EA%B3%BC-key-empirical-results">6. 핵심 실증 결과 (Key Empirical Results)</h2>
+<h3 id="61-%EB%8F%99%EB%A3%8C-%EA%B8%B0%EC%97%85-%EC%B6%A9%EA%B2%A9%EC%97%90-%EB%94%B0%EB%A5%B8-%ED%9A%8C%EC%A0%84%EC%9C%A8-%ED%8C%A8%ED%84%B4-figure-1">6.1 동료 기업 충격에 따른 회전율 패턴 (Figure 1)</h3>
+<p><strong>Figure 1: Turnover Following Return Shocks</strong></p>
+<p><strong>Turnover 정의</strong>: sum(1달 동안의 일별 거래대금) / avg(시가총액) 또는 sum(일별 거래량) / avg(발행주식수)</p>
+<ul>
+<li>Key Paper에 정의가 명확하게 나와있지 않았으나 이렇게 정의하는 것이 합리적이라고 생각됨</li>
+</ul>
+<h4 id="graph-a-unconditional-turnover-around-high-quintile-fnguide-or-tnic-peer-shock">Graph A. Unconditional Turnover around High-Quintile FnGuide or TNIC Peer Shock</h4>
+<p><img src="figure1a_unconditional_turnover.png" alt="Figure 1A"></p>
+<p><strong>주요 발견</strong>:</p>
+<ul>
+<li>
+<p>TNIC 그룹의 경우 이벤트 발생시 turnover가 즉각적으로 증가한 후 점진적으로 감소한다.</p>
+</li>
+<li>
+<p>FnGuide 그룹의 경우 이벤트 발생시 1 month 뒤 turnover가 증가하고 점진적으로 감소한다.</p>
+</li>
+<li>
+<p>이는 Key Paper의 결과와는 조금 다른 양상이다.</p>
+<ul>
+<li>Key Paper에선 TNIC 그룹과 SIC 그룹 모두 이벤트 발생시 즉각적으로 turnover가 증가하는 양상을 보였다.</li>
+<li>그러나 한국 실증 결과에선 TNIC 그룹만 즉각적으로 증가하고, FnGuide 그룹은 증가하긴 하나 1보다 작고, 즉각적으로 반응하지 않고 1 month 뒤에 반응하는 양상을 보였다.</li>
+</ul>
+</li>
+</ul>
+<h4 id="graph-b-conditional-turnover-around-high-quintile-fnguide-without-tnic-peer-shock-and-tnic-without-fnguide-peer-shock">Graph B. Conditional Turnover around High-Quintile FnGuide Without TNIC Peer Shock and TNIC Without FnGuide Peer Shock</h4>
+<p><img src="figure1b_conditional_turnover.png" alt="Figure 1B"></p>
+<p><strong>주요 발견</strong>:</p>
+<ul>
+<li>
+<p>조건부 turnover를 볼 땐 TNIC 그룹과 FnGuide 그룹 모두 이벤트 발생시 turnover가 즉각적으로 증가한다.</p>
+<ul>
+<li>이 또한 key paper의 결과와는 다른 양상이다. Key paper에선 SIC 그룹은 즉각적으로 증가하고 TNIC 그룹은 즉각적으로 증가하지 않았다.</li>
+</ul>
+</li>
+<li>
+<p>하지만 event 시점 이후부턴 FnGuide 그룹은 점진적으로 감소하는 반면, TNIC 그룹은 오히려 점진적으로 증가하는 양상을 보였다.</p>
+<ul>
+<li>이는 key paper의 결과와 부분적으로 유사하다. Key Paper에서도 TNIC 그룹은 turnover가 event 이후 점진적으로 증가한 후 12개월동안 유지되는 모습을 보였고 SIC 그룹은 빠르게 감소한 뒤 유지되는 패턴을 보였다.</li>
+</ul>
+</li>
+</ul>
+<h3 id="62-%EC%88%98%EC%9D%B5%EB%A5%A0-%EB%8F%99%EC%A1%B0%ED%99%94-%EB%B6%84%EC%84%9D-table-2">6.2 수익률 동조화 분석 (Table 2)</h3>
+<p><strong>Table 2: Return Comovement (Fama-MacBeth Regression)</strong></p>
+<p><strong>Dependent Variable</strong>: Month t Own Return
+<strong>Standard Errors</strong>: Newey-West (2 lags)
+<strong>Significance</strong>: *** p&lt;0.001, ** p&lt;0.01, * p&lt;0.05</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Variable</th>
+<th style="text-align:left">Spec1</th>
+<th style="text-align:left">Spec2</th>
+<th style="text-align:left">Spec3</th>
+<th style="text-align:left">Spec4</th>
+<th style="text-align:left">Spec5</th>
+<th style="text-align:left">Spec6</th>
+<th style="text-align:left">Spec7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">log_be_me</td>
+<td style="text-align:left">0.0016</td>
+<td style="text-align:left">0.0008</td>
+<td style="text-align:left">0.0019*</td>
+<td style="text-align:left">0.0026*</td>
+<td style="text-align:left">0.0036*</td>
+<td style="text-align:left">0.0019</td>
+<td style="text-align:left">0.0032*</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">(1.77)</td>
+<td style="text-align:left">(0.73)</td>
+<td style="text-align:left">(2.25)</td>
+<td style="text-align:left">(2.13)</td>
+<td style="text-align:left">(2.50)</td>
+<td style="text-align:left">(1.41)</td>
+<td style="text-align:left">(2.12)</td>
+</tr>
+<tr>
+<td style="text-align:left">log_size</td>
+<td style="text-align:left">-0.0016</td>
+<td style="text-align:left">-0.0020</td>
+<td style="text-align:left">-0.0053***</td>
+<td style="text-align:left">-0.0016</td>
+<td style="text-align:left">-0.0014</td>
+<td style="text-align:left">-0.0024</td>
+<td style="text-align:left">-0.0021</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">(-1.49)</td>
+<td style="text-align:left">(-1.78)</td>
+<td style="text-align:left">(-4.94)</td>
+<td style="text-align:left">(-1.39)</td>
+<td style="text-align:left">(-1.19)</td>
+<td style="text-align:left">(-1.93)</td>
+<td style="text-align:left">(-1.68)</td>
+</tr>
+<tr>
+<td style="text-align:left">ret_t1</td>
+<td style="text-align:left">0.0013</td>
+<td style="text-align:left">0.0019</td>
+<td style="text-align:left">0.0021*</td>
+<td style="text-align:left">0.0008</td>
+<td style="text-align:left">0.0004</td>
+<td style="text-align:left">0.0010</td>
+<td style="text-align:left">0.0008</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">(0.82)</td>
+<td style="text-align:left">(1.09)</td>
+<td style="text-align:left">(2.07)</td>
+<td style="text-align:left">(0.49)</td>
+<td style="text-align:left">(0.26)</td>
+<td style="text-align:left">(0.66)</td>
+<td style="text-align:left">(0.47)</td>
+</tr>
+<tr>
+<td style="text-align:left">ret_t2_t12</td>
+<td style="text-align:left">-0.0010</td>
+<td style="text-align:left">-0.0007</td>
+<td style="text-align:left">0.0016</td>
+<td style="text-align:left">-0.0014</td>
+<td style="text-align:left">-0.0017</td>
+<td style="text-align:left">-0.0012</td>
+<td style="text-align:left">-0.0015</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">(-0.88)</td>
+<td style="text-align:left">(-0.56)</td>
+<td style="text-align:left">(1.73)</td>
+<td style="text-align:left">(-1.17)</td>
+<td style="text-align:left">(-1.46)</td>
+<td style="text-align:left">(-0.93)</td>
+<td style="text-align:left">(-1.24)</td>
+</tr>
+<tr>
+<td style="text-align:left">tnic_t0</td>
+<td style="text-align:left">0.0120***</td>
+<td style="text-align:left">0.0168***</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">0.0122***</td>
+<td style="text-align:left">0.0121***</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">(15.61)</td>
+<td style="text-align:left">(16.71)</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(14.69)</td>
+<td style="text-align:left">(13.63)</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">tnic_t_1</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">0.0017***</td>
+<td style="text-align:left">0.0014*</td>
+<td style="text-align:left">0.0019***</td>
+<td style="text-align:left">0.0017*</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(3.36)</td>
+<td style="text-align:left">(2.24)</td>
+<td style="text-align:left">(3.34)</td>
+<td style="text-align:left">(2.44)</td>
+</tr>
+<tr>
+<td style="text-align:left">tnic_t_2</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">-0.0004</td>
+<td style="text-align:left">-0.0004</td>
+<td style="text-align:left">-0.0003</td>
+<td style="text-align:left">-0.0004</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(-0.69)</td>
+<td style="text-align:left">(-0.63)</td>
+<td style="text-align:left">(-0.49)</td>
+<td style="text-align:left">(-0.51)</td>
+</tr>
+<tr>
+<td style="text-align:left">tnic_t_3</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">-0.0012*</td>
+<td style="text-align:left">-0.0009</td>
+<td style="text-align:left">-0.0011*</td>
+<td style="text-align:left">-0.0008</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(-2.17)</td>
+<td style="text-align:left">(-1.63)</td>
+<td style="text-align:left">(-1.99)</td>
+<td style="text-align:left">(-1.29)</td>
+</tr>
+<tr>
+<td style="text-align:left">tnic_t_4</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">0.0001</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">0.0001</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(0.24)</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(0.19)</td>
+</tr>
+<tr>
+<td style="text-align:left">tnic_t_5</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">-0.0006</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">-0.0003</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(-1.06)</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(-0.57)</td>
+</tr>
+<tr>
+<td style="text-align:left">tnic_t_6</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">-0.0006</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">-0.0006</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(-1.09)</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(-1.09)</td>
+</tr>
+<tr>
+<td style="text-align:left">sic_t0</td>
+<td style="text-align:left">0.0210***</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">0.0214***</td>
+<td style="text-align:left">0.0185***</td>
+<td style="text-align:left">0.0159***</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">(19.42)</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(20.28)</td>
+<td style="text-align:left">(16.77)</td>
+<td style="text-align:left">(12.62)</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">sic_t_1</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">0.0024*</td>
+<td style="text-align:left">0.0022</td>
+<td style="text-align:left">0.0049***</td>
+<td style="text-align:left">0.0042**</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(2.43)</td>
+<td style="text-align:left">(1.93)</td>
+<td style="text-align:left">(3.81)</td>
+<td style="text-align:left">(3.18)</td>
+</tr>
+<tr>
+<td style="text-align:left">sic_t_2</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">-0.0011</td>
+<td style="text-align:left">-0.0011</td>
+<td style="text-align:left">-0.0009</td>
+<td style="text-align:left">-0.0009</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(-1.58)</td>
+<td style="text-align:left">(-1.21)</td>
+<td style="text-align:left">(-0.80)</td>
+<td style="text-align:left">(-0.73)</td>
+</tr>
+<tr>
+<td style="text-align:left">sic_t_3</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">0.0004</td>
+<td style="text-align:left">0.0004</td>
+<td style="text-align:left">0.0009</td>
+<td style="text-align:left">0.0012</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(0.57)</td>
+<td style="text-align:left">(0.42)</td>
+<td style="text-align:left">(0.85)</td>
+<td style="text-align:left">(1.02)</td>
+</tr>
+<tr>
+<td style="text-align:left">sic_t_4</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">0.0007</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">-0.0004</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(0.72)</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(-0.32)</td>
+</tr>
+<tr>
+<td style="text-align:left">sic_t_5</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">0.0009</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">0.0015</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(1.12)</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(1.39)</td>
+</tr>
+<tr>
+<td style="text-align:left">sic_t_6</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">0.0006</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">0.0010</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(0.67)</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">(0.98)</td>
+</tr>
+<tr>
+<td style="text-align:left">N observations</td>
+<td style="text-align:left">113,402</td>
+<td style="text-align:left">113,402</td>
+<td style="text-align:left">317,951</td>
+<td style="text-align:left">107,176</td>
+<td style="text-align:left">100,951</td>
+<td style="text-align:left">108,474</td>
+<td style="text-align:left">102,249</td>
+</tr>
+</tbody>
+</table>
+<p><strong>실증 결과와 Key Paper 결과 비교</strong>:</p>
+<ol>
+<li>
+<p><strong>동시점 수익률 동조화 (Spec 1, 2, 3)</strong>:</p>
+<ul>
+<li>tnic_t0과 sic_t0 모두 control variable을 추가하고도 강한 양(+)의 유의미한 계수를 가진다.</li>
+<li>두 분류 체계 모두 실제 경제적 연계를 포착함을 확인.</li>
+</ul>
+</li>
+<li>
+<p><strong>시차 변수의 예측력 (Spec 4, 5)</strong>:</p>
+<ul>
+<li>TNIC의 lag variables와 SIC의 lag variables를 모두 포함할 때 둘 다 유의하며, TNIC가 조금 더 유의한 결과를 보인다.</li>
+<li>이는 Key Paper와는 매우 다른 결과다. Key Paper에선 TNIC variable을 추가하면 SIC variable이 유의미하지 않게 나왔다.</li>
+<li>특히 Spec 5와 같이 lag 4, 5, 6까지 추가하는 경우에도 tnic_t_1, tnic_t_3이 유의미한 반면 SIC의 lag 변수들은 모두 유의미하지 않게 보고된다.</li>
+</ul>
+</li>
+</ol>
+<p><strong>TNIC 네트워크의 낮은 커버리지 한계</strong>:</p>
+<p>현재 결과가 Key Paper와 다른 이유는 TNIC 네트워크의 낮은 커버리지 때문으로 보인다:</p>
+<ul>
+<li>
+<p><strong>상장폐지 기업 누락</strong>: DART 사업보고서의 Stock ID는 현재 상장된 기업에 대해서만 제공되기 때문에 TNIC 네트워크 구축 시 과거 상장폐지된 기업들은 포함되지 않는다.</p>
+</li>
+<li>
+<p><strong>XML 파싱 한계</strong>: 공시를 XML 파싱을 통해 추출하였는데, 일부 기업의 경우 이 형식을 지키지 않고 공시를 하는 경우가 있어 해당 기업들의 사업내용 기술서가 누락되었을 수도 있다.</p>
+</li>
+<li>
+<p><strong>고립 노드 발생</strong>: TNIC 네트워크를 구축했을 때 network가 만들어지지 않고 orphan node가 되는 기업들이 존재한다. 이 또한 TNIC 네트워크의 커버리지를 낮추는 요인이다.</p>
+</li>
+</ul>
+<h2 id="7-%EC%B0%B8%EA%B3%A0%EB%AC%B8%ED%97%8C-references">7. 참고문헌 (References)</h2>
+<p>Cohen, L., &amp; Frazzini, A. (2008). Economic links and predictable returns. <em>Journal of Finance</em>, 63(4), 1977-2011.</p>
+<p>Fama, E. F., &amp; French, K. R. (1992). The cross-section of expected stock returns. <em>Journal of Finance</em>, 47(2), 427-465.</p>
+<p>Hoberg, G., &amp; Phillips, G. M. (2016). Text-based network industries and endogenous product differentiation. <em>Journal of Political Economy</em>, 124(5), 1423-1465.</p>
+<p>Hoberg, G., &amp; Phillips, G. M. (2018). Text-based industry momentum. <em>Journal of Financial and Quantitative Analysis</em>, 53(6), 2355-2388.</p>
+<p>Kim, S., Kim, H., &amp; Choi, H. (2022). An artificial intelligence-enabled industry classification and its interpretation. <em>Internet Research</em>, 32(5), 1644-1667.</p>
+<p>Lee, M. C. (2024). Kiwi: Implementation of Korean morphological analyzer using statistical language model and skip-bigram. <em>Korean Journal of Digital Humanities</em>, 1(1), 109-136.</p>
+<p>Moskowitz, T. J., &amp; Grinblatt, M. (1999). Do industries explain momentum? <em>Journal of Finance</em>, 54(4), 1249-1290.</p>
+
+</body>
+</html>

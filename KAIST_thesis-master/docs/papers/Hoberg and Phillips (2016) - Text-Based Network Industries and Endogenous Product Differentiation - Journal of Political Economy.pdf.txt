@@ -1,0 +1,2323 @@
+Text-Based Network Industries and
+Endogenous Product Differentiation
+Gerard Hoberg
+University of Southern California
+Gordon Phillips
+Dartmouth College and National Bureau of Economic Research
+We study how ﬁrms differ from their competitors using new time-varying
+measures of product similarity based on text-based analysis of ﬁrm 10-K
+product descriptions. This year-by-year set of product similarity mea-
+sures allows us to generate a new set of industries in which ﬁrms can
+have their own distinct set of competitors. Our new sets of competitors
+explain speciﬁc discussion of high competition, rivals identiﬁed by man-
+agers as peer ﬁrms, and changes to industry competitors following ex-
+ogenous industry shocks. We also ﬁnd evidence that ﬁrm R&D and ad-
+vertising are associated with subsequent differentiation from competitors,
+consistent with theories of endogenous product differentiation.
+I.
+Introduction
+Deﬁning industry boundaries and industry competitiveness is central to
+the study of industrial organization. It is also central to broader disciplines
+We especially thank our editor, Sam Kortum, and three anonymous referees. We also
+thank Dan Kovenock, Steve Martin, Nagpurnanand Prabhala, John Sutton, and seminar
+participants at Aalto (Helsinki) School of Economics, HEC-Paris, Research Institute of In-
+dustrial Economics (IFN Stockholm), INSEAD, University Institute of Lisbon, London
+Business School, Notre Dame, Northwestern, Stanford, Stockholm School of Economics,
+University of Amsterdam, University of Chicago, University of Southern California, Univer-
+sity of Vienna, and the Academy of Management meetings for helpful comments. All errors
+are ours alone. Data are provided as supplementary material online.
+Electronically published August 31, 2016
+[ Journal of Political Economy, 2016, vol. 124, no. 5]
+© 2016 by The University of Chicago. All rights reserved. 0022-3808/2016/12405-0001$10.00
+1423
+
+in economics, ﬁnance, and management strategy, where the study of in-
+dustries, or the need to control for industry, is pervasive. We develop new
+time-varying industry classiﬁcations using text-based analysis of ﬁrm prod-
+uct descriptions ﬁled with the Securities and Exchange Commission
+(SEC). Our paper is based on the premise that product similarity is core
+to classifying industries and that empirical work can beneﬁt from more
+ﬂexible measures of industry membership, product differentiation, and
+changes in both as they occur in each year. We use these new industries
+to show how industries and their competitors change both in competi-
+tive intensity and in product offerings following industry shocks. We also
+show that ﬁrm research and development (R&D) and advertising are as-
+sociated with subsequent differentiation from competitors and increased
+proﬁtability.
+Our starting point is to gather business descriptions from 50,673 ﬁrm
+annual 10-Ks ﬁled with the SEC using web crawling algorithms. We pro-
+cess the text in these business descriptions to form new industry classiﬁ-
+cations based on the strong tendency of product market vocabulary to
+cluster among ﬁrms operating in the same market. Because they are a
+function of 10-K business descriptions, our classiﬁcations are based on
+the products that ﬁrms supply to the market rather than production pro-
+cesses (as is the case for existing industry classiﬁcation schemes).1 Using
+the traditional industry groups, ﬁrms are placed within predeﬁned in-
+dustry groups instead of using the information that ﬁrms provide to de-
+termine whom they compete against. To identify related ﬁrms, our meth-
+ods use the business description section of the 10-K, where ﬁrms give
+detail on the products they offer. In particular, the business description
+section of the 10-K is mandated by SEC regulations requiring ﬁrms to de-
+scribe the signiﬁcant products they offer to their customers. Our new clas-
+siﬁcations are thus based on the products sold by ﬁrms that arise from un-
+derlying consumer preferences and demand.
+There are two central ideas in our paper. The ﬁrst is that 10-K product
+words describe the features and bundles of products each ﬁrm offers.
+Thus, we use the text in each ﬁrm’s 10-K business description to assign
+each ﬁrm a spatial location based on product words, generating a Hotelling-
+like product location space for publicly traded US ﬁrms.2 Each ﬁrm has a
+1 See the website for the North American Industry Classiﬁcation System (http://www
+.naics.com/info.htm). The Census Department states, “NAICS was developed to classify
+units according to their production function. NAICS results in industries that group units
+undertaking similar activities using similar resources but does not necessarily group all sim-
+ilar products or outputs.”
+2 Hotelling (1929) and Chamberlin (1933) famously show that product differentiation
+is fundamental to proﬁtability and theories of industrial organization, and also that prod-
+uct markets can be viewed as having a spatial representation that accounts for product dif-
+ferentiation. Empirically, the spatial characteristics of our measures can also be viewed as
+1424
+journal of political economy
+
+unique spatial location and its own potential set of nearby competitors
+in this space based on product word overlaps. Groups of likely competi-
+torsarethuslocatedinclustersinspaceanalogoustocitiesonamap.Larger
+distances within a cluster indicate product differentiation, and distances
+across clusters indicate across-industry similarity.
+The second central idea relates to networks, as we calculate how sim-
+ilar each ﬁrm is to every other ﬁrm by calculating ﬁrm-by-ﬁrm pairwise
+word similarity scores using the 10-K product words. We thus reduce high-
+dimensional word vectors to a simple matrix of ﬁrm pairwise similarity
+scores. Using these pairwise similarity scores, we then group ﬁrms into in-
+dustries. Our general industry classiﬁcation can then be represented as
+an unrestricted network of ﬁrms. Because ﬁrms update their 10-Ks, the
+network is time varying. In this network, a ﬁrm’s competitors are analo-
+gous to a Facebook circle of friends, where each ﬁrm can have its own dis-
+tinct set of competitors. Because each ﬁrm pair has a continuous degree
+of relatedness, the analogy is that some pairs are close friends and some
+pairs are more distant acquaintances.
+What makes our analysis possible is that publicly traded ﬁrms must
+ﬁle a 10-K in each year, allowing us to build classiﬁcations that change
+over time. Using this time-varying feature, we examine how ﬁrms react
+to changes within and around their product markets over time.3 For ex-
+ample, we assess the extent to which ﬁrms adjust product offerings fol-
+lowing large industry shocks. Although numerous studies use industry
+classiﬁcations as control variables, only a few studies examine the classi-
+ﬁcation schemes themselves, and these do not consider the possibility of
+industry classiﬁcations that change materially over time.4
+We create 10-K-based industry classiﬁcations using two methods: one
+historically motivated and one that allows industry competition to be ﬁrm-
+centric and change over time. The ﬁrst, which we name ﬁxed industry clas-
+siﬁcations, is analogous to SIC and NAICS industries. Firms are grouped
+together using ﬁxed product market deﬁnitions, and industry member-
+ship is constrained to be transitive. Therefore, this method requires that
+if ﬁrms B and C are in ﬁrm A’s industry, then ﬁrms B and C are also in the
+analogous to the patent technology–based space of Jaffe (1986), although Jaffe’s space is
+applicable for patent ﬁling ﬁrms and is not generated using product description text.
+3 Note that only publicly traded ﬁrms ﬁle 10-Ks. However, the methods can be applied to
+a broader set of product descriptions using ﬁrm Internet webpages.
+4 Kahle and Walkling (1996) compare the informativeness of Standard Industrial Clas-
+siﬁcation (SIC) codes obtained from the Center for Research in Security Prices (CRSP)
+and Compustat databases, and Fama and French (1997) create new industry classiﬁcations
+based on a new way of grouping existing four-digit SIC codes. Krishnan and Press (2003)
+compare SIC codes to NAICS codes, and Bhojraj, Lee, and Oler (2003) also compare var-
+ious ﬁxed industry classiﬁcations. Although these studies are informative and suggest that
+existing static classiﬁcations can be used in better ways, they do not explore whether the
+core methodology underlying static classiﬁcations can be improved.
+text-based network industries
+1425
+
+same industry. To implement this method, we assign ﬁrms to industries
+using a clustering algorithm that maximizes total within-industry similar-
+ity based on word usage in 10-K product descriptions.
+Our second, more general, network classiﬁcation is unconstrained. We
+now allow product market deﬁnitions to change every year, and we relax
+the membership transitivity requirement of ﬁxed industry classiﬁcations.
+We thus view industries as time-varying intransitive networks. We name
+these new industries text-based network industry classiﬁcations or TNIC on our
+external website, where we maintain the data.5 In this classiﬁcation sys-
+tem, each ﬁrm has its own set of distinct competitors. To illustrate why tran-
+sitivity is restrictive, suppose that ﬁrms A and B both view ﬁrm C as a rival.
+If A and B each have products with different distinct features or enhance-
+ments that C does not have, then A and B may not compete against each
+other as they may serve different product segments.
+Relative to existing industry classiﬁcations, our text-based classiﬁca-
+tions offer economically large improvements in their ability to explain
+differences in key characteristics such as proﬁtability, sales growth, and
+market risk across industries. They also better explain the extent to which
+managers mention high competition in the Management’s Discussion and
+Analysis section of the 10-K, the speciﬁc ﬁrms mentioned by managers
+as being competitors, and how advertising and R&D investments relate
+to future product differentiation. Our empirical tests beneﬁt from in-
+formation regarding the degree to which speciﬁc ﬁrms are similar to their
+competitors and how this changes over time, neither of which can be
+derived from static zero-one membership classiﬁcations such as SIC or
+NAICS.6
+Using our ability to identify both the time-varying product market lo-
+cation of a ﬁrm and the time-varying identity of its rivals, we examine how
+these items change following large exogenous industry shocks. We focus
+on the September 11, 2001, shock to the military goods and services in-
+dustry and also on the post-2000 collapse of the software industry. Follow-
+ing these exogenous shocks, our new industry classiﬁcations capture sig-
+niﬁcant changes in the membership of each ﬁrm’s rivals, the degree of
+product similarity, and also the nature and type of products offered.
+Our results suggest that a positive shock to the military industry led to in-
+creases in competition and increases in product market similarity as rivals
+relocated in the product market space to areas of common high demand.
+In contrast, a negative industry shock in the software industry led to re-
+5 Our new industry network groupings and underlying data are available for download
+at http://hobergphillips.usc.edu.
+6 Our results are robust to the treatment of ﬁrms that report producing in more than
+one industry (conglomerate ﬁrms). When forming ﬁxed classiﬁcations, we use only ﬁrms
+that report just one segment to identify which industries exist in the economy. Thereafter,
+we assign conglomerates and nonconglomerates alike to the resulting classiﬁcations.
+1426
+journal of political economy
+
+ductions in similarity and movement toward more differentiated prod-
+ucts.
+We also examine whether advertising and R&D are correlated with de-
+creasing ex post product similarity. We ﬁnd that ﬁrms spending more on
+either advertising or R&D experience signiﬁcant reductions in measures
+of ex post similarity and signiﬁcant gains in ex post proﬁtability. These
+ﬁndings are consistent with Sutton’s (1991) hypothesis that ﬁrms spend
+on advertising and R&D to differentiate themselves and create endoge-
+nous barriers to entry. Our results provide evidence across a broad range
+of industries complementing the study by Ellickson (2007), who analyzes
+endogenous barriers to entry in the supermarket industry.7
+One of the beneﬁts of our approach is that it allows both within-industry
+and across-industry relations to be examined. Many empirical studies ex-
+amining product differentiation focus on single industries, while an older
+literature summarized by Schmalensee (1989) focuses on cross-industry
+relations.8 We are able to identify a unique set of industry rivals surround-
+ing each ﬁrm over time as in the circular city model of Chamberlin (1933),
+which relaxes the restrictive transitivity property of existing classiﬁcations.
+We also identify groups of other ﬁrms that share some vocabulary sim-
+ilar to that of the initial group of ﬁrms, thus capturing across-industry
+relatedness.
+Although it is convenient to use existing industry classiﬁcations such
+as SIC or NAICS for research purposes, these measures have at least four
+limitations. First, neither reclassiﬁes ﬁrms signiﬁcantly over time as the
+product market evolves. Second, neither can easily accommodate inno-
+vations that create entirely new product markets. In the late 1990s, hun-
+dreds of new technology and web-based ﬁrms were grouped into a large
+and nondescript SIC-based “business services” industry. Third, SIC and
+NAICS impose transitivity even though two ﬁrms that are rivals to a third
+ﬁrm might not be rivals. Finally, they do not provide continuous mea-
+sures of similarity both within and across industries. There are also econo-
+metric beneﬁts to using our new industries as they are more informative
+in tests of external validity that we conduct in this paper.
+Our new classiﬁcations can also be used in conjunction with, not in
+lieu of, other data. Although not part of the current study, word-by-word
+mappings can be used to create ﬁrm-speciﬁc aggregations of Bureau of
+Labor Statistics price series, Bureau of Economic Analysis (BEA) input-
+output data, and patent data. For example, patent ﬁlings have a textual
+7 We note that while our new measures are interesting for research or scientiﬁc pur-
+poses, e.g., to examine innovation, shocks, or industry life cycles, they are less useful for
+policy and antitrust purposes as they could be manipulated by ﬁrms if they believed they
+were being used for this purpose.
+8 For recent examples of single-industry studies, see Nevo (2000), Mazzeo (2002), Seim
+(2006), and Gowrisankaran and Rysman (2012).
+text-based network industries
+1427
+
+description, and this can be used to map how patents are related to each
+other and across ﬁrms—independent of the patent examiner classiﬁca-
+tion. Analogously, if price data are available for verbal product lists, ﬁrm-
+speciﬁc price levels can also be estimated using various weighting meth-
+ods based on ﬁrm 10-K text.
+Our research contributes to existing strands of literature using text anal-
+ysis to address economic and ﬁnancial theories, product markets, and
+mergers and acquisitions. Hoberg and Phillips (2010) show that merging
+ﬁrms with more similar product descriptions in their 10-Ks experience
+more successful outcomes. Hanley and Hoberg (2010) use document sim-
+ilarity measures to examine prospectus disclosures from the SEC Edgar
+website to address theories of initial public offering pricing. In other con-
+texts, Gentzkow and Shapiro (2010) measure the Republican versus Dem-
+ocratic slant of US daily newspapers and document a preference among
+readers for like-minded news. Papers such as Antweiler and Frank (2004),
+Tetlock(2007),Tetlock,Saar-Tsechanksy,andMacskassy(2008),andLough-
+ran and McDonald (2011) examine the tone of various documents and
+link them, for example, to stock price movements.
+The remainder of the paper is organized as follows. We describe the
+verbal data and similarity calculations in Section II. We give methodolog-
+ical details for our new industry classiﬁcations in Section III. We discuss
+central properties of new industry classiﬁcations and give new industry ex-
+amples in Section IV. In Section V we examine the external validation of
+our new industry classiﬁcations. Section VI examines how industry simi-
+larity and competitors change over time following large exogenous indus-
+try shocks. Section VII tests theories of endogenous barriers to entry and
+examines how R&D and advertising are associated with subsequent changes
+in similarity and proﬁtability. Section VIII presents conclusions.
+II.
+Objective and Methodology: From Words
+to Industry Classiﬁcations
+Our industry classiﬁcations are based on the notion that ﬁrms in the
+same industry use many of the same words to identify and describe their
+products. In this section, we describe our objective in building new mea-
+sures of industry relatedness. We also describe the underlying data struc-
+tures that deﬁne our new industries.
+A.
+Objective
+Our overall objective is to capture the relatedness of ﬁrms based on their
+product offerings to customers using a ﬂexible network approach. This
+approach provides a measure of distance between ﬁrm pairs in product
+space and does not impose transitivity between members of the network.
+1428
+journal of political economy
+
+Our approach identiﬁes competitors of each ﬁrm on the basis of the sim-
+ilarity of their product offerings. Competitors can be different for each
+ﬁrm—even when ﬁrms may share some overlapping competitors. Thus an
+industry can be thought of as a cluster in a network with porous bound-
+aries. This more general classiﬁcation of industries can be used to test a
+larger set of economic hypotheses (see Sec. IV).
+Our objective differs from that of traditional SIC or NAICS industry
+classiﬁcations, which is to place ﬁrms in predeﬁned industry categories
+on the basis of production processes, not the products they offer to cus-
+tomers (http://www.naics.com/info.htm). SIC and NAICS industries also
+impose transitivity among group members and provide no measure of sim-
+ilarity between ﬁrms within an industry or between ﬁrms in neighboring
+industries.
+Our methods come closer to capturing the fact that cross-price elastic-
+ities of demand between ﬁrms may be different for different pairs of
+ﬁrms within the same industry. In many industry studies in industrial or-
+ganization, researchers obtain detailed price and quantity data in order
+to measure these intraindustry cross-price elasticities. Our classiﬁcations
+provide measures of distance for all ﬁrm pairs simultaneously without
+having to obtain detailed price and quantity data—which for many com-
+petitors with differentiated products can be difﬁcult to obtain.
+A second major part of our objective is to allow for frequent annual
+updating. Our industries are updated every year as ﬁrm product offerings
+change. In contrast, ﬁrm SIC and NAICS codes update infrequently de-
+spite the fact that ﬁrm products change materially over time, as can be seen
+in their 10-Ks.
+The last part of our objective is to uniquely capture horizontal related-
+ness between ﬁrms, not vertical relatedness. As we describe later in the
+paper, we thus remove pairs from our related pairs that are in two differ-
+ent traditional industries classiﬁed as shipping to each other using the
+input-output tables of the BEA. The pairs we remove turn out to be rel-
+atively scarce, representing just 4 percent of the pairs in our data. We thus
+conclude that our methods naturally capture horizontally related prod-
+uct offerings and not vertical links or vertical production processes.
+B.
+Capturing Relatedness between Firms
+Our primary building block is the set of unique words that ﬁrms use to
+describe their products in their business description sections from 10-K
+annual ﬁlings on the SEC Edgar website from 1996 to 2008. These de-
+scriptions are found in a separate section of each 10-K ﬁled by each ﬁrm.
+The 10-K business descriptions are legally required to be accurate, as
+item 101 of Regulation S-K requires that ﬁrms describe the signiﬁcant
+products they offer to the market. These descriptions must also be up-
+text-based network industries
+1429
+
+dated and be representative of the current ﬁscal year of the 10-K. This re-
+cency requirement is important, as our goal is to measure how industries
+change over time.
+We use the 10-K business descriptions to compute pairwise word sim-
+ilarity scores for each pair of ﬁrms in a given year. In our main speciﬁca-
+tion, we limit attention to nouns (deﬁned by Webster.com) and proper
+nouns that appear in no more than 25 percent of all product descriptions
+in order to avoid common words.9 We deﬁne proper nouns as words that
+appear with the ﬁrst letter capitalized at least 90 percent of the time in our
+sample of 10-Ks. We also omit common words that are used by more than
+25 percent of all ﬁrms, and we omit geographical words including coun-
+try and state names, as well as the names of the top 50 cities in the United
+States and in the world. As we discuss later, our results are robust to alter-
+ing these stop word thresholds.
+Figure 1 displays a histogram showing the number of unique words in
+ﬁrm product descriptions. Typical ﬁrms use roughly 200 unique words.
+The tail is also somewhat skewed, as some ﬁrms use as many as 500–
+1,000 words, although some use fewer than 50. Because they are not
+likely to be informative, we exclude ﬁrms having fewer than 20 unique
+words from our classiﬁcation algorithm.
+We map ﬁrms into industries using word vectors and ﬁrm pairwise co-
+sine similarity scores based on the words used by each ﬁrm. Full details
+regarding our implementation of the cosine similarity calculation are in
+Appendix A. We give a basic description here. Suppose that there areW
+unique words used in the union of the documents used by all ﬁrms in
+our sample. In our sample, W is 61,146 unique nouns and proper nouns
+in 1996 and 55,605 in 2008. A given ﬁrm i’s vocabulary can then be rep-
+resented by a W-vector Pi, with each element being populated by the num-
+ber 1 if ﬁrm i uses the given word and 0 if it does not. We then normal-
+ize each vector to have unit length as follows:
+Vi 5
+Pi
+ﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃ
+Pi  Pi
+p
+8 i, j:
+(1)
+Given that each vector has dimension W, and because we normalize these
+vectors to have unit length, all ﬁrms in a given year thus reside in a space
+shaped as the surface of a W-dimensional unit sphere. We deﬁne Q t as the
+matrix containing the set of normalized vectors Vi for all ﬁrms i in year t.
+Thus Qt is an Nt W matrix, where Nt is the number of ﬁrms in year t. Each
+row i of Qt contains the normalized vector Vi deﬁned above for ﬁrm i in
+9 When a word can be used as more than one part of speech, we include the word in our
+universe if it has at least one use as a noun.
+1430
+journal of political economy
+
+FIG. 1.—Frequency distribution of unique non–common noun and proper noun words in 10-K product descriptions. Color version available as an
+online enhancement.
+
+year t. Thus Qt is a complete description of the ﬁrm-to-word spatial repre-
+sentation of ﬁrms in product space over time.
+In order to derive the ﬁrm-to-ﬁrm network representation of our indus-
+tries, we use the vectors Vi and Vj for a pair of ﬁrms i and j to calculate the
+product cosine similarity or the ﬁrm pairwise similarity score as follows:
+Product Cosine Similarityi,j 5 ðVi VjÞ:
+(2)
+The network representation of ﬁrms is fully described by an Nt  Nt
+square matrix Mt (i.e., a network), where an entry of this matrix for
+row i and column j is the Product Cosine Similarityi,j for ﬁrms i and j de-
+ﬁned above. The large number of words used in business descriptions
+ensures that the matrix Mt is not sparse and that its entries are unrestricted
+real numbers in the interval [0, 1]. Because ﬁrms update their 10-Ks an-
+nually, Mt is time varying.
+Intuitively, the cosine similarity is higher when ﬁrms i and j use more
+of the same words, as both vectors will then have positive values in the
+same elements. Because we populate Pi with binary values, our baseline
+method weights words equally regardless of their frequency.10
+We use the “cosine similarity” method for many reasons (see Sebastiani
+[2002] for a detailed review of related methods). First, its properties are
+well understood given its wide usage in studies of information processing,
+and it is also intuitive given its network and spatial representations. This
+method is only moderately computationally burdensome, making it prac-
+tical to replicate or extend. Finally, this method’s normalization builds
+in a natural control for document length. It is called cosine similarity be-
+cause it measures the angle between two word vectors on a unit sphere.
+III.
+Industry Classiﬁcation Methods and Firm 10-Ks
+We construct network industry classiﬁcations using the matrix of ﬁrm
+pairwise cosine similarity scores (Mt) as the basic building block. We con-
+sider two methods. First, we consider a ﬁxed industry classiﬁcation method
+in which we impose transitivity on ﬁrm membership such that if ﬁrm A
+and ﬁrm C are in the same industry as ﬁrm B, then ﬁrms A and C are in
+the same industry. Second, we relax transitivity and allow ﬁrms to have dif-
+ferent sets of competitors.
+10 Following Loughran and McDonald (2011), we also consider an alternative weight-
+ing scheme called “total frequency/inverse document frequency” (TF-IDF) in which the Pi vec-
+tor is instead populated with higher weights for more frequently used words in ﬁrm i’s own
+document and lower weights for words used by a larger fraction of all ﬁrms in the economy.
+Our results suggest that uniform weights outperform TF-IDF weights for our application, in-
+dicating that a ﬁrm’s use of a given word to describe its products is more important than how
+frequently the word is used.
+1432
+journal of political economy
+
+The large number of words used in business descriptions, along with
+the continuous and bounded properties of the cosine similarity method,
+ensure that the matrix Mt is not sparse and that its entries are real num-
+bers in the interval [0, 1]. In contrast, the analogous matrix Mt underly-
+ing SIC and NAICS industries is heavily “restricted” and must satisfy the
+following two properties.
+Deﬁnition 1.
+A classiﬁcation is said to satisfy the binary membership
+transitivity property if Mt has a binary banded diagonal form (1 on all
+banded diagonals and 0 elsewhere). This implies that for any two ﬁrms
+A and B in the same industry, a ﬁrm C that is in A’s industry is also in B’s
+industry. This form also requires that all ﬁrms are homogeneous within
+industries and that all industries are entirely unrelated to one another.
+Deﬁnition 2.
+A classiﬁcation is said to have the ﬁxed location property
+if Mt is not updated each year. Intuitively, such industries have a time-ﬁxed
+product market (they are ﬁxed until the codes are changed or updated).
+Our ﬁrst method, described in Section B below, is analogous to SIC and
+NAICS classiﬁcations and requires both the binary membership transitiv-
+ity and the ﬁxed location properties to hold. We refer to classiﬁcations re-
+quiring these two restrictive properties as “ﬁxed industry classiﬁcations.”
+Our second method, described in Section C below, relaxes both prop-
+erties. We refer to this class of industries as “text-based network industry
+classiﬁcations.” Both ﬁrms and entire industries can move in the product
+space over time as technologies and product tastes evolve. New ﬁrms can
+appear in the sample, and each ﬁrm can have its own distinct set of com-
+petitors. Finally, these industries are sufﬁciently rich to permit within- and
+across-industry similarities to be computed.
+A.
+The Sample of 10-Ks and the Business Descriptions
+We electronically gather 10-Ks by searching the Edgar database for ﬁl-
+ings that appear as “10-K,” “10-K405,” “10KSB,” or “10KSB40.” Our pri-
+mary sample includes ﬁlings associated with ﬁrm ﬁscal years ending in
+calendar years 1997–2008. Our sample begins in 1997 as this is when elec-
+tronic ﬁling with Edgar ﬁrst became required. We link 10-K data from Ed-
+gar to Compustat using the unique SEC ﬁrm identiﬁer, the central index
+key, and the Compustat gvkey. Among ﬁrm-year observations with ﬁscal
+years ending in 1997–2008 that are present in both CRSP and Compustat
+(domestic ﬁrms traded on either the New York Stock Exchange, American
+Stock Exchange, or NASDAQ), we have 10-K coverage for 97.9 percent of
+the CRSP/Compustat sample.11 We can also report that our database is well
+11 We thank the Wharton Research Data Service for providing us with an expanded his-
+torical mapping from the ﬁrm-level central index key (used by the SEC) to the Compustat
+gvkey. We also compute similarities for 1996 (93.5 percent coverage; electronic ﬁling was
+optional) but only use the 1996 data to compute the starting value of lagged variables. Also,
+text-based network industries
+1433
+
+balanced over time, as we capture between 97.4 percent and 98.3 percent
+in all years of our primary sample from 1997 to 2008. Because database
+selection can be determined using ex ante information (i.e., the 10-K it-
+self), we do not believe that our data requirements indicate any bias.
+Our full sample of 10-Ks from 1997–2008 comprises 68,302 observa-
+tions; this declines to 63,875 when we exclude ﬁrms without valid Com-
+pustat data, ﬁrms with nonpositive sales, or ﬁrms with assets of less than
+$1 million. This declines further to 50,673 if we additionally require 1 year
+of lagged Compustat data and exclude ﬁnancial ﬁrms (SIC codes in the
+range 6000–6999).
+From each linked 10-K, our goal is to extract its business description.
+This section of the document appears as item 1 or item 1A in most 10-Ks.
+We utilize a combination of Perl web crawling scripts, APL program-
+ming, and human intervention (when documents are nonstandard) to
+extract and summarize this section. The web crawling algorithm scans
+the Edgar website and collects the entire text of each 10-K annual report,
+and the APL text reading algorithms then process each document and
+extract each one’s product description and its central index key. This lat-
+ter process is extensively supported by human intervention when non-
+standard document formats are encountered. This method is reliable,
+and we encountered only a small number of ﬁrms (roughly 100) that
+we were not able to process because they did not contain a valid product
+description or because the product description had fewer than 1,000 char-
+acters. These ﬁrms are excluded from our analysis.
+As described earlier, we then parse the words in the business descrip-
+tion and exclude common words and words that are not nouns or proper
+nouns. Using the resulting word vectors for each ﬁrm, we then form the
+matrix of pairwise similarity scores for the ﬁrms in our sample in each year
+(Mt) as described in the last section.
+B.
+Fixed Industry Classiﬁcations Based on 10-Ks
+To maintain consistency with other ﬁxed classiﬁcations such as SIC and
+NAICS, we form 10-K-based ﬁxed industries by running a clustering algo-
+rithm only once using the earliest year of our sample (1997), and we
+then hold these industries ﬁxed throughout our sample. We assign ﬁrms
+to these industries in later years on the basis of their 10-K text similarity
+relative to the frequency-weighted list of words used in the 1997 10-K
+product descriptions that were initially assigned to each industry.
+although we use data for ﬁscal year endings through 2008, we extract documents ﬁled
+through December 2009, as many of the ﬁlings in 2009 are associated with ﬁscal years end-
+ing in 2008. The reason is that 10-Ks are generally ﬁled during the 3-month window after
+the ﬁscal year ends.
+1434
+journal of political economy
+
+We also consider a variation in which we rerun the clustering algo-
+rithm in each year, as this variation imposes the binary membership tran-
+sitivity property but relaxes the ﬁxed location property. This allows us to
+examine the relative economic impact of the two properties separately,
+and we report later that both properties are about equally important in
+explaining the difference in explanatory power between our ﬁxed indus-
+try classiﬁcation and our more general textual network industries.
+We provide a detailed description of the text clustering algorithm used
+to create our ﬁxed industry classiﬁcations in Appendix B. The main idea
+is that the clustering algorithm starts by assuming that each of the roughly
+5,000 ﬁrms in 1997 is a separate industry, and then it groups the most sim-
+ilar ﬁrms into industries one at a time. The algorithm stops when the de-
+sired number of industries remains.
+A positive feature of the clustering algorithm is that it can generate
+a classiﬁcation with any number of industries. We consider industry clas-
+siﬁcations comprising 50–800 industries in increments of 50. However,
+we focus on the 300 industries classiﬁcation as it is most analogous to pop-
+ular alternatives including three-digit SIC codes and four-digit NAICS
+codes, which have 274 and 331 industries, respectively, in our sample. Al-
+though the algorithm’s ﬂexibility to prespecify the number of industries
+is a positive feature, it is not capable of determining the “optimal” num-
+ber of industries. In Appendix C, we explore this question using Akaike
+information criterion tests. These tests use likelihood analysis to compare
+models even when they use varying numbers of parameters (in our case
+industries). The results suggest that roughly 300–400 industries best ex-
+plain ﬁrm-level data.
+Figure 2 displays a histogram showing the distribution of the number of
+ﬁrms in each industry for 10-K-based 300 industries, SIC-3, and NAICS-4
+industries. Ten-K-based industries (top graph) have ﬁrm counts that are
+similar to those based on SIC-3 (second graph) and to NAICS-4 industries
+(bottom graph), as most industries have fewer than 10 ﬁrms. However,
+they are somewhat different in two ways. First, 10-K groupings have more
+single-ﬁrm industries, given that some ﬁrms have highly unique descrip-
+tions. Second, 10-K classiﬁcations have more very large industries and
+are more spread out.
+Industry memberships have roughly one-half to two-thirds overlap.
+For example (not displayed), the likelihood that two ﬁrms in the same
+SIC-3 industry will also be in the same NAICS-4 industry is 61.3 percent.
+The likelihood that they will be in the same 10-K-based industry is a more
+modest 46.2 percent. In contrast, when two ﬁrms are in the same 10-K-
+based industry, the likelihood that they will appear in the same SIC-3 and
+NAICS-4 industry is 44.1 percent and 54.2 percent, respectively. We con-
+clude that 10-K-based industries are quite distinct from both NAICS-4
+and SIC-3.
+text-based network industries
+1435
+
+FIG. 2.—Frequency distribution of the number of ﬁrms in each industry based on three ﬁxed industry classiﬁcation methods: 10-K-based 300 industries,
+three-digit SIC industries, and four-digit NAICS industries. All three classiﬁcations have close to 300 industries in our sample. Color version available as an
+online enhancement.
+
+C.
+10-K-Based Textual Network Industry Classiﬁcations
+We next relax the ﬁxed location and transitivity requirements and con-
+struct text-based network industry classiﬁcations. We use a simple mini-
+mum similarity threshold and deﬁne each ﬁrm i’s industry to include all
+ﬁrms j with pairwise cosine similarities relative to i above a prespeciﬁed
+minimum threshold. A high threshold will result in industries having very
+few rival ﬁrms, and a low threshold results in very large industries.
+For two randomly selected ﬁrms i and j, we label them as a “membership
+pair” if, for a given classiﬁcation, they are in the same industry. Where
+N denotes the number of ﬁrms in the economy, there are ðN 2 2 N Þ=2 per-
+mutations of unique pairs.12 In practice, however, only a small fraction
+of pairs are actually membership pairs. Although one can use any mini-
+mum similarity threshold to construct a classiﬁcation, we focus on thresh-
+olds generating industries with the same fraction of membership pairs
+as SIC-3 industries, allowing us to compare our industries to SIC-3 in an
+unbiased fashion.
+For three-digit SIC codes, 2.05 percent of all possible ﬁrm pairs are
+membership pairs. A 21.32 percent minimum similarity threshold (where
+we deﬁne ﬁrms i and j as being in the same industry when 100 ⋅Vi ⋅Vj >
+21.32) generates 10-K-based industries with 2.05 percent membership
+pairs, which is the same as SIC-3. We consider one further reﬁnement
+to further mitigate the impact of document length. For a ﬁrm i we com-
+pute its median score as the median similarity between ﬁrm i and all other
+ﬁrms in the economy in the given year. Intuitively, because no industry
+is large enough to span the entire economy, this quantity should be cali-
+brated to be near zero. We achieve this by subtracting these median scores
+from the raw scores to obtain our ﬁnal scores used for each ﬁrm.13
+Note that the transitivity property does not hold for these ﬁrm-centric
+industries. For example, consider ﬁrms A and B, which are 25 percent sim-
+ilar. Because this is higher than 21.32 percent, A and B are in each other’s
+industry. Now consider a ﬁrm C that is 27 percent similar to ﬁrm A and
+17 percent similar to ﬁrm B. Firm C is in ﬁrm A’s industry but not in ﬁrm B’s
+industry, and thus transitivity does not hold.
+We also take into account vertical relatedness in deﬁning our variable in-
+dustry classiﬁcations. We examine the extent to which ﬁrm pairings are ver-
+tically related using the methodology described in Fan and Goyal (2006).
+On the basis of the four-digit SIC codes, we use the use table of the Bench-
+mark Input-Output Accounts of the US Economy to compute, for each
+ﬁrm pairing, the fraction of inputs that ﬂow between the industries of
+each pair. If this fraction exceeds 1 percent of all inputs, we exclude the
+12 For a sample of 5,000 ﬁrms, this is 12.4975 million unique pairs.
+13 Our results are robust, although our external validation tests are slightly weaker if we
+omit this step.
+text-based network industries
+1437
+
+pairing from our network industries regardless of the similarity score. Be-
+cause just 4 percent of all pairs are excluded using this screen and because
+our results are robust to including or excluding this screen, we conclude
+that ﬁrm business descriptions in ﬁrm 10-Ks indeed focus heavily on hori-
+zontal ﬁrm product offerings, and not on vertical ﬁrm production inputs.
+IV.
+Qualitative Assessment of Our New
+Industry Classiﬁcations
+In this section we discuss central properties of our “unrestricted” text-
+based network industry classiﬁcation and illustrate these properties us-
+ing sample industries based on the new classiﬁcations. We focus on
+properties of networks that are not captured by traditional ﬁxed indus-
+try classiﬁcations. The properties are (1) capturing within-industry het-
+erogeneity, (2) capturing product and industry change, and (3) captur-
+ing cross-industry relatedness.
+A.
+Capturing Within-Industry Heterogeneity
+The concept of product differentiation within industries dates back to
+Chamberlin (1933), who famously showed that differentiation is fun-
+damental to theories of industrial organization and reduces competition
+between ﬁrms. An informative classiﬁcation should not only identify prod-
+uct markets but also measure differentiation within industries. Begin-
+ning with Berry, Levinsohn, and Pakes (1997), who consider the automo-
+bile industry, the approach in the product differentiation literature has
+been to estimate demand and cost parameters in well-deﬁned product
+markets. For example, Nevo (2000) estimates own- and cross-price elastici-
+ties of demand and their effect on postmerger prices in the ready-to-eat
+cereal market. Gowrisankaran and Rysman (2012) consider a dynamic set-
+ting and examine the effect of transitory price shocks on 1-month and
+1-year price elasticities. Holmes and Stevens (2004) show that industries
+are not as homogeneous as standard classiﬁcations might suggest, as
+smaller and larger ﬁrms might specialize or exhibit different degrees of
+differentiation.
+These latter studies motivate the need for more reﬁned industry clas-
+siﬁcations offering the ﬂexibility to assess industries in a dynamic way or
+to assess the distribution of rivals using multiple degrees of granularity.
+Text-based network industries address both issues. The standard single-
+industry approach used in the literature has been highly informative,
+especially in understanding the dynamics of industry pricing, competi-
+tion, and substitution in well-deﬁned industries.14 However, many theo-
+14 For additional recent examples, see Mazzeo (2002) and Seim (2006).
+1438
+journal of political economy
+
+ries, especially those related to endogenous barriers to entry and multi-
+ple industry production, are difﬁcult to test in a single industry setting.
+Accurately specifying industry composition is especially difﬁcult in in-
+dustries in which ﬁrms offer highly differentiated products or services.
+This difﬁculty is readily apparent in the business services industry, SIC
+code 737. There were over 600 publicly traded ﬁrms in this industry in
+1997 according to Compustat. Using a classiﬁcation that matches the
+coarseness of three-digit SIC industries, we ﬁnd that the markets faced
+by these ﬁrms are quite different. Table 1 displays sample classiﬁcations
+using our methodology for selected ﬁrms in this product area.
+Table 1 shows six major submarkets within this broad business ser-
+vices industry: entertainment, medical services, information transmis-
+sion, software, corporate data management and computing solutions,
+and online retailing and publishing. Each subindustry is the text-based
+network industry surrounding the focal ﬁrm listed in each example’s
+header. Although SIC codes were not used to make these groupings,
+we report them for illustrative purposes. The SIC codes in each market
+load heavily on 737, but each submarket also spans ﬁrms in other SIC
+industries including the three-digit codes 357, 366, and 382. A theme
+is that many ﬁrms address these markets using the Internet, but they of-
+ten also compete with rivals having a more traditional brick-and-mortar
+presence.
+Beyond simply identifying industry clusters, our approach also gener-
+ates ﬁrm-by-ﬁrm pairwise relatedness scores. Therefore, our framework
+can order rivals in terms of their importance to a focal ﬁrm, analogous to
+a network, while also providing aggregated measures of overall product
+differentiation surrounding each ﬁrm. We examine measures of compe-
+tition in Section V.
+B.
+Ability to Capture Product and Industry Change
+An informative industry classiﬁcation should also capture changes to in-
+dustry groupings over time. Firms introduce and discontinue products
+over time and thus enter and exit various industry spaces. This ﬂexibility
+is directly related to the studies by Shaked and Sutton (1987) and Sutton
+(1991), who suggest that barriers to entry are endogenous. In particular,
+advertising and R&D allow ﬁrms to differentiate their products and en-
+ter into related industries.15 These theories motivate our examination of
+advertising and R&D and their links to future changes in industry mem-
+bership and competition (see Sec. VII).
+15 Lin and Saggi (2002) show that trade-offs related to product differentiation can affect
+process innovation and product innovation.
+text-based network industries
+1439
+
+TABLE 1
+10-K-Based Classiﬁcations of Firms in Business Services (SIC-3 5 737)
+Submarket 1: Entertainment (Sample Focal Firm: Wanderlust Interactive)
+43 rivals: Maxis, Piranha Interactive Publishing, Brilliant Digital Entertainment, Midway
+Games, Take Two Interactive Software, THQ, 3DO, New Frontier Media, . . .
+SIC codes of rivals: computer programming and data processing [SIC-3 5 737] (24 rivals),
+motion picture production and allied services [SIC-3 5 781] (4 rivals), miscellaneous
+other (13 rivals)
+Core words: entertainment (42), video (42), television (38), royalties (35), internet (34),
+content (33), creative (31), promotional (31), copyright (31), game (30), sound (29),
+publishing (29), . . .
+Submarket 2: Medical Services (Sample Focal Firm: Quadramed Corp.)
+66 rivals: IDX Systems, Medicus Systems, Hpr, Simione Central Holdings, National Wireless
+Holdings, HCIA, Apache Medical Systems, . . .
+SIC codes of rivals: computer programming and data processing [SIC-3 5 737] (45 rivals),
+insurance agents, brokers, and service [SIC-3 5 641] (5 rivals), miscellaneous health
+services [SIC-3 5 809] (4 rivals), management and public relations services [SIC-3 5
+874] (3 rivals), miscellaneous other (9 rivals)
+Core words: client (59), database (54), solution (49), patient (47), copyright (47), secret
+(47), physician (47), hospital (46), health care (46), server (45), resource (44), func-
+tionality (44), billing (44), . . .
+Submarket 3: Information Transmission (Sample Focal Firm: FAXSAV)
+259 rivals: Omtool Ltd., Concentric Network, Premiere Technologies, International Tele-
+communication Data Systems, IDT Corp., Axent Technologies, Solopoint, Precision
+Systems, Netrix Corp., . . .
+SIC codes of rivals: computer programming and data processing [SIC-3 5 737] (112 ri-
+vals), communications equipment [SIC-3 5 366] (45 rivals), telephone communications
+[SIC-3 5 481] (38 rivals), computer and ofﬁce equipment [SIC-3 5 357] (29 rivals),
+communications services, other [SIC-3 5 489] (7 rivals), miscellaneous business services
+[SIC-3 5 738] (7 rivals), miscellaneous other (15 rivals)
+Core words: internet (236), telecommunications (211), interface (194), communication
+(188), solution (187), platform (184), architecture (182), call (177), infrastructure
+(173), voice (173), functionality (173), server (173), . . .
+Submarket 4: Software (Sample Focal Firm: Intuit)
+52 rivals: Netscape Communications, Mysoftware, Quarterdeck, Software Publishing Corp.,
+GO2Net, Meridian Data, Macromedia, Microsoft, CE Software Holdings, . . .
+SIC codes of rivals: computer programming and data processing [SIC-3 5 737] (48 rivals),
+miscellaneous other (4 rivals)
+Core words: internet (52), functionality (48), copyright (48), Microsoft (48), Windows
+(46), solution (45), ease (44), secret (43), difﬁculties (41), version (41), infringement
+(41), database (41)
+Submarket 5: Corporate Data Management and Computing
+Solutions (Sample Focal Firm: Hyperion)
+207 rivals: Oracle Corp., Fourth Shift Corp., Applix, Timeline, Platinum Technology,
+Harbinger Corp., Santa Cruz Operation, Edify Corp., Banyan Systems, . . .
+SIC codes of rivals: computer programming and data processing [SIC-3 5 737] (174 ri-
+vals), computer and ofﬁce equipment [SIC-3 5 357] (22 rivals), communications
+equipment [SIC-3 5 366] (2 rivals), miscellaneous other (15 rivals)
+Core words: server (196), client (194), solution (193), enterprise (186), functionality
+(185), Windows (183), internet (182), copyright (180), Microsoft (177), database (174),
+architecture (171), interface (168)
+
+Only industry classiﬁcations that frequently recompute product market
+relatedness can address the changing nature of the product market. Some
+product areas disappear or change, such as the use of mainframes and
+work stations in the software industry (see Sec. VI). More common, as a re-
+sult of innovation, new product markets such as solar power or Internet-
+based products can appear. Our industry classiﬁcations are updatedannu-
+ally and can capture rapidly changing product markets. Table 2 provides
+examples of two industries that changed dramatically over time.
+Panel A of table 2 displays the text-based network industry surround-
+ing Real Goods Trading Corporation, which provides solar technology.
+In 1997, this market was nascent, and Real Goods had just one rival,
+Photocomm. By 2008, Real Goods was part of a nine-ﬁrm industry group,
+having a product vocabulary rooted in solar and environmental termi-
+nology. Panel B displays the product market surrounding L-1 Identity
+Solutions in 2008, which provides technological intelligence solutions
+related to homeland security. This entire product market was not in
+our sample in 1997 and likely emerged after the events of September 11,
+2001. The only related ﬁrm that was in our sample in 1997, CACI Inter-
+national, migrated from the database management product market to
+this security-oriented market, as shown in the table.
+Our ability to assess product market change is also important in our
+examination of exogenous shocks to the military and software indus-
+tries. In Section VI, we examine not only changes in the degree of com-
+petition and in industry membership but also changes in the type and
+features of products offered following the shock.
+C.
+Ability to Capture Cross-Industry Relatedness
+An informative industry classiﬁcation should also be able to capture
+across-industry relatedness. If two product markets are very similar,
+TABLE 1 (Continued)
+Submarket 6: Retail (Sample Focal Firm: Amazon.com Inc.)
+87 rivals: Preview Travel, Yahoo, Datamark Holding, Netscape Communications Corp.,
+Wall Data, Onsale, Infoseek Corp., Ivi Publishing, Castelle, Connect, New Era Of
+Networks, V One Corp., . . .
+SIC codes of rivals: computer programming and data processing [SIC-3 5 737] (66 rivals),
+computer and ofﬁce equipment [SIC-3 5 357] (5 rivals), nonstore retailers [SIC-3 5
+596] (5 rivals), communications equipment [SIC-3 5 366] (4 rivals), miscellaneous
+other (14 rivals)
+Core words: internet (84), functionality (79), copyright (78), database (77), inability (74),
+server (74), client (73), infringement (73), secret (72), solution (70), introductions
+(70), Microsoft (70), . . .
+Note.—Sample text-based network industries in the business services industry (SIC
+737).
+text-based network industries
+1441
+
+TABLE 2
+Sample Industries That Underwent Changes (Text-Based
+Network Classiﬁcations)
+A. Industry Surrounding Real Goods Solar in 1997
+1 rival: Photocomm Inc. (SIC 5 362)
+Core words: array (2), fuel (2), backup (2), electric (2), northern (2), remote (2), voltage
+(2), utility (2), consumption (2), grid (2), convert (2), weather (2), wind (2), appliances
+(2), Siemens (2), audit (2), electricity (2), battery (2), catalog (2), specialists (2), earth
+(2), fossil (2), green (2), sizing (2), inverters (2), Photocomm (2)
+Industry Surrounding Real Goods Solar in 2008
+9 rivals: Daystar Technologies, Akeena Solar, Evergreen Solar, Ascent Solar Technologies,
+Energy Conversion Devices, Sunpower Corp., Power One, First Solar
+SIC codes of rivals: electronic components [SIC-3 5 367] (6 rivals), electrical industrial
+apparatus [SIC-3 5 362] (1 rival), research and testing services [SIC-3 5 873] (1 rival)
+Core words: electric (9), silicon (9), electricity (9), roof (9), integrators (8), grid (8), utility
+(8), ﬁlm (8), output (8), semiconductor (8), watt (8), sunlight (8), fuel (7), installations
+(7), metal (7), cell (7), incentives (7), . . .
+B. Industry Surrounding L-1 Identity Solutions in 2008
+5 rivals: Cogent, Widepoint Corp., SRA International, Caci International, Actividentity (All
+in SIC-3 5 737). None of these ﬁrms existed as publicly traded ﬁrms in 1997 except for
+CACI International. Although CACI existed in 1997, it was in a different line of business
+(see below).
+Core words: defense (6), architecture (6), homeland (6), capture (6), client (6), military
+(5), environments (5), integrators (5), mobile (5), procurement (5), prime (5), tradi-
+tionally (5), copyright (5), combine (5), database (5), intelligence (5), budget (5), in-
+stitute (5), mission (5), identity (5), integrity (5), Grumman (5), Northrop (5), con-
+tractor (4), wireless (4), surveillance (4), privacy (4), procurements (4), cyber (4), . . .
+C. Industry Surrounding CACI International in 1997
+SIC codes of 60 rivals: computer programming and data processing [SIC-3 5 737] (48 ri-
+vals), engineering and architectural [SIC-3 5 871] (2 rivals), personnel supply services
+[SIC-3 5 736] (2 rivals), professional and commercial equipment [SIC-3 5 504] (2 ri-
+vals), miscellaneous other (6 rivals)
+Core words: client (56), server (54), internet (53), solution (51), architecture (51), data-
+base (51), enterprise (50), clients (48), databases (48), programming (47), Microsoft
+(47), environments (46), productivity (43), copyright (43), secret (43), interface (42),
+Windows (42), functionality (40), tool (40), background (39), documentation (39),
+intranet (39), . . .
+Industry Surrounding CACI International in 2008
+SIC codes of 18 rivals: computer programming and data processing [SIC-3 5 737] (8 ri-
+vals), search, detection, navigation, guidance, and aeronautical [SIC-3 5 381] (5 rivals),
+communications equipment [SIC-3 5 366] (2 rivals), miscellaneous other (3 rivals)
+Core words: defense (19), military (18), mission (18), contractor (17), homeland (17),
+procurement (17), prime (17), quantity (16), intelligence (16), environments (15),
+award (15), budget (14), command (14), architecture (13), spectrum (13), under-
+standing (13), warfare (13), surveillance (13), . . .
+Note.—Sample text-based network industries that changed dramatically between 1997
+and 2008.
+
+ﬁrms in each product market likely hold a credible threat of entry into
+the other at low cost. This notion of economies of scope is developed
+by Hay (1976) and Panzar and Willig (1981). In particular, ﬁrms facing
+this form of cross-industry threat might keep prices low to deter entry.
+Currently, existing research examines across-industry relatedness using
+coarser levels of SIC or NAICS codes or through the BEA’s input-output
+matrix, which is used to measure vertical relations.
+Our methodology uncovers numerous links entirely missed using other
+classiﬁcations. For example, text-based network similarities reveal that
+ﬁrms in the newspaper publishing and printing industry (SIC-3 is 271)
+are highly similar to ﬁrms in the radio and broadcasting stations industry
+(SIC-3 is 483). This example illustrates the fact that both industries likely
+cater to the same customers, who demand advertising, and thus exhibit
+at least some substitution. A different ﬁrm-speciﬁc example is the merger
+in 2006 of Disney and Pixar. Disney was classiﬁed in the business services
+industry (SIC-3 is 737), while Pixar was classiﬁed in the motion pictures
+industry (SIC-3 is 781). Movies are produced by both but using different
+production methods, explaining in part why they are in different SIC
+codes. Our methodology indicates that they are similar and are in the
+same text-based network industry.
+These examples are interesting given that these ﬁrms have SIC codes
+that disagree even at the one- or two-digit level, suggesting that tradi-
+tional classiﬁcations treat these industries as entirely unrelated. Because
+our classiﬁcations are based on actual product text, we are able to detect
+potential rival ﬁrms that offer related products even if they are not cur-
+rently direct rivals.
+Hoberg and Phillips (2013) is an example of another recent study that
+explores cross-industry relations using language overlaps based on 10-K
+relatedness scores. The study examines why conglomerates operate in
+some industry combinations more frequently than in others and ﬁnds
+that they are most likely to operate in industry pairs that are close to-
+gether in the product space and that spatially surround other highly val-
+ued industries. These ﬁndings are consistent with conglomerate ﬁrms
+using industry relatedness to potentially enter nearby high-value indus-
+tries that might otherwise be costly to enter.
+V.
+External Validation
+Our next objective is to compare our industry classiﬁcations to existing
+SIC and NAICS industry classiﬁcations. Throughout, we hold ﬁxed the
+degree of granularity of the industries we examine, and we compare clas-
+siﬁcations on their ability to generate higher across-industry variation in
+key ﬁrm characteristics (subsection A). We then examine which classiﬁ-
+text-based network industries
+1443
+
+cation best explains managerial discussions of high competition and
+ﬁrm disclosures of self-identiﬁed rivals (subsection B).
+A.
+Across-Industry Variation
+We compare the informativeness of industry classiﬁcations on the basis
+of the extent to which they generate higher levels of across-industry var-
+iation in proﬁtability, sales growth, and stock market risk (market betas).
+Because we hold ﬁxed the degree of granularity in the classiﬁcations we
+compare, we conclude that a classiﬁcation generating a higher degree of
+across-industry variation is more informative.
+To ensure consistency in our tests, we compute the degree of across-
+industry variation using both a ﬁrm-weighted approach and an industry-
+weighted approach. For the ﬁrm-weighted approach, we ﬁrst compute
+the given ﬁrm’s industry value of a given characteristic as the mean of
+the given characteristic among its industry peers. We then compute
+across-industry variation as the standard deviation of these industry char-
+acteristics across all ﬁrm-year observations in our sample. The ﬁrm-
+weighted calculation is particularly relevant for the intransitive text-based
+network classiﬁcation, as each ﬁrm has a unique set of peers. The ﬁrm-
+weighted approach thus allows us to compare text-based network indus-
+tries to other classiﬁcations including 10-K ﬁxed industry classiﬁcations,
+three-digit SIC, and four-digit NAICS industries.
+Industry-weighted estimates of across-industry variation are computed,
+for each industry-year observation, by ﬁrst computing the average charac-
+teristic among all ﬁrms in the given industry in the given year. Industry-
+weighted variation of a given characteristic is then the standard devia-
+tion of these industry characteristics across all industry-year observations
+in our sample. We note that this calculation is feasible only for industry
+classiﬁcations that satisfy the industry transitivity property, as intransi-
+tive industries are ﬁrm speciﬁc and observations exist at the ﬁrm-year
+level.
+Panel A of table 3 displays the results of the ﬁrm-weighted calcula-
+tions. The table shows that 10-K-based ﬁxed industries have more across-
+industry variation than SIC-3 or NAICS-4 industries for all ﬁve character-
+istics we consider. Regarding proﬁtability deﬁned as operating income/
+sales (OI/sales), across-industry variation is 0.204 and 0.205 for SIC-3
+and NAICS-4, respectively. This increases 12.7 percent to 0.231 for 10-K-
+based ﬁxed industries. We observe similar gains regarding OI/sales, sales
+growth, market beta, and the unlevered asset beta. We conclude that 10-
+K-based ﬁxed industries are more informative than both SIC-3 and
+NAICS-4. It is also important to note that the 10-K-based ﬁxed classiﬁca-
+tion is calibrated to have the same granularity as SIC-3, and both classi-
+ﬁcations are also constrained to have ﬁxed locations and to be transitive.
+1444
+journal of political economy
+
+These gains reveal the informativeness of the information source (text in
+the 10-K) and not the network methods.
+Panel A also compares the transitive classiﬁcations (SIC-3, NAICS-4,
+and 10-K-based 300 industries) to the intransitive text-based network clas-
+siﬁcation. Because transitivity limits the ﬂexibility of a network, we ex-
+pect the intransitive network classiﬁcation to have higher across-industry
+variation. The table conﬁrms this prediction. Regarding OI/sales, the
+across-industry variation of 0.231 for 10-K-based ﬁxed industries increases
+by another 7.4 percent to 0.248 for the equal-weighted text-based network
+classiﬁcation and by 15.6 percent to 0.267 for the similarity-weighted
+network classiﬁcation. We observe similar, and in some cases larger, gains
+for the other characteristics. For example, we see a nearly 30 percent in-
+crease for asset betas when comparing 10-K-based ﬁxed industries and
+similarity-weighted network industries. We conclude overall that 10-K-
+based classiﬁcations are more informative than SIC and NAICS classiﬁca-
+tions and also that the intransitive text-based network classiﬁcation is even
+more informative when compared to all three ﬁxed industry classiﬁca-
+tions.
+Panel B of table 3 repeats the tests in panel A using industry-weighted
+calculations rather than ﬁrm-weighted calculations. Although this calcu-
+lation is feasible only for transitive classiﬁcations, the conclusions are the
+same as those in panel A. The 10-K-based ﬁxed classiﬁcation is more in-
+formative than the SIC-3 and NAICS-4 classiﬁcations. The improvements
+TABLE 3
+Firm Characteristics and Industry Classiﬁcations
+Industry Controls
+OI/Sales
+OI/
+Assets
+Sales
+Growth
+Market
+Beta
+Asset
+Beta
+A. Across-Industry Standard Deviations: Firm-
+Weighted Results; All Industry Classiﬁcations
+1. SIC-3 ﬁxed effects
+.204
+.111
+.126
+.283
+.271
+2. NAICS-4 ﬁxed effects
+.205
+.112
+.136
+.289
+.276
+3. 10-K-based 300 ﬁxed effects
+.231
+.128
+.157
+.298
+.285
+4. TNIC equal-weighted average
+.248
+.142
+.163
+.332
+.324
+5. TNIC similarity-weighted average
+(excluding the focal ﬁrm)
+.267
+.153
+.199
+.384
+.369
+B. Across-Industry Standard Deviations: Industry-
+Weighted Results; Transitive Industry
+Classiﬁcations Only
+1. SIC-3 ﬁxed effects
+.156
+.111
+.179
+.347
+.308
+2. NAICS-4 ﬁxed effects
+.169
+.126
+.210
+.414
+.362
+3. 10-K-based 300 ﬁxed effects
+.202
+.139
+.224
+.469
+.432
+Note.—For a given variable indicated in the left-hand column, across-industry standard
+deviations are computed as the standard deviation of the industry average of the given var-
+iable across all ﬁrms in our sample (panel A) and across all industries (panel B). TNIC re-
+fers to text-based network industries.
+text-based network industries
+1445
+
+are also economically large. For OI/sales, the gain is nearly 30 percent
+relative to SIC-3 and nearly 20 percent relative to NAICS-4. The results
+in panel B thus ensure that the results in panel A are not highly inﬂu-
+enced by ﬁrm versus industry weighting.
+B.
+Competition and Reported Peers
+In this section, we examine whether ﬁrms with more text-based network
+rivals, and more similar such rivals, are more likely to disclose competi-
+tive pressures in the Management’s Discussion and Analysis section of
+their 10-K.
+Our approach follows Hoberg and Maksimovic (2015), and we examine
+the Management’s Discussion and Analysis section of each ﬁrm’s 10-K. A
+primary source of content in this section is the manager’s discussion of
+his or her ﬁrm’s performance and the ﬁrm’s outlook going forward. For
+each ﬁrm year, we thus deﬁne the high competition dummy to be one if
+the manager cites “high competition,” or one of its synonyms, in this sec-
+tion.16
+Table 4 displays the results of logit regressions in which the dependent
+variable is the high competition dummy. Standard errors are adjusted
+for clustering at the ﬁrm level. Our primary independent variables are
+measures of the total similarity surrounding each ﬁrm. Total similarity
+is a global measure and is the sum of the pairwise similarities between
+the given ﬁrm and all other ﬁrms in our sample in the given year. We pre-
+dict that a manager of a ﬁrm with higher total similarity will be more likely
+to disclose discussions noting higher levels of competition in his or her
+ﬁrm’s Management’s Discussion and Analysis section of its 10-K.
+We also decompose total similarity into respective components based
+on how far given rivals are from the focal ﬁrm in the product market
+space. Our ﬁrst measure, total similarity (top 2 percent peers), consid-
+ers only total similarity summed over the set of ﬁrm pairs with pairwise
+similarities above the 98th percentile in the given year. This measures
+the degree to which the ﬁrm has “close rivals”: those with a degree of
+similarity analogous to the SIC-3 classiﬁcation (where roughly 2 percent
+of all ﬁrm pairs are in the same SIC-3 classiﬁcation). Overall, we consider
+summed similarity in the following bands: 0.0–2.0 percent, 2.0–5.0 per-
+cent, 5.0–10.0 percent, and 10.0–25.0 percent. This test is made pos-
+sible by the fact that the text-based network provides a pairwise similar-
+ity score for every ﬁrm pair in our sample, and the objective is to identify
+the extent to which competitive pressures are felt by managers even when
+ﬁrms are more distant in the product space. Evidence of competitive
+16 Synonyms for the word “high” include intense, signiﬁcant, substantial, signiﬁcant, vig-
+orous, strong, aggressive, ﬁerce, stiff, extensive, or severe. Synonyms for the word “compe-
+tition” include compete, competition, or competing.
+1446
+journal of political economy
+
+TABLE 4
+Managerial Indications of High Competition and Industry Similarity Measures
+Total Similarity
+No. of Words
+Row
+Total
+Top 2%
+Peers
+Top 3%–
+5% Peers
+Top 6%–
+10% Peers
+Top 11%–
+25% Peers
+OI/
+Assets
+Log Firm
+Age
+Tobin’s
+Q
+Log
+Sales
+Bus.
+Desc.
+MD&A
+R
+2
+1
+.527
+.047
+(16.37)
+2
+.387
+.039
+(12.41)
+3
+.244
+.030
+(8.82)
+4
+.022
+.024
+(.81)
+5
+2.344
+.032
+(211.04)
+6
+.347
+.234
+.001
+2.237
+.049
+(10.90)
+(8.09)
+(.04)
+(26.64)
+7
+.400
+.038
+2.061
+.061
+2.211
+2.360
+1.111
+.148
+(10.63)
+(1.52)
+(22.06)
+(3.03)
+(25.51)
+(211.01)
+(30.92)
+8
+.286
+.026
+2.060
+.079
+2.255
+2.343
+1.136
+.145
+(8.54)
+(1.08)
+(22.04)
+(3.95)
+(26.75)
+(210.76)
+(31.40)
+9
+.142
+.015
+2.068
+.095
+2.233
+2.268
+1.148
+.141
+(4.76)
+(.61)
+(22.35)
+(4.78)
+(26.14)
+(28.80)
+(31.65)
+10
+.024
+.010
+2.066
+.107
+2.256
+2.268
+1.164
+.140
+(.81)
+(.40)
+(22.28)
+(5.41)
+(26.74)
+(28.85)
+(31.96)
+11
+2.252
+.016
+2.064
+.088
+2.237
+2.281
+1.151
+.143
+(27.68)
+(.66)
+(22.19)
+(4.47)
+(26.24)
+(29.06)
+(31.71)
+12
+.253
+.139
+2.036
+2.212
+.036
+2.060
+.054
+2.218
+2.345
+1.111
+.149
+(7.52)
+(4.51)
+(21.05)
+(25.42)
+(1.46)
+(22.02)
+(2.69)
+(25.68)
+(210.63)
+(30.83)
+Note.—N 5 41,823. The table reports the results of logistic regressions in which the dependent variable is one if the ﬁrm’s management mentions high competition (or a synonym
+thereof) in its Management’s Discussion and Analysis section of its 10-K in the given year. Independent variables include measures of similarity using the text-based network pairwise
+network. In addition to the total similarity of all peers, we also consider the total similarity based on stepwise groups of the most similar peers (top 2 percent, 5 percent, 10 percent, and
+25 percent). Each localized peer group is orthogonalized in a stepwise fashion (from 2 percent to 25 percent). Additional control variables include sales, age, proﬁtability, Tobin’s Q,
+year ﬁxed effects, and document size variables including the number of words in the business description and in the Management’s Discussion and Analysis (MD&A) section of the
+ﬁrm’s 10-K. All independent variables are standardized for ease of comparison; t-statistics in parentheses are based on standard errors adjusted for clustering by ﬁrm.
+
+pressures from more distant peers would support the conclusion that is-
+sues relating to potential entry threats, and issues relating to incentives to
+pursue limit pricing, likely apply in the universe of US publicly traded ﬁrms.
+Table 4 shows the results of this test, where the dependent variable is
+an indicator variable indicating that the manager discusses competitive
+pressures. Row 1 shows that ﬁrms with higher global total similarity are
+far more likely to discuss competitive pressures in their management’s
+discussion. This result suggests that information in the text-based net-
+work classiﬁcation is informative regarding the presence of ﬁrms that
+managers themselves perceive to actually be rivals. In particular, these
+rivals pose competitive threats that managers feel obliged to mention
+when interpreting their ﬁrm’s performance and future prospects.
+Rows 2–6 further show that these competitive pressures extend beyond
+the range typically studied by researchers. In particular, many studies
+control for three-digit SIC industries, which has a granularity of roughly
+2 percent. Rows 3 and 6 show that managers facing more distant rivals in
+the 2.0–5.0 percent band, on the margin, also are more likely to disclose
+issues relating to higher competition in their 10-Ks. Because all indepen-
+dent variables arestandardized,wecanalsocomparemagnitudes.There-
+sults suggest that competition in the nearest band is roughly 50 percent
+more important than competition in the second band; however, both
+bands are highly signiﬁcant. These ﬁndings are consistent with the con-
+clusion that managers react not only to current rivals in their immediate
+markets but also to rivals in neighboring markets that might pose poten-
+tial entry threats.
+In rows 7–12 of table 4, we explore the robustness of this conclusion
+to various control variables that might also be related to competitive
+pressures including ﬁrm size, age, proﬁtability, and Tobin’s Q. Because
+it is well known that document size can inﬂuence text-based variables,
+we also control for the size of the ﬁrm’s Management’s Discussion and
+Analysis section. In all, we ﬁnd that our primary total similarity variables
+weaken somewhat as the new controls are added. However, all variables
+remain highly signiﬁcant, and our primary conclusions obtain with or
+without the controls.
+We also consider the approach used by Rauh and Suﬁ(2012), who
+gather data from Capital IQ identifying the ﬁrms listed by each ﬁrm in
+its 10-K as being a rival. We note that one important limitation in this anal-
+ysis is that Capital IQ data are not available on a historical basis. We thus
+extract Capital IQ peers using 2011 data, and we examine whether text-
+based network industries computed using the last year of our data (2008)
+can better explain the Capital IQ peers relative to SIC-3 or NAICS-4 in-
+dustries. We display the results in table 5. The table reveals that our net-
+work industries outperform SIC-3 and NAICS-4 industries in their ability
+to explain Capital IQ self-reported peers. For example, our baseline ap-
+1448
+journal of political economy
+
+proach that uses nouns and proper nouns and a 25 percent stop word
+threshold generates 52.5 percent overlap with Capital IQ peers. This com-
+pares to 47.1 percent for SIC-3. Our peers perform even better relative to
+NAICS-4: 55.1 percent overlap compared to 44.0 percent. Given that our
+comparisons hold industry granularity constant, we conclude that these
+results are driven by economic informativeness and are not due to tech-
+nical differences in granularity.
+VI.
+Capturing Industry Change
+In this section we assess changes in ﬁrm similarity and product market
+location following two major exogenous industry shocks. We examine
+the impact of these shocks on the total similarity of rivals around a given
+ﬁrm, the number of industry rivals, and the extent of product market dis-
+location (changes in the products offered). We ﬁrst consider the military
+goods and services industry following the shock to military spending af-
+TABLE 5
+Self-Reported Capital IQ Peers and Industry Classiﬁcations
+Text-Based Industries
+(SIC-3 Granularity)
+Text-Based Industries
+(NAICS-4 Granularity)
+Words Used for
+TNIC Industry
+Stop Word
+Threshold
+(%)
+TNIC
+Overlap
+with
+Capital IQ
+(%)
+TNIC
+Overlap
+with SIC-3
+(%)
+TNIC
+Overlap
+with
+Capital IQ
+(%)
+TNIC
+Overlap
+with NAICS-4
+(%)
+All words
+100
+40.9
+46.6
+43.1
+61.8
+All words
+25
+50.6
+50.2
+53.0
+65.8
+All words
+10
+60.1
+49.1
+62.3
+61.5
+All words
+TF-IDF
+59.3
+49.0
+61.9
+65.6
+Nouns and proper
+nouns
+100
+43.7
+47.3
+46.2
+62.5
+Nouns and proper
+nouns
+25
+52.5
+50.2
+55.1
+65.6
+Nouns and proper
+nouns
+10
+62.0
+45.8
+63.5
+54.4
+Nouns and proper
+nouns
+TF-IDF
+58.5
+48.1
+61.0
+64.6
+Note.—The table reports the fraction of Capital IQ 2011 peers that are also peers as
+identiﬁed by various other industry classiﬁcations, including SIC-3, NAICS-4, and text-
+based network classiﬁcations (TNIC) constructed to have levels of granularity identical
+to those of SIC-3 and NAICS-4. The table also reports the fraction of overlap between
+SIC-3 and TNIC and also between NAICS-4 and TNIC. The overlap between SIC-3 and Cap-
+ital IQ competitors is 47.1 percent. The overlap between NAICS-4 and Capital IQ compet-
+itors is 44.0 percent. Although Capital IQ data are from 2011 (historical peer data are not
+available), all SIC, NAICS, and TNIC data are from 2008. The Stop Word Threshold col-
+umn indicates whether we discard common words deﬁned as those used in at least 10 per-
+cent, 25 percent, or 100 percent of all documents or if we instead use TF-IDF to weight
+common words less heavily as an alternative to discarding them.
+text-based network industries
+1449
+
+ter the events of September 11, 2001. Our second analysis is based on the
+software industry following the technology stock market collapse (dot-
+com shock) beginning in March 2000.
+We choose these two shocks because of their importance in shaping
+the trajectory of large numbers of ﬁrms in these industries and also be-
+cause these examples best illustrate unique features of text-based net-
+work industries that make them well suited to address research questions
+involving time-varying changes that are difﬁcult to analyze using other
+industry classiﬁcations. Because one shock is a positive demand shock
+(defense) and the other is a negative demand shock (software), these
+choices also allow us to explore if product markets react differently to
+positive and negative shocks.
+A.
+Military Intelligence and Battleﬁeld Products
+Figure 3 displays the scale and timing of the positive military spending
+demand shock. Prior to 2001, US military spending gradually declined
+from nearly 6 percent of GDP to just 3 percent of GDP. After 2001, this
+trend sharply reversed, and spending increased to just below 5 percent
+of GDP by 2009. Although much of the observed increase from 3 per-
+cent to 5 percent is gradual, we expect that industry participants knew
+at the time of the September 11 attacks that future spending would grow
+and the growth would be large and long-lasting. We focus on how the
+product market changed before and after 2001. We also note that this
+shock has a large magnitude (1–2 percent of annual US GDP) and it
+is also exogenous, as market participants did not expect the 2001 at-
+tacks. This shock presents a nearly ideal laboratory for examining the
+FIG. 3.—Annual military spending by the United States as a fraction of GDP (source:
+World Bank). Color version available as an online enhancement.
+1450
+journal of political economy
+
+impact of a large demand shock on product market structure and dislo-
+cation.
+Product market research assessing the impact of the September 11
+attacks on the military industry is difﬁcult using existing classiﬁcations
+for three reasons. First, military products span many different SIC- and
+NAICS-based industries including heavy equipment, transportation, elec-
+tronics, software, security, and medical equipment. Second, only a frac-
+tion of the ﬁrms in each market actually sell to the military. A manual re-
+view of all ﬁrms would be necessary to identify the relevant set engaged
+in selling to the military.
+Third, existing industry classiﬁcations are not updated materially over
+time. A researcher would have to manually assess how ﬁrms supplying to
+the military changed over time. For example, some ﬁrms might begin or
+terminate sales to the military. Also, updated product offering data are
+not available using other classiﬁcations, making the issue of product mar-
+ket dislocation very difﬁcult to study. Because text-based network indus-
+tries are based on the actual vocabulary used in annual ﬁrm 10-Ks, we are
+able to solve these problems directly.
+We use the series of matrices Q t containing the product words (de-
+ﬁned in Sec. II) to identify the set of ﬁrms likely providing goods and
+services to the military. For a given year t, Q t is the set of normalized
+product word vectors for all ﬁrms in the sample in that year. Each ﬁrm’s
+product word vector has length W (the number of unique 10-K words),
+and each element identiﬁes whether or not the given ﬁrm uses the spe-
+ciﬁc word corresponding to that element.
+We consider two queries on Q t. We ﬁrst identify the set of “military in-
+telligence ﬁrms” as the set of all ﬁrms that use all three of the following
+terms in their business descriptions in year t: “military,” “defense,” and
+“intelligence.” In our second test, we identify the set of “military battle-
+ﬁeld ﬁrms” as the set of ﬁrms using all of the following four terms in year t:
+“military,” “defense,” “battleﬁeld,” and “equipment.” We consider both to
+explore potential differential treatment effects in these related markets.
+Because Q t is updated and comprehensive, these queries immediately
+yield the set of ﬁrms addressing each market in each year.
+Our hypotheses are that (A) the 9/11 attacks generate a positive de-
+mand shock in these markets, and we expect an increase in entry and to-
+tal similarity following the shock; and (B) we expect a shift in product
+location to reﬂect changing needs of the military after this shock. To test
+the ﬁrst hypothesis, we compute the following averages over ﬁrms in
+each product market in time series: the average total text-based network
+similarity surrounding each ﬁrm and the average number of network ri-
+vals faced by each ﬁrm. We assess each statistic in time series, and we test
+the ﬁrst hypothesis by examining if each variable experiences a struc-
+tural break after 2001.
+text-based network industries
+1451
+
+To test the second hypothesis, we use the information in Q t in a differ-
+ent way. For each word wk corresponding to the W columns in Q t, we com-
+pute the extent to which wk has grown in usage in the given market after
+the shock. Words experiencing the highest positive change indicate
+product words that increased most in use after the shock. Words receiv-
+ing the most negative change indicate product words that experienced
+the most severe decline. Assessment of these word change vocabularies
+illustrates the extent to which product markets experienced a location
+shift after the September 11 attacks.
+Figures 4 and 5 display results for military intelligence ﬁrms and mil-
+itary battleﬁeld ﬁrms, respectively. Panel A in both ﬁgures reports the
+FIG. 4.—Military intelligence ﬁrms: competitor changes. Time-series changes in indus-
+try attributes for ﬁrms stating the following three words in their business descriptions: mil-
+itary, defense, and intelligence. Note that structural break tests regarding whether local sim-
+ilarity of rivals changed before and after 2001 are signiﬁcant at the 1 percent level. A similar
+test based on the number of rivals is not signiﬁcant. We also report the words that grew
+(shrank) in prominence before and after the 2001 military demand shock (we display
+the fraction of ﬁrms using the given word before and after the shock).
+1452
+journal of political economy
+
+time-series statistics describing the number of ﬁrms in each product mar-
+ket, the degree of total similarity, and the average number of text-based
+network rivals faced by ﬁrms in each market. The caption of each ﬁgure
+reports the results of tests examining whether each industry experienced
+a structural break in total similarity and the number of rivals after 2001.
+In ﬁgure 4, a structural break test on the level of total similarity is sig-
+niﬁcant at the 1 percent level. A similar test regarding the average num-
+ber of rivals is just below standard levels of statistical signiﬁcance. In ﬁg-
+ure 5, both structural break tests are signiﬁcant at the 5 percent level. We
+conclude that the 2001 shock resulted in an increase in total similarity,
+indicating increased competition. The positive demand shock likely
+triggered entry (or movement by existing ﬁrms) into newly demanded
+FIG. 5.—Military battleﬁeld ﬁrms: competitor changes. Time-series changes in industry
+attributes for ﬁrms stating the following three words in their business descriptions: military,
+defense battleﬁeld, and equipment. Note that structural break tests regarding whether lo-
+cal similarity of rivals changed before and after 2001 are signiﬁcant at the 5 percent level. A
+similar test based on the number of rivals is also signiﬁcant at the 5 percent level. We also re-
+port the words that grew (shrank) in prominence before and after the 2001 military demand
+shock (we display the fraction of ﬁrms using the given word before and after the shock).
+text-based network industries
+1453
+
+military intelligence and battleﬁeld products. We conclude that industry
+participants likely beneﬁted from the positive demand shock. However,
+these gains were likely offset, at least in part, by increased competition.
+Panels B and C display the results of the product market location
+change tests. Panel B reports the words that most increased in usage af-
+ter the shock (2002 vs. 2000). For military intelligence ﬁrms in ﬁgure 4,
+we ﬁnd an increased focus on surveillance (47.2 percent of ﬁrms use the
+term in 2002, compared to just 22.5 percent in 2000). This is consistent
+with information gathering being a central theme for the military after
+the shock. We also observe an increased focus on disasters, e-mail, inte-
+grators, and the speciﬁc ﬁrm Northrop Grumman. These results also
+support an increased focus on information gathering, especially the
+gathering of nonbattleﬁeld intelligence. The results for military battle-
+ﬁeld ﬁrms in ﬁgure 5 are similar, and we also see an increased focus on
+surveillance, optics, simulation, artillery, infrastructure, and cleanup.
+These results support the conclusion that military battleﬁeld ﬁrms be-
+came more focused on possible ground conﬂicts and that simulations,
+infrastructure, and artillery likely played a central role.
+Panel C reports words that became less utilized after the shock. In ﬁg-
+ure 4, key terms include broadcast, microwave, microelectronics, trans-
+mitters, and the speciﬁc ﬁrm Litton. These results indicate a declining
+focus on information transmission and electronic devices. Put together
+with panel B, we ﬁnd a likely dislocation away from information trans-
+mission and toward nonbattleﬁeld information-gathering technolo-
+gies. For military battleﬁeld ﬁrms in ﬁgure 5, the following terms de-
+clined in usage: subassemblies, broadcast, radar, algorithms, airframes,
+and the speciﬁc ﬁrms Motorola and Lockheed. Together with panel B,
+these results suggest a shift away from traditional air power and communi-
+cation and toward a focus on potential ground conﬂicts.
+Overall, we conclude that the September 11 shock resulted in two im-
+portant changes for both military industries: an increase in entry into
+new high-demand markets and product changes toward nonbattleﬁeld
+information gathering and products intended for potential ground con-
+ﬂicts. Because the shock was exogenous, it is likely that the shock caused
+these changes.
+B.
+Software Industry
+We next consider the post-2000 software market collapse. This shock is
+also large in size and is also difﬁcult to examine using traditional indus-
+try classiﬁcations (software ﬁrms are typically lumped with many other
+ﬁrms into a business services SIC code, and this market also experi-
+enced rapid change over time). It is also important to note that this is
+a negative demand shock, whereas the military shock was a positive
+1454
+journal of political economy
+
+shock. Our empirical approach is identical to that used for the military
+industry above. We deﬁne the software market broadly to include ﬁrms
+with all three of the following terms in their business descriptions in
+year t: “software,” “computer,” and “program.”
+Panel A of ﬁgure 6 shows a decline in the total similarity surrounding
+each ﬁrm and in the average number of text-based network rivals in the
+software industry. The decline is large in magnitude and long-lasting.
+This suggests that the negative shock led to ﬁrm exit or movement by
+ﬁrms into other product markets. We conclude that this negative de-
+mand shock created a symmetric-opposite result relative to the positive
+shock in the military industry. However, we also note that the process
+of consolidation following the negative shock is more gradual and slow
+FIG. 6.—Software ﬁrms: competitor changes. Time-series changes in industry attributes
+for ﬁrms stating the following three words in their business descriptions: software, computer,
+and program. Note that structural break tests regarding whether local similarity of rivals
+changed before and after 2001 are signiﬁcant at the 1 percent level. A similar test based
+on the number of rivals is also signiﬁcant at the 1 percent level. We also report the words
+that grew (shrank) in prominence before and after the 2001 military demand shock (we
+display the fraction of ﬁrms using the given word before and after the shock).
+text-based network industries
+1455
+
+moving relative to the realignment following the positive shocks in the
+military industry.
+Panels B and C of ﬁgure 6 show that the software industry also expe-
+rienced product market dislocation after the shock. Panel B shows a
+movement toward a focus on e-mail, intelligence, Linux, portals, and life
+cycles. Panel C shows a dislocation away from Unix, mainframes, intra-
+net, telemarketing, and workstations.
+Our study suggests that major exogenous demand shocks affect indus-
+tries in ways not well documented in the existing literature. We observe
+large changes in market structure and product similarity, and also prod-
+uct market dislocation, indicating that industry boundaries are undergo-
+ing large changes over time.
+VII.
+Endogenous Barriers to Entry
+In this section, we examine how measures of industry similarity and prof-
+itability change over time following Sutton (1991), who predicts that ad-
+vertising and R&D can create endogenous barriers to entry. An example
+from “An Illustration of Dual Structure” in Sutton’s Sunk Costs and Market
+Structure, section 3.4, illustrates the logic behind our empirical design. In
+Sutton’s example, we observe a ﬁrm moving between two industries as it,
+and possibly some rivals, increase their advertising spending in order to
+become a small group of leading brands that sell to brand-sensitive buy-
+ers, thus escaping the large number of ﬁrms that do not advertise but
+rather “sell on price.”
+The main idea is that R&D and advertising can create unique products
+that appeal to quality-sensitive consumers, making it more expensive for
+rivals to enter. A key assumption is that advertising and R&D (which
+might be geared toward improving product appeal) are actually effective
+in reducing ex post similarity. We test this assumption by regressing changes
+in ex post similarity and proﬁtability on ex ante advertising and R&D lev-
+els. We recognize that these tests examine association, as it is difﬁcult to
+establish causality in this setting. This analysis complements the study by
+Ellickson (2007), who analyzes the supermarket industry, and further il-
+lustrates the challenges that Ellickson notes on providing evidence on
+endogenous ﬁxed costs.
+We focus on text-based network industries for this test, as observing
+changes in industry memberships and industry locations is critical to
+testing Sutton’s theory, which is primarily about trying to solidify indus-
+try boundaries and prevent entry across industry boundaries. Fixed in-
+dustry classiﬁcations lack this ﬂexibility because their industry locations
+are ﬁxed over time, and memberships rarely change.
+Table 6 displays the results. We consider text-based network industry re-
+sults in panel A. One observation is one ﬁrm in one year. The dependent
+1456
+journal of political economy
+
+TABLE 6
+Ex Ante Advertising and R&D versus Future Similarity
+Dependent Variable
+Positive
+Advertising
+Dummy
+Positive
+R&D Dummy
+Log Industry
+Adver./Sales
+Log Industry
+R&D/Sales
+Industry Past
+Stock Return
+Log Assets
+Industry Log
+B/M Ratio
+Adjusted R
+2
+A. Text-Based Network Industry Regressions
+1. D total similarity
+2.414
+2.152
+2.034
+2.005
+.055
+.018
+2.004
+.127
+(213.72)
+(25.80)
+(28.55)
+(21.37)
+(1.63)
+(2.71)
+(2.25)
+2. D number of rivals
+212.301
+21.997
+21.195
+.156
+2.184
+1.636
+21.616
+.102
+(26.94)
+(21.70)
+(24.83)
+(.87)
+(1.41)
+(4.38)
+(21.23)
+3. D proﬁtability
+.038
+.039
+.004
+.005
+2.022
+2.010
+.014
+.078
+(4.61)
+(6.61)
+(5.15)
+(7.38)
+(24.92)
+(28.43)
+(3.74)
+B. Industry-Adjusted Firm-Level Regressions
+4. D total similarity
+2.037
+2.116
+2.005
+2.020
+.059
+.016
+.020
+.121
+(21.33)
+(25.15)
+(2.83)
+(24.25)
+(1.76)
+(2.40)
+(1.29)
+5. D number of rivals
+2.775
+23.768
+2.103
+2.738
+2.208
+1.464
+21.291
+.100
+(2.62)
+(24.03)
+(2.37)
+(23.71)
+(1.42)
+(3.99)
+(2.96)
+6. D proﬁtability
+.031
+.053
+.007
+.013
+.009
+.015
+.001
+.015
+(4.83)
+(9.22)
+(5.21)
+(10.87)
+(2.97)
+(11.15)
+(.27)
+Note.—Ordinary least squares regressions with ex post product changes in total similarity and the number of rivals and proﬁtability as the dependent
+variables. Panel A is based on advertising and R&D computed at the text-based network industry level. Panel B is based on ﬁrm-level network-industry-
+adjusted advertising and R&D. All speciﬁcations include 10-K-based ﬁxed industry classiﬁcation and yearly ﬁxed effects; t-statistics in parentheses are
+based on standard errors adjusted for clustering by year and industry. The sample has 49,246 observations.
+
+variable for each row is noted in the left-hand column. We consider three
+dependent variables: the change in ex post total similarity, the change
+in the number of text-based network rivals, and the change in average
+proﬁtability of ﬁrms in the focal ﬁrm’s network industry. The indepen-
+dent variables include dummies for industries having zero advertising
+and R&D expenditures. We also include the natural logarithm of the av-
+erage R&D/sales and advertising/sales for industries that have nonzero
+spending. This allows us to examine the effects of having R&D and adver-
+tising programs and also the effect of intensity in each category. Finally,
+we include controls for size, stock returns, and the book to market ratio.
+In panel B, we repeat these same tests using ﬁrm-level advertising and
+R&D.
+Table 6 shows strong support for Sutton’s predictions using both text-
+based network industry level (panel A) and ﬁrm-level (panel B) R&D
+and advertising. For example, row 1 shows that ﬁrms in network indus-
+tries with nonzero R&D and advertising, and also those with more in-
+tense spending, experience ex post reductions in their total similarity.
+We observe similar results in row 2 regarding the number of rivals, where
+results are particularly strong for advertising but are not signiﬁcant for
+R&D. Examining ex post proﬁtability in row 3, we ﬁnd support for the
+conclusion that both advertising and R&D are associated with increasing
+ex post proﬁtability. The results are similar in panel B, suggesting that
+these effects hold at both the ﬁrm and the industry levels.
+To understand the intuition for these results, we conduct a detailed
+analysis of one industry: the online education industry. We deﬁne this
+industry as the set of text-based network peer ﬁrms surrounding the
+Apollo Group, which runs the University of Phoenix, a large provider
+of online education programs.
+Table 7 displays time-series statistics for the network industry surround-
+ing Apollo Group during our sample period. We chose this example be-
+cause the improvements in (and the declining costs of) technology likely
+reduced the natural barriers to entry in this industry. We thus predict
+that ﬁrms providing online education would have strong incentives to in-
+vest in advertising to reinforce the eroding natural barriers to entry. We
+expect a movement toward niche markets established and defended by
+higher advertising.
+Table 7 supports this intuition. The last two columns, which display
+the average advertising to sales ratio for ﬁrms in Apollo’s network indus-
+try and the total advertising to total sales ratio for these ﬁrms in aggre-
+gate, conﬁrm that advertising among Apollo’s industry rivals increased
+dramatically during our sample period. Consistent with a link to barriers
+to entry, we also observe declines both in the average number of network
+rivals and in the average total similarity among ﬁrms in this market as
+advertising ramped up. We conclude that Apollo and its rivals likely had
+1458
+journal of political economy
+
+high incentives to spend on advertising as natural barriers to entry eroded,
+and our evidence suggests that this strategy was successful.
+VIII.
+Conclusions
+We use web crawling and text parsing algorithms to build new measures
+of ﬁrm pairwise product similarity based on business descriptions from
+ﬁrm 10-Ks ﬁled with the SEC. The word usage vectors from each ﬁrm
+generate an empirical Hotelling-like product market space on which
+all ﬁrms reside. We use these vectors to calculate how ﬁrms are related
+to each other and to create new industry classiﬁcations. These new clas-
+siﬁcations enable us to assess product market changes and the impact of
+major shocks and to test theories of product differentiation and whether
+ﬁrms advertise and conduct R&D to create product differentiation con-
+sistent with Sutton’s (1991) work on endogenous barriers to entry.
+Our new text-based network industry classiﬁcations are based on how
+ﬁrms describe themselves in the product description section of their 10-Ks.
+Because our classiﬁcations are updated in each year, they do not have
+the time-ﬁxed location restrictions associated with SIC and NAICS. In
+addition, our main classiﬁcation method is based on relaxing the transi-
+tivity restriction of existing SIC and NAICS industries and thus allows
+each ﬁrm to have its own potentially unique set of competitors. This
+new method, which we term text-based network industry classiﬁcations,
+is analogous to a social network in which each individual can have a dis-
+tinct set of friends or to geographic networks in which the distance from
+a ﬁrm determines whether or not it is a competitor.
+TABLE 7
+Advertising and Total Similarity Surrounding Apollo
+In Group
+Year
+No.
+of Firms
+in Group
+Average
+Total
+Similarity
+Average
+No. of
+TNIC Rivals
+Average
+Advertising/
+Sales
+Total
+Advertising/
+Total Sales
+1997
+20
+102.4
+8.9
+.013
+.003
+1998
+19
+98.2
+11.6
+.011
+.008
+1999
+23
+95.5
+11.6
+.031
+.029
+2000
+24
+86.3
+11.0
+.081
+.028
+2001
+17
+78.9
+9.765
+.031
+.023
+2002
+15
+72.9
+9.3
+.037
+.033
+2003
+17
+66.6
+7.8
+.041
+.035
+2004
+15
+62.8
+7.9
+.047
+.040
+2005
+14
+61.1
+7.9
+.057
+.067
+2006
+11
+54.8
+6.0
+.060
+.081
+2007
+12
+54.5
+6.0
+.063
+.064
+2008
+14
+54.4
+7.1
+.058
+.060
+Note.—The table displays time-series statistics including similarity measures and adver-
+tising activity for ﬁrms in Apollo’s network industry during our sample period.
+text-based network industries
+1459
+
+Measures of similarity in industry groups based on our new classiﬁca-
+tions better explain speciﬁc discussions of high competition by manage-
+ment and better explain rivals mentioned by managers as peer ﬁrms
+than do existing classiﬁcations. Our new industry classiﬁcations also al-
+low us to examine how industry membership and rival similarity change
+over time in response to exogenous industry shocks and whether adver-
+tising and R&D serve as endogenous barriers to entry. We ﬁnd that major
+demand shocks in the military and software product markets are fol-
+lowed by economically large changes in the number of similar ﬁrms,
+the degree of product differentiation, and the type of products ﬁrms of-
+fer to the market. We also ﬁnd support for Sutton’s (1991) hypothesis
+that ﬁrms spend on advertising and R&D, at least in part, to increase
+ex post product differentiation and proﬁtability.
+Appendix A
+This appendix explains how we compute the “product similarity” and “product dif-
+ferentiation” between two ﬁrms i and j. We ﬁrst take the text in each ﬁrm’s product
+description and construct a binary vector summarizing its usage of English words.
+The vector has a length equal to the number of unique words used in the set of all
+product descriptions. For a given ﬁrm, a given element of this vector is one if the
+word associated with the given element is in the given ﬁrm’s product description.
+To focus on products, we restrict the words in this vector to less commonly used
+words. Very common words include articles, conjunctions, personal pronouns, ab-
+breviations, and legal jargon, for example. Speciﬁcally, we restrict attention to
+words that are either nouns or proper nouns and that also appear in fewer than
+25 percent of all business descriptions in the given year. For each ﬁrm i, we thus
+have a binary vector Pi, with each element taking a value of one if the associated
+word is used in the given ﬁrm’s product description and zero otherwise.
+We deﬁne the frequency vector Vi to be normalized to unit length:
+Vi 5
+Pi
+ﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃ
+Pi  Pi
+p
+:
+(A1)
+To measure how similar the products of ﬁrms i and j are, we take the dot product
+of their normalized vectors, which is their “product similarity”:
+Product Similarityi,j 5 ðVi  VjÞ:
+(A2)
+We deﬁne product differentiation as one minus similarity:
+Product Differentiationi,j 5 1 2 ðVi  VjÞ:
+(A3)
+Because all normalized vectors Vi have a length of one, product similarity and
+product differentiation both have the nice property of being bounded in the in-
+terval (0, 1). This normalization ensures that product descriptions with fewer
+words are not penalized excessively. This method is known as the “cosine similar-
+1460
+journal of political economy
+
+ity” method, as it measures the cosine of the angle between two vectors on a unit
+sphere. The underlying unit sphere also represents an “empirical product mar-
+ket space” on which all ﬁrms in the sample have a unique location.
+Appendix B
+This appendix describes our ﬁxed industry classiﬁcation methodology based on
+10-K text similarities. Our classiﬁcation goal is to maximize total within-industry
+product similarity subject to two constraints. First, in order to be comparable to
+existing methods, a common set of industries must be created and held ﬁxed for
+all years in our time series. Thus, we form a ﬁxed set of industries based on our
+ﬁrst full year of data (1997). Second, our algorithm should be sufﬁciently ﬂexi-
+ble to generate industry classiﬁcations for any number of degrees of freedom.
+This latter requirement is important because, in order to compare the quality
+of our new classiﬁcations relative to alternatives like three- or four-digit SIC
+codes, our classiﬁcations should generate a similar number of industries. We
+achieve these goals using a two-stage process: (1) an industry formation stage,
+which is based on the ﬁrst full year of our sample; and (2) an industry assignment
+stage, which assigns ﬁrms in all years of our sample to the ﬁxed industries deter-
+mined in stage 1.
+We begin the ﬁrst stage by taking the subsample of N single-segment ﬁrms in
+1997 (multiple-segment ﬁrms are identiﬁed using the Compustat segment data-
+base). We then initialize our industry classiﬁcations to have N industries, with
+each of the N ﬁrms residing within its own one-ﬁrm industry. We then compute
+the pairwise similarity for each unique pair of industries j and k, which we denote
+as Ij,k.
+To reduce the industry count to N 2 1 industries, we take the maximum
+pairwise industry similarity as follows:
+max
+j,k,j≠k Ij,k:
+(B1)
+The two industries with the highest similarity are then combined, reducing the
+industry count by one. This process is repeated until the number of industries
+reaches the desired number. Importantly, when two industries with mj and mk
+ﬁrms are combined, all industry similarities relative to the new industry must
+be recomputed. For a newly created industry l, for example, its similarity with
+respect to all other industries q is computed as the average ﬁrm pairwise similar-
+ity for all ﬁrm pairs in which one ﬁrm is in industry l and one in industry q as
+follows:
+Il,q 5 ∑
+ml
+x51
+∑
+mq
+y51
+Sx,y
+mlmq
+:
+(B2)
+Here, Sx,y is the ﬁrm-level pairwise similarity between ﬁrm x in industry l and ﬁrm y
+in industry q.
+Although this method guarantees maximization of within-industry similarity af-
+ter one iteration, it does not guarantee this property after more than one iteration.
+For example, a ﬁrm that initially ﬁts best with industry j after one iteration might
+text-based network industries
+1461
+
+ﬁt better with another industry k after several iterations because industry k was not
+an option at the time the initial classiﬁcation to industry j was made. Thus, we re-
+compute similarities ex post to determine whether within-industry similarity can
+be improved by moving ﬁrms to alternative industries. If similarity can be im-
+proved, we reclassify suboptimally matched ﬁrms to their industry of best ﬁt.
+Once this process is complete, the set of industries generated by the algorithm
+will have the desired industry count and will have the property that within-
+industry similarity cannot be maximized further by movingany one ﬁrm to another
+industry. It is important to note, however, that industry classiﬁcations ﬁtting this
+description are not necessarily unique. It is plausible that multiple simultaneous
+ﬁrm reassignments can further improve within-industry similarity. We do not
+take further steps to ensure uniqueness because of computational limitations.
+Also, any departure from the true optimal set of industries would bias our study
+away from ﬁnding signiﬁcant results, and thus our approach is conservative
+and might understate the true power of 10-K business descriptions.
+The industry assignment stage takes the industries formed in the ﬁrst stage as
+given and assigns any given ﬁrm in any year to the industry it is most similar to.
+We begin by computing an aggregate word usage vector for each industry. Each
+vector is based on the universe of words appearing in fewer than 25 percent of all
+ﬁrms in 1997 as before. The vector is populated by the count of ﬁrms in the given
+industry using the given word, and this vector is then normalized to have unit
+length (similarly to how we compute ﬁrm pairwise similarities in App. A). This
+normalization ensures that industries using more words are not rewarded on
+the basis of size, but rather are rewarded only on the basis of similarity. For a
+given ﬁrm that we wish to classify, we simply compute its similarity to all of the
+candidate industries and assign the ﬁrm to the industry it is most similar to. A
+ﬁrm’s similarity to an industry is simply the dot product of the ﬁrm’s normalized
+word vector to the industry’s normalized word vector.
+Although we use the ﬁrst full year of our sample, 1997, to form industries, we
+do not believe that this procedure generates any look-ahead bias. The industry
+formation itself is purely a function of the text in product descriptions and
+the deﬁnition of a multiple segment ﬁrm obtained from Compustat. We use mul-
+tiple segment identiﬁers from 1996, which precedes our sample, and our results
+are virtually unchanged if we further omit 1997 from our sample.
+Appendix C
+In this appendix, we further assess the performance of 10-K-based ﬁxed industries
+versus SIC and NAICS industries by exploring various levels of granularity. A key ad-
+vantage of our approach is the ability to set granularity to any arbitrary level. We use
+theAkaikeinformationcriterion(AIC)toexaminewhichlevelofgranularityismost
+likely to explain ﬁrm characteristic data. Understanding granularity is relevant to
+understanding the role and breadth of economies of scope.
+Table C1 presents the results of the AIC tests. For all four levels of SIC granularity
+(panel A), all six levels of NAICS granularity (panel B), and product description–
+based industries ranging from 50 to 800 industries (panel C), we compute the AIC
+statistic and the adjusted R-squared from regressions in which the dependent var-
+iable is proﬁtability scaled by sales or assets, and the independent variable is a set
+1462
+journal of political economy
+
+TABLE C1
+Industry Classiﬁcations and Industry Granularity
+OI/Sales
+OI/Assets
+Industry Deﬁnition
+Akaike
+Information
+Criterion
+Adjusted R
+2
+Akaike
+Information
+Criterion
+Adjusted R
+2
+No. of
+Industries
+Average
+No. of Firms
+per Industry
+A. SIC Code–Based Industry Deﬁnitions
+1. SIC-1-digit
+3,459.7
+.143
+259.1
+2.000
+10
+538.1
+2. SIC-2-digit
+2,990.9
+.224
+2303.8
+.048
+72
+74.7
+3. SIC-3-digit
+2,827.1
+.273
+2730.4
+.132
+274
+19.6
+4. SIC-4-digit
+2,782.9
+.298
+2864.7
+.183
+434
+12.4
+B. NAICS-Based Industry Deﬁnitions
+5. NAICS-1-digit
+3,897.9
+.070
+2215.9
+.031
+9
+597.9
+6. NAICS-2-digit
+3,249.1
+.177
+2504.7
+.086
+23
+234.0
+7. NAICS-3-digit
+2,960.4
+.230
+2778.8
+.142
+97
+55.5
+8. NAICS-4-digit
+2,843.7
+.272
+2890.5
+.190
+331
+16.3
+9. NAICS-5-digit
+3,143.4
+.262
+2575.5
+.176
+680
+7.9
+10. NAICS-6-digit
+3,334.4
+.263
+2381.1
+.178
+1,002
+5.4
+C. 10-K Product Description–Based Industry Deﬁnitions
+11. 10-K-based-50
+2,581.7
+.278
+21,172.3
+.198
+50
+107.6
+12. 10-K-based-100
+2,413.8
+.308
+21,272.9
+.222
+100
+53.8
+13. 10-K-based-200
+2,438.5
+.312
+21,221.9
+.223
+200
+26.9
+14. 10-K-based-250
+2,417.1
+.321
+21,245.1
+.232
+250
+21.5
+15. 10-K-based-300
+2,370.4
+.328
+21,258.7
+.237
+300
+17.9
+16, 10-K-based-400
+2,348.0
+.338
+21,253.0
+.243
+400
+13.5
+17. 10-K-based-500
+2,440.7
+.333
+21,196.1
+.244
+500
+10.8
+18. 10-K-based-800
+2,603.0
+.329
+21,076.9
+.245
+800
+6.7
+Note.—The table reports the average Akaike information criterion (AIC) for cross-sectional regressions in which proﬁtability is regressed on a spec-
+iﬁed set of industry ﬁxed effects. To avoid clustering over time (which would bias AIC tests), we run separate regressions in each year from 1997 to 2008
+and report average AIC scores.
+
+of industry ﬁxed effects based on the given classiﬁcation. To avoid clustering of
+ﬁrm observations over time, which could bias AIC tests, we run separate cross-
+sectional regressions in each year and we then report the average AIC scores and
+the average adjusted R-squared calculations based on 10 regressions from 1997
+to 2006. Classiﬁcations with lower AIC scores are more likely to explain the data.
+Panel A shows that three- and four-digit SIC classiﬁcations are most informa-
+tive and dominate two-digit SIC codes. This suggests that the wide usage of three-
+digit SIC codes in existing studies is reasonable. Panel B suggests that four-digit
+NAICS dominates other resolutions, suggesting that NAICS-4 might be a substi-
+tute for SIC-3. Because AIC scores are designed to permit comparisons across in-
+dustries using different information sources and industry counts, we can also
+broadly compare SIC to NAICS. Panels A and B show that SIC and NAICS are
+reasonable substitutes for each other. NAICS is marginally better when explain-
+ing proﬁtability scaled by assets, and SIC is marginally better when explaining
+proﬁtability scaled by sales. Our results do not support the conclusion that
+NAICS dominates SIC, which is perhaps surprising given the more recent estab-
+lishment of NAICS.
+Panel C shows that 10-K-based industries dominate both SIC and NAICS, as
+AIC scores in panel C are broadly lower than those in either panel A or panel B.
+This result is robust to scaling proﬁtability by sales or assets. The AIC score of
+2,603.1 (10-K-based 300 industries) is broadly lower than the 3,091.4 for three-
+digit SIC codes and the 3,097.7 for four-digit NAICS codes, even though all three
+groupings have similar granularity levels.
+Although we can conclude that 10-K-based industries are more informative
+than SIC or NAICS industries, panel C draws only a moderately decisive conclu-
+sion that the AIC scores reach a minimum at 300 industries. This minimum is
+surrounded by only a gradual slope. We conclude that the degree of granularity
+(roughly 300 industries) used by SIC and NAICS is reasonable and is also a good
+benchmark for 10-K-based industries.
+References
+Antweiler, Werner, and Murray Frank. 2004. “Is All That Talk Just Noise? The In-
+formation Content of Internet Stock Message Boards.” J. Finance 52:1259–94.
+Berry, Steven, James Levinsohn, and Ariel Pakes. 1997. “Automobile Prices in
+Market Equilibrium.” Econometrica 63:841–90.
+Bhojraj, Sanjeev, Charles Lee, and Derek Oler. 2003. “What’s My Line? A Com-
+parison of Industry Classiﬁcations for Capital Market Research.” J. Accounting
+Res. 41:745–74.
+Chamberlin, E. H. 1933. The Theory of Monopolistic Competition. Cambridge, MA:
+Harvard Univ. Press.
+Ellickson, Paul. 2007. “Does Sutton Apply to Supermarkets?” Rand J. Econ. 38:43–59.
+Fama, Eugene, and Kenneth French. 1997. “Industry Costs of Equity.” J. Financial
+Econ. 43:153–93.
+Fan, Joseph, and Vidhan Goyal. 2006. “On the Patterns and Wealth Effects of
+Vertical Mergers.” J. Bus. 79:877–902.
+Gentzkow, Matthew, and Jesse Shapiro. 2010. “What Drives Media Slant? Evi-
+dence from U.S. Daily Newspapers.” Econometrica 78:35–71.
+1464
+journal of political economy
+
+Gowrisankaran, Gautam, and Marc Rysman. 2012. “Dynamics of Consumer De-
+mand for New Durable Goods.” J.P.E. 120:1173–1219.
+Hanley, Kathleen, and Gerard Hoberg. 2010. “The Information Content of IPO
+Prospectuses.” Rev. Financial Studies 23:2821–64.
+Hay, D. A. 1976. “Sequential Entry and Entry-Deterring Strategies in Spatial
+Competition.” Oxford Econ. Papers 28:240–57.
+Hoberg, Gerard, and Vojislav Maksimovic. 2015. “Redeﬁning Financial Con-
+straints: A Text-Based Analysis.” Rev. Financial Studies 28:1312–52.
+Hoberg, Gerard, and Gordon Phillips. 2010. “Competition and Product Market
+Synergies in Mergers and Acquisitions: A Text-Based Analysis.” Rev. Financial
+Studies 23:3773–3811.
+———. 2013. “Industry Choice and Product Language.” Working paper, Univ.
+Southern California.
+Holmes, Thomas, and John Stevens. 2004. “Spatial Distribution of Economic Ac-
+tivities in North America.” In Handbook of Urban and Regional Economics, vol. 4, Cit-
+ies and Geography, edited by J. Vernon Henderson and Jacques-François Thisse.
+Amsterdam: Elsevier.
+Hotelling, Harold. 1929. “Stability in Competition.” Econ. J. 39:41–57.
+Jaffe, Adam. 1986. “Technological Opportunities and Spillovers of R&D: Evi-
+dence from Firms’ Patents, Proﬁts, and Market Value.” A.E.R. 76:984–1001.
+Kahle, Kathleen, and Ralph Walkling. 1996. “The Impact of Industry Classiﬁca-
+tions on Financial Research.” J. Financial and Quantitative Analysis 31:309–35.
+Krishnan, Jayanthi, and Eric Press. 2003. “The North American Industry Classi-
+ﬁcation System and Its Implications for Accounting Research.” Contemporary
+Accounting Res. 20:685–717.
+Lin, Ping, and Kamal Saggi. 2002. “Product Differentiation, Process R&D, and
+the Nature of Market Competition.” European Econ. Rev. 46:201–11.
+Loughran, Tim, and Bill McDonald. 2011. “When Is a Liability Not a Liability?
+Textual Analysis, Dictionaries, and 10-Ks.” J. Finance 66:35–65.
+Mazzeo, Michael. 2002. “An Empirical Model of Firm Entry with Endogenous
+Product Choices.” Rand J. Econ. 33:221–42.
+Nevo, Aviv. 2000. “Mergers with Differentiated Products: The Case of the Ready-
+to-Eat Cereal Industry.” Rand J. Econ. 31:395–421.
+Panzar, J., and R. Willig. 1981. “Economies of Scope.” A.E.R. 71:268–72.
+Rauh, Joshua, and Amir Suﬁ. 2012. “Explaining Corporate Capital Structure:
+Product Markets, Leases, and Asset Similarity.” Rev. Finance 16:115–55.
+Schmalensee, Richard. 1989. “Inter-industry Studies of Structure and Performance.”
+In Handbook of Industrial Organization, vol. 2, edited by Richard Schmalensee and
+Robert D. Willig. Amsterdam: North-Holland.
+Sebastiani, Fabrizio. 2002. “Machine Learning in Automated Text Categoriza-
+tion.” ACM Computing Surveys 34:1–47.
+Seim, Katja. 2006. “An Empirical Model of Firm Entry with Endogenous Product
+Choices.” Rand J. Econ. 37:619–40.
+Shaked, Avner, and John Sutton. 1987. “Product Differentiation and Industrial
+Structure.” J. Indus. Econ. 26:131–46.
+Sutton, John. 1991. Sunk Costs and Market Structure. Cambridge, MA: MIT Press.
+Tetlock, Paul C. 2007. “Giving Content to Investor Sentiment: The Role of Media
+in the Stock Market.” J. Finance 62:1139–68.
+Tetlock, Paul, Maytal Saar-Tsechanksy, and Sofus Macskassy. 2008. “More than
+Words: Quantifying Language to Measure Firms’ Fundamentals.” J. Finance
+63:1437–67.
+text-based network industries
+1465

@@ -1,0 +1,280 @@
+# Online Appendix: Text-Based Industry Momentum
+
+1
+
+
+## Online Appendix Table A1 Fama MacBeth Return Regressions (Various SIC-based Momentum Variables)
+
+Fama-MacBeth regressions with the monthly stock return as the dependent variable for our full sample from July
+1997 to December 2012. The independent variables are all measured ex-ante using the lag structure given by Fama
+and French. The key variables include industry momentum variables based on different mappings based on the
+SIC-code industry classification. In Panel A, we consider methods that value-weight the return of industry peers in
+the given group (excluding the focal firm itself). In Panel B, we consider methods that equal-weight the return of
+industry peers in the given group (excluding the focal firm itself). In each panel, we consider four specifications in
+increasing granularity, all of which are based on SIC codes: (1) the 20-industry group based on Moskowitz and
+Grinblatt (1997), (2) the Fama-French-48 industries, (3) 2-digit SIC codes, and (4) 3-digit SIC codes. In all
+specifications, we also include our baseline 10-K Based TNIC-3 momentum variables. Although not displayed to
+conserve spece, we also include controls for own-firm momentum (month _t −_ 2 to _t −_ 11)), own firm lagged return
+(month _t −_ 1), log book to market ratio and log market capitalization. In the SIC-based method column, we note
+the method used in the given test. All RHS variables are standardized prior to running the regression for ease of
+comparison. All standard errors are adjusted using Newey-West with two lags.
+
+
+t-1 to t-6 t-7 to t-12 t-1 to t-6 t-7 to t-12
+
+SIC-based SIC-based TNIC-3 TNIC-3
+SIC-based Industry Industry Industry Industry # Obs. /
+Row Method Past Ret. Past Ret. Past Ret. Past Ret. _R_ [2]
+
+
+_**Panel A: Value-weighted SIC-based methods (full sample)**_
+
+
+(1) MG-20 0.004 0.000 0.007 0.004 0.052
+(3.33) (0.03) (4.33) (2.98) 805,089
+(2) FF-48 0.003 -0.001 0.007 0.005 0.051
+(3.25) (-0.55) (4.13) (3.34) 805,089
+(3) SIC-2 0.003 -0.001 0.007 0.005 0.051
+(4.06) (-0.84) (3.99) (3.25) 805,089
+(4) SIC-3 0.003 -0.000 0.007 0.005 0.051
+(3.78) (-0.53) (4.15) (2.98) 805,089
+
+
+_**Panel B: Value-weighted SIC-based methods (above-median sized firms)**_
+
+
+(5) MG-20 0.003 -0.000 0.005 0.004 0.083
+(1.97) (-0.09) (2.88) (2.73) 403,074
+(6) FF-48 0.002 -0.001 0.005 0.005 0.081
+(1.99) (-0.51) (2.66) (3.23) 403,074
+(7) SIC-2 0.002 -0.001 0.005 0.004 0.081
+(2.15) (-0.56) (2.64) (2.84) 403,074
+(8) SIC-3 0.001 -0.000 0.005 0.004 0.080
+(1.77) (-0.53) (2.73) (2.71) 403,074
+
+
+_**Panel C: Equal-weighted SIC-based methods (full sample)**_
+
+
+(9) MG-20 0.003 -0.001 0.007 0.005 0.055
+(1.38) (-0.40) (4.55) (3.30) 805,089
+(10) FF-48 0.003 -0.000 0.007 0.005 0.054
+(1.92) (-0.14) (4.31) (3.20) 805,089
+(11) SIC-2 0.004 -0.000 0.007 0.005 0.053
+(2.33) (-0.11) (4.31) (3.08) 805,089
+(12) SIC-3 0.004 0.000 0.007 0.005 0.052
+(3.08) (0.23) (4.20) (2.89) 805,089
+
+
+_**Panel D: Equal-weighted SIC-based methods (above-median sized firms)**_
+
+
+(13) MG-20 0.001 0.000 0.005 0.005 0.086
+(0.28) (0.04) (3.10) (3.06) 403,074
+(14) FF-48 -0.000 0.000 0.005 0.004 0.084
+(-0.02) (0.25) (2.91) (3.00) 403,074
+(15) SIC-2 0.000 0.000 0.005 0.004 0.083
+(0.13) (0.21) (2.90) (2.79) 403,074
+(16) SIC-3 0.001 0.000 0.005 0.004 0.081
+(0.90) (0.04) (2.68) (2.75) 403,074
+
+
+2
+
+
+## Online Appendix Table A2 Return Comovement: High and Low Industry Disparity
+
+Fama-MacBeth regressions with own-firm monthly stock return as the dependent variable. One observation is one firm from July 1997 to December 2012. The independent variables
+include one to six month lags of TNIC-based peer returns (excluding the firm itself) and Fama-French-48 (SIC-based) peer returns (also excluding the firm itself). We also include
+controls for own firm momentum (own-firm 11 month lagged return from month _t −_ 12 to _t −_ 2) and the Fama and French (1992) variables including log book to market ratio and log
+size, a dummy for negative book to market ratio stocks (these control variables are not displayed to conserve space). Panels A and B display results for firms with below-median and
+above median TNIC/SIC disparity, respectively. Disparity is one minus the total sales of firms in the intersection of TNIC and SIC peers divided by the total sales of firms in the union
+of the TNIC and SIC peers. All peer variables are standardized to have a standard deviation of one for ease of comparison and interpretation. All standard errors are adjusted using
+Newey-West with two lags.
+
+
+TNIC-3 TNIC-3 TNIC-3 TNIC-3 TNIC-3 TNIC-3 TNIC-3 FF-48 FF-48 FF-48 FF-48 FF-48 FF-48 FF-48
+_t_ _t −_ 1 _t −_ 2 _t −_ 3 _t −_ 4 _t −_ 5 _t −_ 6 _t_ _t −_ 1 _t −_ 2 _t −_ 3 _t −_ 4 _t −_ 5 _t −_ 6 RSQ /
+Row Return Return Return Return Return Return Return Return Return Return Return Return Return Return # Obs.
+
+
+_**Panel A: Below Median Industry Disparity**_
+
+
+(1) 0.041 0.005 0.002 0.000 0.001 0.000 0.001 0.020 -0.001 0.000 0.001 0.000 0.000 -0.002 0.117
+(42.98) (6.37) (2.37) (0.61) (0.80) (0.17) (1.86) (22.47) (-1.90) (0.33) (1.37) (0.01) (0.15) (-1.93) 376,235
+(2) 0.009 0.003 0.002 0.001 -0.000 0.002 -0.000 -0.001 0.002 -0.001 0.001 -0.001 0.090
+(6.32) (2.56) (1.67) (0.81) (-0.09) (1.34) (-0.09) (-0.77) (1.81) (-0.66) (0.89) (-0.83) 376,235
+
+
+_**Panel B: Above Median Industry Disparity**_
+
+
+(3) 0.023 0.005 0.003 0.003 0.001 0.002 0.002 0.014 0.001 -0.000 0.001 0.001 -0.001 -0.000 0.063
+(23.81) (7.91) (4.08) (4.58) (2.13) (2.70) (2.29) (14.29) (1.75) (-0.00) (1.02) (1.00) (-1.61) (-0.30) 369,617
+(4) 0.006 0.004 0.003 0.002 0.002 0.002 0.002 -0.000 0.001 0.001 -0.001 0.000 0.050
+(7.62) (4.08) (4.36) (2.31) (2.02) (2.41) (1.88) (-0.30) (1.19) (0.94) (-1.13) (0.14) 369,617
+
+
+## Online Appendix Table A3 Return Comovement (Systematic versus Idiosyncratic Components)
+
+Fama-MacBeth regressions with own-firm monthly stock return as the dependent variable. One observation is one firm from July 1997 to December 2012. The independent variables
+include one to six month lags of the systematic and idiosyncratic portions of the TNIC industry return portfolio. To compute the systematic portion, we first regress (for each month)
+daily stock returns for each firm onto the three Fama French factors and the momentum factor. The projection from this regression (excluding the projection from the intercept) is the
+systematic portion of a firm’s daily return. These are then aggregated to monthly observations, and we compute the average of these systematic returns over each firm’s text based
+peers to get the “Systematic Peer Return”. The idiosyncratic Peer Return is the raw TNIC peer return minus the systematic TNIC peer return. Panels A to C display results for the
+full sample, firms with below-median, and firms with above median TNIC/SIC disparity, respectively. Disparity is one minus the total sales of firms in the intersection of TNIC and
+SIC peers divided by the total sales of firms in the union of the TNIC and SIC peers. All peer variables are standardized to have a standard deviation of one for ease of comparison and
+interpretation. All standard errors are adjusted using Newey-West with two lags.
+
+
+_**SYSTEMATIC COMPONENTS**_ _**IDIOSYNCRATIC COMPONENTS**_
+
+
+TNIC-3 TNIC-3 TNIC-3 TNIC-3 TNIC-3 TNIC-3 TNIC-3 TNIC-3 TNIC-3 TNIC-3 TNIC-3 TNIC-3
+_t −_ 1 _t −_ 2 _t −_ 3 _t −_ 4 _t −_ 5 _t −_ 6 _t −_ 1 _t −_ 2 _t −_ 3 _t −_ 4 _t −_ 5 _t −_ 6 RSQ /
+Row Return Return Return Return Return Return Return Return Return Return Return Return # Obs.
+
+
+_**Panel A: Full Sample**_
+
+
+(1) 0.004 0.001 0.001 0.002 0.001 0.001 0.005 0.003 0.003 0.001 0.001 0.002 0.060
+(2.66) (0.82) (0.54) (1.09) (0.40) (0.75) (8.20) (4.79) (4.83) (2.39) (1.68) (2.68) 750,924
+
+
+_**Panel B: Below Median Industry Disparity**_
+
+
+(2) 0.004 0.000 0.002 0.001 0.000 0.000 0.006 0.003 0.002 0.001 0.000 0.002 0.090
+(2.01) (0.16) (0.86) (0.43) (0.12) (0.06) (6.95) (3.61) (2.90) (1.11) (0.48) (2.15) 378,507
+
+
+_**Panel C: Above Median Industry Disparity**_
+
+
+(3) 0.004 0.002 0.000 0.002 0.001 0.002 0.005 0.003 0.003 0.002 0.002 0.002 0.051
+(2.70) (1.02) (0.18) (1.22) (0.97) (1.08) (8.43) (5.06) (5.40) (2.64) (2.41) (3.02) 372,417
+
+
+## Online Appendix Table A4 Actual vs Random TNIC Industry Momentum Returns
+
+The first two columns report average ex-post returns and the average past 11 month returns for deciles sorted
+based on the past 11 month return. The past 11 month return is lagged one extra month and is thus measured
+from month _t_ = _−_ 12 to _t_ = _−_ 2. The ex-post return is from month _t_ = 0. Reported averages are the industry
+average value of the past 11 month return and the ex-post return following the approach in Moskowitz and
+Grinblatt (1997). The last two columns report the results of random industry portfolios also following the approach
+in Moskowitz and Grinblatt (1997). In particular, we sort all firms by their past 11 month return, and replace each
+firm in each industry with the other firm that had the closest 11 month return. This creates random industries of
+similar size and granularity as TNIC, and each random industry had almost identical past returns as each actual
+industry (as displayed below in the first and third data columns). Unlike the past returns, the ex-post returns are
+not mechanistically linked in this way. The ex-post returns are thus the variable of interest. The table shows that
+the upward pattern of ex-post returns for actual TNIC peer returns is significantly steeper than the trend for
+random TNIC peer returns. A statistical test of differences indicates that these patterns are statistically different
+at the 1% level. Hence, actual horizontal industry links are critical in generating our observed results.
+
+
+Actual TNIC-3 Actual TNIC-3 Random TNIC-3 Random TNIC-3
+
+t-2 to t-12 t=0 ex- t-2 to t-12 t=0 ex
+Decile Past Return post Return Past Return post Return
+
+
+Lowest Past Return -25.60 0.64 -25.52 1.08
+
+2 -12.82 0.86 -12.75 0.99
+
+3 -6.34 1.11 -6.29 0.92
+
+4 0.00 1.00 0.03 0.90
+
+5 5.99 0.83 5.99 0.91
+
+6 12.13 0.99 12.09 0.97
+
+7 19.85 1.39 19.80 1.09
+
+8 29.55 1.75 29.41 1.18
+
+9 41.49 1.84 41.19 1.19
+
+Highest Past Return 71.53 1.89 70.54 1.20
+
+
+5
+
+
+## Online Appendix Table A5 Fama MacBeth Return Regressions (Robustness to Large Firms)
+
+To examine if our results can be explained by the well-known lead-lag effect between large and small firms as shown in Hou (2007), we consider several increasingly stringent
+specifications and examine if our key one-year TNIC-3 momentum variable remains significant. Panels A to C display results for the full sample, firms with above-median, and firms in
+the highest tercile size (market capitalization), respectively. These size-restricted tests are particularly stringent and illustrate that our results cannot be explained by the well-known
+lead-lag effect because returns attributable to the lead-lag effect do not exist in samples of larger firms. Because our results are robust to these specifications, and also because we find
+long-lasting predictable returns (12 months), we conclude that our results are related to the industry momentum anomaly and not to the lead-lag anomaly. All RHS variables are
+standardized prior to running the regression for ease of comparison. All standard errors are adjusted using Newey-West with two lags.
+
+
+t-1 to t-12 t-1 to t-12
+
+TNIC-3 FF-48 t-1 t-2 to t-12 Log Market Log Book
+Industry Industry Own Firm Own Firm Capital- to Market _R_ [2] /
+Row Sample Past Return Past Return Past Return Past Return ization Ratio # Obs.
+
+
+_**Panel A: Full Sample**_
+
+
+(1) All Months 0.008 0.003 -0.004 -0.000 -0.000 0.002 0.047
+(4.36) (1.65) (-4.26) (-0.18) (-0.35) (2.30) 805,090
+(2) Pre-2008 0.009 0.003 -0.004 0.002 -0.001 0.003 0.050
+(4.15) (1.56) (-3.40) (1.36) (-0.73) (2.17) 591,241
+
+
+_**Panel B: Above median size only**_
+
+
+(3) All Months 0.005 0.002 -0.003 -0.003 -0.001 0.001 0.071
+(2.73) (1.23) (-2.63) (-0.77) (-0.94) (1.19) 402,592
+(4) Pre-2008 0.007 0.002 -0.003 0.000 -0.000 0.002 0.074
+(3.05) (1.19) (-2.35) (0.10) (-0.28) (1.45) 295,652
+
+
+_**Panel C: Largest size tercile only**_
+
+
+(5) All Months 0.003 0.002 -0.002 -0.003 -0.001 0.001 0.085
+(1.82) (1.59) (-1.95) (-0.83) (-1.31) (0.92) 268,365
+(6) Pre-2008 0.005 0.002 -0.002 0.001 -0.000 0.002 0.089
+(2.57) (1.35) (-1.63) (0.21) (-0.47) (1.20) 197,083
+
+
+## Online Appendix Table A6 Fama MacBeth Return Regressions (separately consider positive and negative past returns)
+
+This table divides all momentum variables into their positive and negative components. This is done by defining the positive component as being equal to the past return itself if it is
+positive, and zero otherwise. The negative component is similarly defined. Results are based on TNIC-3 and Fama-French-48 (SIC-based) momentum variables. This test is considered
+to show that our results are robust to an alternative specification that is motivated by Hou (2007), who shows that the negative component of past returns is more significant than the
+positive component when explaining the lead-lag anomaly. Our goal is to explain industry momentum, and indeed our results below show that the positive component of past returns
+is more important than the negative component (which is not consistent with the lead-lag anomaly).
+
+
+_**POSITIVE COMPONENTS**_ _**NEGATIVE COMPONENTS**_
+
+
+t-1 to t-12 t-1 to t-12 t-1 to t-12 t-1 to t-12
+
+TNIC-3 FF-48 t-1 t-2 to t-12 TNIC-3 FF-48 t-1 t-2 to t-12
+Industry Industry Self Self Industry Industry Self Self _R_ [2]
+
+RowSample Past Ret Past Ret Past Ret Past Ret Past Ret Past Ret Past Ret Past Ret # Obs
+
+
+(1) All Months 0.008 0.004 0.034
+(2.94) (2.62) 805,090
+(2) All Months 0.007 0.002 -0.002 0.002 0.003 -0.191 -0.003 0.002 0.060
+(3.73) (0.75) (-4.11) (1.47) (3.32) (-0.96) (-2.80) (1.45) 805,090
+(3) Pre-2008 0.011 0.003 0.040
+(4.27) (1.87) 591,241
+(4) Pre-2008 0.010 0.001 -0.003 0.003 0.002 -0.232 -0.002 0.003 0.063
+(4.60) (1.01) (-3.21) (2.29) (2.08) (-0.98) (-2.10) (1.76) 591,241
+
+
