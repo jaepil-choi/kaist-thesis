@@ -1,0 +1,75 @@
+# Target journal universe for literature search / key-paper selection.
+# Used by the paper-search skill (OpenAlex-based, see pyalex).
+#
+# IMPORTANT — Review of Finance source split:
+# OpenAlex indexes this journal under two separate Source records because it
+# was renamed from "European Finance Review" (pre-2003) to "Review of Finance".
+# Both source_ids must be OR'd together or older articles will be silently
+# missing from search results.
+#
+# id_system: "openalex" — ids below are OpenAlex Source IDs (e.g. "S5353659"),
+# NOT Scopus Source IDs. Scopus abstract/reference retrieval was tested and
+# returns 401 Unauthorized outside KAIST's institutional network, so this
+# project uses OpenAlex (free, no IP restriction) instead of Scopus for
+# search + abstract + reference/citation retrieval.
+#
+# Tier 4 is not an academic prestige ranking like 1-3 -- it's the primary
+# practitioner/quant venues for portfolio construction & constrained
+# optimization topics (transfer coefficient, active extension / 130-30,
+# enhanced indexing, fundamental law of active management). The seminal
+# papers for that literature (Grinold 1989; Clarke, de Silva & Thorley 2002)
+# live in these two journals, not in the tier 1-3 academic set, so leaving
+# tier 4 out would miss the core of that literature. Added 2026-07-12 while
+# researching "enhanced index fund performance under constraints / optimal
+# long-short alpha transfer" as a candidate thesis topic.
+
+tiers:
+  1:
+    - name: Journal of Finance
+      issn_l: "0022-1082"
+      source_ids: ["S5353659"]
+    - name: Journal of Financial Economics
+      issn_l: "0304-405X"
+      source_ids: ["S149240962"]
+    - name: Review of Financial Studies
+      issn_l: "0893-9454"
+      source_ids: ["S170137484"]
+
+  2:
+    - name: Journal of Financial and Quantitative Analysis
+      issn_l: "0022-1090"
+      source_ids: ["S193228710"]
+    - name: Review of Finance
+      issn_l: "1382-6662"  # historical; see note above
+      source_ids: ["S49857371", "S131117787"]
+    - name: Management Science
+      issn_l: "0025-1909"
+      source_ids: ["S33323087"]
+
+  3:
+    - name: Review of Asset Pricing Studies
+      issn_l: "2045-9920"
+      source_ids: ["S2735409286"]
+    - name: Journal of Banking and Finance
+      issn_l: "0378-4266"
+      source_ids: ["S2876017"]
+    - name: Journal of Financial Intermediation
+      issn_l: "1042-9573"
+      source_ids: ["S5984737"]
+    - name: Journal of Financial Markets
+      issn_l: "1386-4181"
+      source_ids: ["S127646213"]
+    - name: Journal of Empirical Finance
+      issn_l: "0927-5398"
+      source_ids: ["S145875555"]
+    - name: Financial Management
+      issn_l: "0046-3892"
+      source_ids: ["S157946625"]
+
+  4:
+    - name: The Journal of Portfolio Management
+      issn_l: "0095-4918"
+      source_ids: ["S143806524"]
+    - name: Financial Analysts Journal
+      issn_l: "0015-198X"
+      source_ids: ["S162525099"]
