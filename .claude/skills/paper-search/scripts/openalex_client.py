@@ -17,11 +17,19 @@ import os
 from pathlib import Path
 from typing import Any
 
+import truststore
 import yaml
 from dotenv import load_dotenv
 
 import pyalex
 from pyalex import Works, Sources
+
+# Use the OS certificate store (Windows/macOS) instead of certifi's bundled
+# CA list. Needed on networks with a TLS-inspecting corporate proxy (e.g. an
+# "ePrism SSL" gateway) whose root CA is trusted by the OS but not by
+# certifi -- without this, requests to api.openalex.org fail with
+# SSLCertVerificationError: self-signed certificate in certificate chain.
+truststore.inject_into_ssl()
 
 # Resolve config/key-paper.yaml relative to the repo root (three levels up
 # from .claude/skills/paper-search/scripts/).

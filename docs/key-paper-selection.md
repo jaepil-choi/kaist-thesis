@@ -49,6 +49,136 @@ out-of-sample R²의 횡단면 버전 등)도 제안.
 firm characteristics에 적용하는 건 방법론적으로 자연스럽고 선례가 많은
 replication 설계.
 
+### 3. Mutual fund performance: Using bespoke benchmarks to disentangle mandates, constraints and skill
+
+- **저자**: Alessandro Beber, Michael W. Brandt, Jason Cen, Kenneth A. Kavajecz
+- **저널**: Journal of Empirical Finance (tier 3), 2021
+- **피인용**: 12
+- **DOI**: https://doi.org/10.1016/j.jempfin.2020.12.001
+- **OpenAlex ID**: W2970643464
+
+**Abstract 요약**: 모든 뮤추얼펀드는 서로 다른 mandate(운용지침)와
+constraint(제약)를 갖는데도, 기존 성과평가는 이를 무시하고 범용 벤치마크로
+순위를 매긴다는 문제의식에서 출발. 각 펀드의 mandate·constraint를 반영한
+"맞춤형(bespoke) 다요인 벤치마크"를 구성하는 방법론을 제시. 이 방식으로
+재평가하면 평균 펀드의 성과기록이 크게 개선되고, 펀드 간 순위도 원래 순위와
+유의미하게 달라짐 — mandate·constraint를 통제하지 않으면 실력(skill)을
+잘못 측정하게 된다는 걸 정량적으로 입증.
+
+**왜 후보인가**: Mutual fund regulatory/mandate constraint 하에서 "무엇이
+최적 운용이고 무엇이 실력인가"를 방법론적으로 분리해내는 논문 — 원래 관심사였던
+regulatory constraint 프레이밍(아래 "Enhanced index fund / transfer
+coefficient 문헌" 참고)과 직접 연결되면서도, tier 3 학술지라 "prestigious
+journal key paper를 한국 데이터로 replicate" 기준에는 부합. Bespoke
+benchmark 구성 방법론을 한국 펀드 데이터에 적용하는 replication 설계가
+가능해 보임.
+
+### 4. Institutional Investment Constraints and Stock Prices
+
+- **저자**: Jie Cao, Bing Han, Qinghai Wang
+- **저널**: Journal of Financial and Quantitative Analysis (tier 2), 2017
+- **피인용**: 50
+- **DOI**: https://doi.org/10.1017/s0022109017000102
+- **OpenAlex ID**: W3121379631
+
+**Abstract 요약**: 위임운용(delegated portfolio management)에서의 투자제약이
+종목 수요를 왜곡시킨다는 가설을 검증. 이미 overweight한 종목에 좋은 뉴스가
+나와도 기관은 더 사지 않고, 이미 underweight한 종목에 나쁜 뉴스가 나와도
+팔기를 꺼림(제약 때문에 추가 매수/매도가 어려움). 그 결과 "좋은 뉴스인데
+overweight라 더 못 산 종목"이 "나쁜 뉴스인데 underweight라 더 못 판 종목"보다
+이후 유의하게 초과성과를 내고, 이것이 모멘텀·PEAD 같은 이상현상 일부를
+설명한다고 주장.
+
+**왜 후보인가**: Tier-2 저널이고 피인용 50으로 검증된 논문. 기관투자자의
+포트폴리오 제약이 가격형성(모멘텀/PEAD)에 미치는 영향을 다뤄 자산가격결정
+이상현상 문헌과 직접 연결됨 — 한국 시장의 기관투자자 보유비중 데이터로
+동일한 overweight/underweight 뉴스반응 비대칭을 검증하는 replication이
+가능해 보임 (한국은 기관 보유공시 데이터 접근성이 상대적으로 좋은 편).
+
+### 5. Machine-learning the skill of mutual fund managers
+
+- **저자**: Ron Kaniel, Zihan Lin, Markus Pelger, Stijn Van Nieuwerburgh
+- **저널**: Journal of Financial Economics (tier 1), 2023
+- **피인용**: 106
+- **DOI**: https://doi.org/10.1016/j.jfineco.2023.07.004
+- **OpenAlex ID**: W4385753172
+
+**Abstract 요약**: 머신러닝으로 펀드 특성(fund characteristics)만 갖고도
+고성과/저성과 뮤추얼펀드를 수수료 차감 전후 모두 일관되게 구분해낼 수 있고,
+이 초과성과가 3년 넘게 지속됨을 보임. Fund momentum과 fund flow가 가장
+중요한 예측변수이고, 펀드가 보유한 종목들의 특성 자체는 예측력이 없음.
+예측 롱숏 포트폴리오의 수익률은 고(高)센티먼트 시기 직후에 더 높으며,
+신경망 추정을 통해 센티먼트와 fund flow·fund momentum 간의 새로운
+상호작용 효과를 발견.
+
+**왜 후보인가**: Tier-1 저널(JFE), 피인용 106으로 이미 활발히 인용되는 논문.
+기존 후보 #1(ML 기반 beta 추정), #2(ML 확장 Fama-MacBeth)와 같은 "ML을
+자산가격결정/성과평가 방법론에 도입" 계열이라 방법론적 일관성이 있음.
+펀드 특성 기반 예측 방법론을 한국 뮤추얼펀드 데이터에 적용하는 replication이
+가능해 보이며, 한국은 미국 대비 fund characteristics 기반 스킬 예측 연구가
+상대적으로 적어 gap일 가능성.
+
+### 6. ETF Arbitrage, Non-Fundamental Demand, and Return Predictability
+
+- **저자**: David Brown, Shaun Davies, Matthew C. Ringgenberg
+- **저널**: Review of Finance (tier 2), 2020
+- **피인용**: 132
+- **DOI**: https://doi.org/10.1093/rof/rfaa027
+- **OpenAlex ID**: W3121485504
+
+**Abstract 요약**: 비기본가치적(non-fundamental) 수요충격은 자산가격에 큰
+영향을 주지만 직접 관측하기 어려움. ETF 1차 시장에서 authorized
+participant(AP)가 ETF와 기초자산 간 일물일가법칙 위반을 창출/환매
+(creation/redemption)로 교정한다는 점을 이용해, 이 창출/환매 흐름(ETF
+flow) 자체가 비기본가치 수요의 신호임을 이론+실증으로 보임. 고유입 ETF를
+숏·저유입 ETF를 롱하는 포트폴리오가 월 1.1~2.0% 초과수익을 내고, 이 왜곡이
+투자자에게 실질적 비용(저성과)까지 유발함.
+
+**왜 후보인가**: Tier-2 저널, 피인용 132로 검증된 논문. ETF flow를
+비기본가치 수요의 관측 가능한 대리변수로 쓰는 식별전략이 명확하고
+재현가능함 — 한국 ETF 시장의 creation/redemption 데이터로 동일한
+flow-기반 예측 포트폴리오를 구성하는 replication이 가능해 보임.
+
+### 7. Identifying the Effect of Stock Indexing: Impetus or Impediment to Arbitrage and Price Discovery?
+
+- **저자**: Byung Hyun Ahn, Panos N. Patatoukas
+- **저널**: Journal of Financial and Quantitative Analysis (tier 2), 2021
+- **피인용**: 9
+- **DOI**: https://doi.org/10.1017/s0022109021000235
+- **OpenAlex ID**: W3155965432
+
+**Abstract 요약**: "인덱스 투자 증가가 차익거래를 방해하고 가격발견을
+저해한다"는 우려를 Russell 지수 재구성(reconstitution)을 자연실험으로
+이용해 인과적으로 검증. 대형주·중형주에서는 인덱스 투자가 차익거래자의
+뉴스 반영 능력에 뚜렷한 영향이 없지만, 초소형주(micro-cap)에서는 오히려
+뉴스에 대한 가격조정 속도를 높임 — 메커니즘은 인덱싱이 차익거래 제약을
+완화시켜 원래 거래하기 힘들었던 초소형주의 정보거래를 촉진한다는 것.
+
+**왜 후보인가**: Tier-2 저널. Russell 재구성 같은 규칙 기반 지수 재조정을
+자연실험으로 쓰는 식별전략이 깨끗하고, "인덱싱이 가격발견을 해친다"는
+통념에 반대되는 결과라 흥미로움. 코스피/코스닥 지수 정기변경(예: KOSPI200
+편입·편출)을 유사한 자연실험으로 활용하는 한국 replication이 가능해 보임.
+
+### 8. Earning Alpha by Avoiding the Index Rebalancing Crowd
+
+- **저자**: Robert D. Arnott, Christopher Brightman, Vitali Kalesnik, Lillian Wu
+- **저널**: Financial Analysts Journal (tier 4), 2023
+- **피인용**: 8
+- **DOI**: https://doi.org/10.1080/0015198x.2023.2173506
+- **OpenAlex ID**: W4362607100
+
+**Abstract 요약**: 시가총액가중지수는 밸류에이션이 오른 종목을 편입하고
+내린 종목을 편출하는 기계적 룰을 갖는데, 편입/편출 발표 시 가격충격 이후
+리버설이 일어남을 보임 — S&P 500 편출종목이 편입종목보다 그 다음 해 평균
+22% 초과성과. 인덱스펀드보다 먼저 거래하거나 리밸런싱을 3~12개월 지연하는
+단순 룰만으로 연 23bp를 추가로 벌 수 있고, 기본가치 기준(fundamental
+size) 또는 다년 평균 시총으로 cap-weight하면 이 효과가 두 배가 됨.
+
+**왜 후보인가**: Practitioner journal(FAJ, tier 4)이지만 인덱스 편입효과의
+리버설이라는 명확하고 재현가능한 실증 패턴을 다룸. 한국은 KOSPI200/MSCI
+Korea 등 규칙기반 리밸런싱이 활발해 동일한 "리밸런싱 군중 회피" 전략의
+초과수익을 검증하는 replication이 자연스러움.
+
 ### 문헌 추적 결과 (references / citing papers)
 
 두 논문의 references(이론적 계보)와 citing papers(그 이후 누가 뭘 했는지)를
