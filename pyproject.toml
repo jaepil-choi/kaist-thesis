@@ -10,6 +10,7 @@ dependencies = [
     "jupyterlab>=4.6.1",
     "jupytext>=1.19.4",
     "linearmodels>=7.0",
+    "markitdown[all]>=0.1.5",
     "matplotlib>=3.11.0",
     "nbstripout>=0.9.1",
     "numpy>=2.5.1",
