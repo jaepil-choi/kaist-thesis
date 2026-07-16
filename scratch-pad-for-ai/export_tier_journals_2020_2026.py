@@ -1,4 +1,4 @@
-"""Export all 2025-2026 works from the configured tier 1-4 journals.
+"""Export all 2020-2026 works from the configured tier 1-4 journals.
 
 The complete OpenAlex metadata export is saved alongside a transparent,
 keyword-based machine-learning shortlist for subsequent literature review.
@@ -18,12 +18,12 @@ from pyalex import Works
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = REPO_ROOT / "scratch-pad-for-ai" / "outputs"
-FULL_OUTPUT = OUTPUT_DIR / "tier1-4-papers-2025-2026.csv"
-ML_OUTPUT = OUTPUT_DIR / "tier1-4-machine-learning-papers-2025-2026.csv"
+FULL_OUTPUT = OUTPUT_DIR / "tier1-4-papers-2020-2026.csv"
+ML_OUTPUT = OUTPUT_DIR / "tier1-4-machine-learning-papers-2020-2026.csv"
 
 # OpenAlex publication_date uses the earliest publication date it knows
 # (often online-first), not necessarily the later print-issue date.
-DATE_FROM = "2025-01-01"
+DATE_FROM = "2020-01-01"
 DATE_TO = "2026-12-31"
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
