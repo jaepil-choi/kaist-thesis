@@ -1,0 +1,102 @@
+Read_Me 시트를 꼭 읽어주세요!!,,,,,,
+이름,논문명,저자,연도,키워드,간단한 설명,상태
+강예지,,,,,,
+강예지,,,,,,
+강예지,,,,,,
+강혜민,,,,,,
+강혜민,,,,,,
+강혜민,,,,,,
+김규리,,,,,,
+김규리,,,,,,
+김규리,,,,,,
+김대근,,,,,,
+김대근,,,,,,
+김대근,,,,,,
+김성민,,,,,,
+김성민,,,,,,
+김성민,,,,,,
+김우택,Investor Sentiment and the Pricing of Characteristics-Based Factors,"Zhuo Chen,Bibo Liu, Huijun Wang, Zhengwei Wang,Jianfeng Yu",2025,"investor sentiment, characteristic-based factors, factor beta, mispricing, risk-based factors, beta-sorted portfolios, high-sentiment regime, low-sentiment regime, anomalies, short-sale constraints.","이 논문은 투자자 심리가 characteristic-based factor의 가격결정에 어떤 영향을 주는지 분석합니다. 핵심 결과는, 고심리 시기 이후에는 factor beta가 높은 포트폴리오가 낮은 포트폴리오보다 높은 수익률을 내지만, 저심리 시기 이후에는 그 반대가 나타난다는 것입니다. 이는 이런 factor들이 순수한 위험요인이라기보다, 특히 고심리 시기에 mispricing을 반영할 가능성이 크다는 해석을 제시합니다.",
+김우택,Multifactor Timing with Deep Learning,"Paul Cotturo , Fred Liu , and Robert Proner",2026,"factor timing, deep learning, economic structure, machine learning, dynamic multitask neural net works, big data","이 논문은 딥러닝으로 여러 주식 팩터의 성과를 “타이밍”할 수 있는지를 분석합니다. 핵심 모델인 DMT는 멀티태스크 학습과 LSTM을 결합해 팩터 간 공통 구조와 거시·금융 사이클을 함께 반영합니다. 결과적으로 기존 머신러닝 모델보다 예측 정확도와 샤프지수가 높았고, 특히 실업률, 레버리지, 수익성, 통화 관련 변수가 중요한 예측 변수로 나타났습니다",
+김우택,Tradable Risk Factors for Institutional and Retail Investor,"Andreas Johansson, Riccardo Sabatucci, Andrea Tamoni",2025,"smart beta, factor investing, tradable factors, shorting fees, borrowing costs",,
+김이건,Anomaly Time,"Bowles, Reed, Ringgenberg, Thornock",2024,"anomaly, information release, return timing",이상현상 수익률이 재무정보 공시 직후 첫 1개월에 집중되고 이후 급속히 소멸됨을 실증. 학계 관행인 6월 포트폴리오 구성이 stale 정보를 써서 이상현상을 과소평가한다는 것을 보임,
+김이건,Earnings Extrapolation and Predictable Stock Market Returns,Guo,2025,"return predictability, investor sentiment",투자자들이 최근 어닝 트렌드를 과도하게 외삽하여 실적 발표가 집중된 달과 그렇지 않은 달 사이에 체계적인 수익률 차이가 발생함을 보임,
+김이건,Taking Sides on Return Predictability,"McLean, Pontiff, Reilly",2025,"investor heterogeneity, anomalies, smart money","9가지 시장참여자 유형별 거래가 130개 수익률 예측변수와 어떻게 연관되는지 분석. 개인투자자는 기대수익률 낮은 주식을 매수하고, 공매도자·기업이 smart money임을 실증",
+김종헌,,,,,,
+김종헌,,,,,,
+김종헌,,,,,,
+남수경,Machine Forecast Disagreement,"Turan G. Bali, Bryan T. Kelly",2026,"MFD, Forecast Dispersion, Heterogeneous Beliefs, Asset Pricing",K=100 ML 모델을 가상 투자자로 시뮬레이션하여 각자 random 76/153 feature subset으로 수익률 예측 → forecast dispersion(MFD)을 belief disagreement로 측정. High-MFD 종목이 Low-MFD 대비 월 1.14% underperform (연 14-15%),
+남수경,,,,,,
+남수경,,,,,,
+박동혁,"Idiosyncratic Volatility, Short-Sale Constraints, and the Cross-Section of Stock Returns: A Reexamination","Andrew Y. Chen, Rachel J. Nam, and David C. Zhang",2025,"idiosyncratic volatility puzzle, short-sale constraints, market friction, overvaluation, retail turnover",고유변동성이 높은 주식의 기대수익률이 비정상적으로 낮은 '고유변동성 퍼즐'이 사실은 공매도 제약과 투자자 간 의견 대립이 결합하여 발생한 '과대평가(Mispricing)' 현상임을 재검증,Reading
+박동혁,Limited Attention and the Interindustry Information Percolation: Evidence from Supply Chains,"Harrison G. Hong, Christopher J. Malloy, and Inessa Liskovich",2025,"limited attention, customer-supplier momentum, economic links, information percolation, stock return predictability",투자자들의 제한된 주의(Limited Attention)로 인해 경제적으로 밀접하게 연결된 산업 간에 정보가 시차를 두고 점진적으로 확산(Information Percolation)되는 현상을 실증한 논문,Reading
+박동혁,The Complex Factor Structure of Asset Returns and Investor Misreaction,"Lawrence J. Jin, Tobias J. Moskowitz, and Bryan T. Kelly",2024,"complex asset structure, credit distress, investor misreaction, limits to arbitrage, liquidity pressure",기업의 재무적 다각화나 구조가 복잡(Complex)할수록 투자자들이 정보 수용에 한계를 느껴 과소반응(Underreaction) 혹은 과잉반응(Overreaction) 등의 오반응을 보임을 실증한 논문,Reading
+박원민,Investor Attention and Insider Trading,"Sattar Mansi, Lin Peng, Jianping QI, Han Shi",2025,"Investor Attention, Mispricing, Behavioral Finance",내부자는 기업정보 때문이 아니라 개인투자자의 관심 증가가 만든 mispricing(과대평가) 을 이용해 거래한다.,Reading
+박원민,Market Returns and a Tale of Two Types of Attention,"Zhi Da, Jian Hua, Tim Chih-Ching Hung, Lin Peng",2025,"Return Forecasting, Retail Attention, Institutional Attention",개인투자자 Attention과 기관투자자 Attention은 미래 시장수익률에 정반대 영향을 준다.,Reading
+박원민,,,,,,
+박재민,,,,,,
+박재민,,,,,,
+박재민,,,,,,
+복지영,Positivity and long-lasting momentum,"Jingjing Chen, George J. Jiang,
+Chenye Liu, Dongming Zhu",2026,"momentum, Firm fundamentals, Stock valuation","주가 모멘텀이 단순히 과거 수익률 때문만이 아니라, 긍정적 기업 관련 뉴스에도 영향을 미침",Reading
+복지영,,,,,,
+복지영,,,,,,
+손민재,A Multifactor Perspective on Volatility-Managed Portfolios,"DeMiguel, Martin-Utrera, Uppal",2024,"volatility management, multifactor, timing",,Refining
+손민재,Can Competition Increase Profits in Factor Investing?,"DeMiguel, Martin-Utrera, Uppal",2024,"factor investing, competition, price impact",팩터 투자에서 경쟁이 수익을 감소시키지만 다른 팩터와의 결합(trading diversification)은 오히려 수익을 증가시킬 수 있음을 분석,Idea
+손민재,Investor Factors,"Betermier, Calvet, Knüpfer, Kvaerner",2025,"investor behavior, factor model, household finance",투자자 포트폴리오 데이터를 활용해 새로운 pricing factor를 추출하고 자산 수익률을 설명하는 방법 제시,Idea
+심동보,Production Complementarity and Information Transmission Across Industries,"Lee, Shi, Sun, Zhang",2024,"Production complementarity, information transmission, momentum spillover, investor inattention",서로 다른 산업에 속하지만 공통 고객에게 보완재를 공급하는 기업들(complementors) 간에 수익률 선행-후행 관계가 존재함을 실증,Reading
+심동보,,,,,,
+심동보,,,,,,
+오성택, Index Investing and Asset Pricing Under Information Asymmetry and Ambiguity Aversion,"David Hirshleifer, Chong Huang, Siew Hong Teoh",2026,"macro, value, momentum","시총가중 인덱스 대신 변동성을 낮춘 저변동성 인덱스(RAMP)를 쓰면, 정보 비대칭과 모호성 회피가 있어도 모두가 시장에 참여하고 CAPM이 다시 성립한다.",Reading
+오성택,Test Assets and Weak Factors,"STEFANO GIGLIO, DACHENG XIU, DAKE ZHANG",2025,"macro, value, momentum","팩터가 약한 게 아니라 테스트 자산을 잘못 고른 거라서, 관심 팩터와 관련된 자산만 골라 분석하면(SPCA) 약한 팩터도 제대로 추정할 수 있다는 논문.팩터가 약한 게 아니라 테스트 자산을 잘못 고른 거라서, 관심 팩터와 관련된 자산만 골라 분석하면(SPCA) 약한 팩터도 제대로 추정할 수 있다",Reading
+오성택,,,,,,
+유수형,When Do Short Sellers Trade? Evidence from Intraday Data and Implications for Informed Trading Models,"Danqi Hu, Charles M. Jones, Xiaoyan Zhang, Xinran Zhang",2025,"Short Selling, Intraday Trading, Informed Trading, Return Predictability, Short-Sale Flow, Price Discovery, Market Efficiency","장중 공매도 거래를 open/midday/close로 나누어, 어느 시간대의 공매도가 미래 주가하락을 가장 잘 예측하는지 분석한 논문",Refining
+유수형,In-sample and out-of-sample Sharpe ratios of multi-factor asset pricing models,"Raymond Kan, Xiaolu Wang, Xinghua Zheng",2024,"Asset pricing models, Multi-factor models, Sharpe ratio, In-sample performance, Out-of-sample performance, Estimation risk, Factor investing",팩터모델이 표본 안에서는 좋아 보여도 실제 표본 밖 투자성과는 과대평가될 수 있음을 이론·실증적으로 분석한 논문,Idea
+유수형,,,,,,
+윤상은,,,,,,
+윤상은,,,,,,
+윤상은,,,,,,
+윤석준,Economic Uncertainty and the Beta Anomaly,"Zhiqi Cao, Wenfeng Wu",2025,"beta anoboly, Economic factor",거시경제 요인에 따른 국면별로 베타이상현상이 다르게 관측될 수 있다.,
+윤석준,Stock Return Predictability and Taylor Rules,Onur Ince,2025,"econ, stock return predictibality ",시장수익률을 예측하는 과정에서 테일러 공식의 입력변수가 유효한 독립변수로 작용하 수 있다.,Reading
+윤석준,The Volatility Puzzle of the Beta Anomaly,Pedro Barroso a,2025,"factor, bab",국면별 bab 팩터 실증검증,
+이완희,Leveraged Exchange-Traded Funds with Market Closure and Frictions,"Dai, Kou, Soner, Yang",2023,"Management Science, 69(4), 2517–2535",,Reading
+이완희,"Price Impact in Closing Auctions, Opening Auctions, and Continuous Markets: A Benchmark for Cost of Trading on Anomalies","Goyal, Jegadeesh, Wu",2026,Journal of Financial and Quantitative Analysis,,Reading
+이완희,Retail Option Traders and the Implied Volatility Surface,"Eaton, Green, Roseman, Wu",2026,Journal of Financial Economics,,Reading
+이윤서,Competition for Attention in the ETF Space,Itzhak Ben-David,2023,ETF,ETF운용사는 투자자의 관심이 집중된 테마를 상품화하여 판매함.,Refining
+이윤서,Active ETFs as Attention Assets: Retail Trading Meets Managed Funds,"Da Huang, Vasudha Nair, Christopher Schwarz",2026,ETF,패시브 자금 유입이 지수 내 최대 규모 기업의 주가를 불균형적으로 끌어올리고 idiosyncratic volatility도 증가시킴. 패시브 투자가 noise trader 수요가 높은 대형주의 과대평가를 심화시키는 메커니즘.,Reading
+이윤서,,,,,,
+이재훈,0DTE Index Options and Market Volatility: How Large is Their Impact?,c,2025,"dealer gamma, hedging pressure, intraday volatility",proprietary trade data로 추정된 OMM aggregate gamma가 시장 변동성에 미치는 최대 영향은?,Reading
+이재훈,"0DTEs: Trading, Gamma Risk and Volatility Propagation","Dim, Eraker, Vilkov",2025,"volatility, derivatives, 0DTE options",open-interest gamma가 과거 변동성을 단순 전파하지는 않는다. (조만간 한국 시장의 weekly option이 요일별로 세분화되어 0day 옵션이 됐을 때의 영향은?),Reading
+이재훈,Risky Intrady Order Flow and Option Liquidity,"Doshi, Pederzoli, Sert",2025,"ultra-short options, order-flow volatility, microstructure","옵션의 trading cost 측면에서, intrady gamma보다 order-flow volatility가 spread 설명력에서 더 강하다.",Reading
+이종원,,"Ben-David, Franzoni, Kim, and Moussawi",2023,,"ETF 산업이 저보수 broad-based ETF와 고보수 specialized ETF로 분화됐고, specialized ETF는 투자자의 attention과 extrapolative beliefs를 겨냥해 출시되며 출시 후 약 5년간 유의한 위험조정 저성과를 보임",Reading
+이종원,,,,,,
+이종원,,,,,,
+이현석,The other side of value: The gross profitability premium,Robert Novy-Marx,2013,"Profitability, Value premium, Factor models, Asset pricing, Quality investing",영업이익보다 쉽고 단순하게 구할 수 있는 gross profitability를 factor로 적용한 것으로 이에 대한 연구가 거의 없어서 한 번 국내시장에 적용하면 어떨까 생각해 봤음,Reading
+이현석,,,,,,
+이현석,,,,,,
+인기훈,Factor momentum and the momentum factor,"Ehsani, S., and J. T. Linnainmaa",2022,Asset pricing,"Key paper 3개에 더해, 횡단면과 시계열 팩터 모멘텀의 국내 검증 및 전세계 시장에서 변동성 통제를 가미했을때 샤프지수가 개선되는지 검정",Reading
+인기훈,Volatility-managed portfolios,"Moreira, A., and T. Muir",2017,,,
+인기훈,Factor momentum,"Arnott,Kalesnik,Linnainmaa",2023,,,
+임재민,,,,,,
+임재민,,,,,,
+임재민,,,,,,
+조하영,,,,,,
+조하영,,,,,,
+조하영,,,,,,
+지윤승,Predicting Stock Returns of Past-Winner Stocks and Bond Returns of Past-Loser Stocks with a Stock’s 52-Week Price Anchor,"Chen Chen a , Sounak Saha b , Mobina Shafaati a,1 , Chris Stivers c ,∗ , Licheng Sun",2026,"52-Week Price Anchor, Momentum, Past-Winner Stocks, Return Predictability, Investor Anchoring",과거 수익률이 높았던 winner stock 중에서도 현재 주가가 52주 가격 범위의 높은 위치에 있는 종목이 이후에도 더 높은 수익률을 보이는지를 분석,Reading
+지윤승,Volatility of Price–Earnings Ratio and Long-Run Return,"Xiaoquan Jiang, Chen Li",2026,"P/E ratio volatility, Return predictability, Long-run returns, Valuation",PER의 변동성이 장기 주식수익률을 예측하는지 분석.,Reading
+지윤승,What Drives Momentum and Reversal Evidence from Day and Night Signals,"Yashar H. Barardehi, Vincent Bogousslavsky, and Dmitriy Muravyev",2026,"Momentum, Reversal, Intraday Returns, Overnight Returns, Return Predictability, Private Information, Underreaction","과거 수익률을 장중수익률과 야간수익률로 나눠 분석해, 모멘텀 효과가 주로 밤사이 뉴스보다 장중 거래 과정에서 드러나는 정보에 대한 투자자들의 과소반응에서 발생한다고 설명",Refining
+최우영,,,,,,
+최우영,,,,,,
+최우영,,,,,,
+최재필,,,,,,
+최재필,,,,,,
+최재필,,,,,,
+하정랑,Cross-Sections of Stock Returns,,,,,
+하정랑,Forest through the Trees: Building,,,,,
+하정랑,,,,,,
+허욱,"Deep learning, predictability, and optimal portfolio returns","Mykola Babiak, Jozef Baruník",2026,"DNN, LSTM model","장기 투자자가 딥러닝(DNN, LSTM)을 이용해 주식 시장의 초과 수익률을 예측하고, 이를 포트폴리오 구성에 적용했을 때 발생하는 경제적 이익을 분석",Decided
+허욱,,,,,,
+허욱,,,,,,
+홍성지,dual peer effects and cross-stock pro,"Boons, Duarte, de Roon & Szymanowska",2026,peer index,peer factor,Refining
+홍성지,Time-Varying Inflation Risk and Stock Returns,"Boons, Duarte, de Roon & Szymanowska",2020,"inflation, factor model",,Reading
+홍성지,Yield Curve Momentum,Sihvonen,2025,factor model,,Reading
