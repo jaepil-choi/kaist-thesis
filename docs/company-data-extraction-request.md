@@ -1,107 +1,136 @@
-# KAIST Thesis 3-Year Pilot 데이터 추출 요청서
+# KAIST Thesis 3-Year Pilot 추가 데이터 추출 요청서
 
-작성일: 2026-07-17
+작성일: 2026-07-18
 
-## 1. Pilot 범위
+## 1. 요청 목적과 현재 상태
 
-시계열 자료의 공통 기간은 **2023-01-01~2025-12-31**로 고정한다. 2026년은
-완결되지 않은 연도이므로 포함하지 않는다.
+KAIST thesis 후보인 Kaniel et al.의 fund-skill ML 연구와 Beber et al.의
+bespoke benchmark 연구에 필요한 3-year pilot 자료를 추가로 요청한다.
 
-- Kaniel: 3년 자료로 fund return·TNA·flow, share-class, family join을 검증
-- Arnott: **2024년에 효력이 발생한 KOSPI200 정기변경**을 대상으로 전후
-  1년인 2023~2025년 자료를 검증
-- Beber: 현재 약관 snapshot과 2023~2025년 스타일·성과자료를 연결할 수
-  있는지 검증
+공통 시계열 기간은 **2023-01-01~2025-12-31**이다. 2026년은 완결되지 않은
+연도이므로 포함하지 않는다. 이 pilot은 데이터 구조와 계산 가능성을 확인하기
+위한 것이며 최종 가설검정용 표본은 아니다.
 
-이 pilot은 최종 가설검정용 표본이 아니다. Kaniel의 36개월 rolling beta나
-장기 성과 지속성, Arnott의 여러 리밸런싱 cycle, Beber의 장기 성과평가는
-pilot 통과 후 기간을 확장한다.
+현재 상태는 다음과 같다.
 
-## 2. 공통 fund master와 분류자료
+| 구분 | 상태 | 회사에 추가 요청 |
+|---|---|---|
+| 공통 fund master·분류자료 | 수령 완료 | 없음 |
+| Arnott KOSPI200 구성·지수자료 | 수령 완료 | 없음 |
+| Arnott 공시·종목별 시장자료 | 다른 원천에서 확보 가능 | 없음 |
+| Kaniel fund-day panel | 미수령 | **필요** |
+| Kaniel manager-day panel | 미수령 | **필요** |
+| Beber 약관한도·약관투자·스타일 panel | 미수령 | **필요** |
+| 한국 Carhart factor·sentiment | 외부에서 별도 구축 | 없음 |
+| 기존 추출 manifest | 미수령 | 가능하면 재전달 요청 |
 
-이 테이블들은 시계열이 아니라 현재 snapshot/reference table이므로 기간
-조건을 걸지 않는다. 추출 기준일을 metadata에 기록한다.
-
-### 2.1 `WRDSS.DW_ZI_펀드기본정보`
-
-요청 컬럼:
-
-```text
-협회펀드코드
-운용사코드
-운용사펀드코드
-한글펀드명
-펀드구분
-협회분류코드
-대유형코드
-유형코드
-설정일
-해지구분
-해지일
-최초설정액
-최초설정좌수
-최초기준가
-전체주식편입한도
-코스닥편입한도
-제로인평가여부
-운용사평가여부
-BM코드
-BM한글명
-BM영문명
-환헷지여부
-집합투자분류코드
-```
-
-필터: 없음. 해지펀드도 포함한다.
-
-### 2.2 `WRDSS.DW_ZI_클래스펀드`
-
-요청 컬럼:
+회사에 새로 요청하는 핵심은 아래 다섯 원천이다.
 
 ```text
-펀드구분
-대표펀드코드
-서브펀드코드
-설정구분
+WRDSS.DW_ZI_펀드일별분석
+WRDSS.DW_ZI_운용사일별분석
+WRDSS.DW_ZI_펀드약관한도
+WRDSS.DW_ZI_펀드약관투자
+WRDSS.DW_ZI_펀드스타일분석
 ```
 
-필터: 없음.
+## 2. 수령 완료 자료
 
-### 2.3 Fund type·attribute codebook
+### 2.1 Fund master·분류자료
 
-다음 테이블은 전 컬럼을 요청한다.
+다음 current snapshot/reference parquet 6개를 수령했다.
+
+| 파일 | 행 수 | 검수 상태 |
+|---|---:|---|
+| `dw_zi_펀드기본정보.parquet` | 167,588 | `협회펀드코드` 중복·결측 0 |
+| `dw_zi_클래스펀드.parquet` | 50,121 | 관계 유형별 분리 필요 |
+| `dw_zi_펀드별속성코드.parquet` | 966,365 | `(협회펀드코드, 속성코드)` 중복 0 |
+| `dw_zi_속성코드.parquet` | 385 | 수령 완료 |
+| `dw_zi_유형코드.parquet` | 300 | 수령 완료 |
+| `dw_zi_코드정보.parquet` | 708 | 수령 완료 |
+
+이 자료로 국내 공모 주식형, active/passive/enhanced-index, share class,
+해지 여부, 운용사코드를 로컬에서 분류한다. 회사 담당자가 임의로 현재
+생존펀드나 active fund만 선별할 필요는 없다.
+
+`DW_ZI_클래스펀드`에는 share-class 관계와 모자펀드 관계가 함께 있다.
+
+- `펀드구분=1`: share-class 관계
+- `펀드구분=2`: 모펀드-자펀드 관계
+
+두 관계를 단순히 하나의 대표펀드 매핑으로 합치면 중복 집계가 발생하므로,
+분석 단계에서 별도로 처리한다.
+
+### 2.2 Arnott KOSPI200 자료
+
+다음 자료를 수령했다.
+
+| 파일 | 행 수 | 기간 |
+|---|---:|---|
+| `kaist_kospi200_constituents.parquet` | 146,253 | 2023-01-02~2025-12-30 |
+| `kaist_kospi200_index_levels.parquet` | 731 | 2023-01-02~2025-12-30 |
+
+KOSPI200 ISIN은 `KRD020020016`이고, 구성자료의 예상 키
+`(일자, 지수ISIN, 종목코드1)` 중복은 0이다. 2024년 정기변경 effective
+date와 편입·편출 종목도 구성종목 set difference로 복원할 수 있다.
+
+Arnott에 추가로 필요한 다음 자료는 다른 원천에서 확보할 예정이므로 회사에
+추출을 요청하지 않는다.
+
+- 정기·수시변경 최초 공시일시와 정정공시 이력
+- effective date와 실제 index trade date
+- 편입·편출 구분, 변경사유, 공시문서 ID
+- 종목별 total return, 거래량·거래대금, 시가총액, bid/ask
+- 거래정지, 상장폐지, corporate action 자료
+
+### 2.3 재전달을 요청하는 metadata
+
+Parquet는 수령했지만 아래 manifest JSON은 전달받지 못했다. 기존 실행 결과가
+남아 있다면 재추출 없이 파일만 전달해 주면 된다.
 
 ```text
-WRDSS.DW_ZI_펀드별속성코드
-  - 협회펀드코드, 속성코드
-
-WRDSS.DW_ZI_속성코드
-  - 속성코드, 레벨, 속성코드명, 상위속성코드
-
-WRDSS.DW_ZI_유형코드
-  - 대유형코드, 유형코드, 대유형명, 유형명
-
-WRDSS.DW_ZI_코드정보
-  - 상위코드, 코드, 코드명, 비고
+097_manifest_*.json
+098_manifest_*.json
+099_manifest_*.json
 ```
 
-필터: 없음.
+manifest에는 최소한 source table, 실행시각, SQL, 컬럼, 행 수, 기간,
+key duplicate 검사 결과가 포함되어야 한다.
 
-이 자료를 먼저 받은 뒤 내가 **국내 공모 주식형 fund code whitelist**를
-확정해 전달한다. 담당자가 임의로 active fund나 현재 생존펀드만 선택하지
-않는다. whitelist에는 다음을 구분해 유지한다.
+## 3. DB 부하를 줄이기 위한 추출 원칙
 
-```text
-active / passive / enhanced-index
-대표펀드 / share class
-존속 / 해지
-국내주식형 / 해외주식형
-운용사코드
-```
+### 3.1 사용하지 않을 방식
 
-## 3. Kaniel 3-Year Pilot
+국내 공모 주식형 예비 universe는 수천 개의 `협회펀드코드`를 포함한다.
+따라서 아래 방식은 사용하지 않는다.
 
-### 3.1 Fund-day core panel
+- 수천 개 코드를 `WITH targets AS (... UNION ALL ...)`로 SQL에 삽입
+- 대형 일별 table과 fund whitelist를 DB에서 join
+- fund code chunk와 date chunk를 동시에 적용해 같은 table을 수백 번 반복 조회
+- 전체 기간을 한 번에 조회
+
+### 3.2 요청 방식
+
+대형 일별자료는 **기간 chunk 단위의 단순 SELECT**로 추출한다.
+
+- fund-day: 기간 조건 + `대유형코드='20'`
+- manager-day: 기간 조건만 사용하거나, 필요하면 소수의 `운용사코드 IN (...)`
+- Beber: 30개 fund code이므로 단순 `IN (...)`
+
+월별 또는 분기별로 받은 결과는 DB 밖에서 다음과 같이 처리한다.
+
+1. chunk별 parquet 저장
+2. 로컬 `concat`
+3. whitelist filter
+4. 예상 key duplicate 검사
+5. 정렬 후 canonical parquet 저장
+
+SQL `UNION`처럼 중복을 자동 제거하지 않는다. 중복이 있으면 삭제하지 말고
+원인을 확인한다.
+
+## 4. 추가 요청 1: Kaniel fund-day core panel
+
+### 4.1 소스와 기간
 
 소스:
 
@@ -115,16 +144,23 @@ WRDSS.DW_ZI_펀드일별분석
 기준일자 BETWEEN '20230101' AND '20251231'
 ```
 
-대상:
+### 4.2 대상과 필터
 
-```text
-공통 master로 확정해 전달하는 국내 공모 주식형 협회펀드코드 whitelist
-active, passive, enhanced-index를 모두 받고 분석 단계에서 구분
-해지펀드와 해지 전 과거자료 포함
-모든 share class 포함
+DB에서는 whitelist join을 하지 않고 국내 공모 주식형 대유형 전체를 받는다.
+
+```sql
+WHERE 기준일자 BETWEEN :chunk_start AND :chunk_end
+  AND 대유형코드 = '20'
 ```
 
-요청 컬럼:
+월별 또는 분기별 non-overlapping date chunk로 실행한다. active, passive,
+enhanced-index, 해지펀드, 모든 share class를 포함한다. 현재 상태나 펀드명으로
+추가 필터링하지 않는다.
+
+active/passive, ETF/index, 생존기간, share-class는 수령한 master·codebook을
+사용해 로컬에서 구분한다.
+
+### 4.3 요청 컬럼
 
 ```text
 기준일자
@@ -149,22 +185,42 @@ BM수익률지수
 제로인평가여부
 ```
 
-변환하지 말아야 할 항목:
+예상 grain:
 
-- `실현수익률`과 `BM수익률`은 원본 factor 형식 그대로 제공
+```text
+기준일자 × 협회펀드코드
+```
+
+### 4.4 원자료 보존 조건
+
+- `실현수익률`과 `BM수익률`은 원본 decimal factor 형식 그대로 제공
 - 설정일의 `순자산=0`, `실현수익률=1` placeholder row 유지
-- NULL을 0으로 바꾸지 않음
+- NULL, 0, 빈 문자열을 임의로 변환하지 않음
+- 해지펀드의 해지 전 과거자료를 제거하지 않음
 - 일별자료를 월말자료로 사전 집계하지 않음
+- 숫자 반올림 또는 소수점 자릿수 축소를 하지 않음
 
-Pilot 확인사항:
+### 4.5 Pilot 검증 항목
 
-- 월별 fund return을 일별 factor로 정확히 복리 계산할 수 있는지
-- `순자산_t / (순자산_(t-1) × 실현수익률_t) - 1` flow 계산의 안정성
+- 일별 return factor의 월별 복리 집계
+- 아래 flow 계산의 안정성
+
+\[
+\text{flow}_{i,t}
+=
+\frac{\text{TNA}_{i,t}}
+{\text{TNA}_{i,t-1}\times\text{return factor}_{i,t}}
+-1
+\]
+
 - 설정일·해지일과 일별자료의 연결
-- 대표펀드와 share class의 중복 없는 TNA 가중 통합
-- active/passive 분류와 국내주식 exposure의 일관성
+- share-class TNA 가중 fund-level return
+- active/passive 분류와 실제 국내주식 exposure의 일관성
+- survivorship-bias-free 표본 구성 가능성
 
-### 3.2 Asset-manager daily validation panel
+## 5. 추가 요청 2: Kaniel manager-day validation panel
+
+### 5.1 소스와 기간
 
 소스:
 
@@ -178,14 +234,32 @@ WRDSS.DW_ZI_운용사일별분석
 기준일자 BETWEEN '20230101' AND '20251231'
 ```
 
-대상:
+### 5.2 대상과 필터
 
-```text
-fund whitelist에 포함된 운용사코드
-fund whitelist에 대응하는 제로인유형코드
+원 논문의 family TNA는 국내주식형 한 유형만이 아니라 같은 운용사의 전체
+펀드 family를 의미한다. 따라서 선택된 운용사에 대해
+`제로인유형코드`를 국내주식형으로 제한하지 않는다.
+
+선호안:
+
+```sql
+WHERE 기준일자 BETWEEN :chunk_start AND :chunk_end
 ```
 
-요청 컬럼:
+운용사일별분석의 3년 전체 자료가 너무 크다면 다음 대안을 사용한다.
+
+1. fund master에서 필요한 distinct `운용사코드` 목록을 로컬로 확정
+2. 소수의 운용사코드만 `IN (...)`으로 전달
+3. DB join 없이 기간 조건 + 운용사코드 조건으로 SELECT
+
+```sql
+WHERE 기준일자 BETWEEN :chunk_start AND :chunk_end
+  AND 운용사코드 IN (전달하는 운용사코드 목록)
+```
+
+`(운용사코드, 제로인유형코드)` 수천 행짜리 target CTE는 만들지 않는다.
+
+### 5.3 요청 컬럼
 
 ```text
 기준일자
@@ -207,219 +281,38 @@ KOSDAQ평가액
 유동성자산평가액
 ```
 
-용도: fund-level 합산으로 만든 family TNA·return·flow와 vendor의
-운용사자료가 일치하는지 검산한다.
-
-### 3.3 Monthly factor series
-
-회사에 이미 한국 Carhart factor가 있으면 다음 형식으로 요청한다.
-
-기간:
+예상 grain:
 
 ```text
-2023-01~2025-12
+기준일자 × 운용사코드 × 제로인유형코드
 ```
 
-요청 컬럼:
+### 5.4 용도
 
-```text
-기준월
-MKT_RF
-SMB
-HML
-MOM
-RF
-각 factor의 산출 universe
-각 factor의 value-weight/equal-weight 구분
-```
+- fund-level 합산으로 만든 family TNA·펀드 수·return과 vendor 자료 검산
+- 전체 유형을 합산한 true family TNA와 국내주식형 family TNA를 구분
+- manager/family flow와 momentum 구축 가능성 검증
 
-기존 factor가 없으면 1차 pilot에서는 raw stock data를 추가 요청하지 않고,
-fund panel의 return·flow·join 검증부터 수행한다. 한국형 sentiment는
-한국은행 공개자료로 별도 구축하므로 회사 추출 대상에서 제외한다.
+개인 펀드매니저 ID, 담당기간, 경력, team-managed 여부는 WRDSS에서 전용
+table을 찾지 못했으며 Kaniel의 parsimonious model에는 필수가 아니므로
+이번 요청에서 제외한다.
 
-## 4. Arnott 3-Year Pilot
+## 6. 추가 요청 3: Beber mandate·style pilot
 
-Pilot 대상 지수는 **KOSPI200 한 개**로 제한한다.
+### 6.1 대상 표본
 
-```text
-지수 ISIN = 'KRD020020016'
-구성·지수 시계열 = 2023-01-01~2025-12-31
-분석 대상 event = effective date가 2024-01-01~2024-12-31인 변경
-```
+수령한 fund master와 Kaniel fund-day coverage를 확인한 뒤, 다음 조건을
+만족하는 국내 active equity 30개 펀드코드를 별도 전달한다.
 
-2024년 event만 쓰면 2023년의 사전 1년과 2025년의 사후 1년을 완결된
-calendar year로 관측할 수 있다.
+- share-class 중복 제거
+- 설정 후 최소 10년 이상 경과
+- 장기 return record가 존재할 가능성이 높은 펀드
+- 서로 다른 운용사와 스타일을 포함
 
-### 4.1 KOSPI200 daily constituents
+30개 whitelist 전달 전에는 Beber 쿼리를 실행하지 않는다. 30개는 constraint
+coding 가능성을 확인하는 pilot이고, 최종 연구는 50개 이상 표본이 필요하다.
 
-소스:
-
-```text
-WRDSS.DW_KRX지수구성
-```
-
-필터:
-
-```text
-지수ISIN = 'KRD020020016'
-AND 일자 BETWEEN '20230101' AND '20251231'
-```
-
-요청 컬럼:
-
-```text
-일자
-지수ISIN
-지수명국문
-종목코드1
-종목코드2
-종목명국문
-증권종류
-국가코드1
-통화코드
-MIC
-표준산업분류코드
-지수업종코드
-상장주식수
-상장시가총액
-지수주식수
-유동비율
-CAP비율
-조정가중치
-지수시가총액
-지수내비중
-적용일
-WEIGHT_TR
-```
-
-용도:
-
-- 일자별 membership과 weight 복원
-- 변경 직전일과 효력일의 종목코드 set difference로 편입·편출 식별
-- KRX 공시의 편입·편출 목록과 교차검증
-
-### 4.2 KOSPI200 daily index series
-
-소스:
-
-```text
-WRDSS.DW_KRX지수산출
-```
-
-필터:
-
-```text
-ISIN = 'KRD020020016'
-AND 일자 BETWEEN '20230101' AND '20251231'
-```
-
-요청 컬럼:
-
-```text
-일자
-변경여부
-ISIN
-지수명국문
-지수명영문
-기준시점
-기준지수값
-종가지수값
-전일대비
-비교시가총액변경전
-비교시가총액변경후
-구성종목수변경전
-구성종목수변경후
-다음정기변경일
-지수PER
-지수PBR
-지수배당수익률
-적용일
-```
-
-`변경여부`는 단독 event signal로 쓰지 않는다. `다음정기변경일`의 전환과
-구성종목 set difference를 함께 사용한다.
-
-### 4.3 2024 KOSPI200 change announcements
-
-KRX 공시 또는 회사 내부 event archive에서 요청한다.
-
-기간:
-
-```text
-effective date BETWEEN '20240101' AND '20241231'
-```
-
-요청 컬럼:
-
-```text
-지수ISIN
-지수명
-announcement date
-announcement time
-effective date
-actual index trade date
-종목코드
-종목명
-편입/편출 구분
-정기/수시 구분
-변경사유
-공시문서 ID
-원문 파일 또는 URL
-```
-
-해당 원천이 없으면 없는 것으로 명시해 달라고 요청한다. effective date를
-announcement date로 대체하지 않는다.
-
-### 4.4 Event-stock daily market data
-
-대상:
-
-```text
-4.1과 4.3에서 확정된 2024년 KOSPI200 편입·편출 종목
-```
-
-기간:
-
-```text
-2023-01-01~2025-12-31
-```
-
-요청 컬럼:
-
-```text
-일자
-영구 종목 ID
-6자리 종목코드
-종목명
-수정종가
-현금배당과 corporate action을 포함한 daily total return
-거래량
-거래대금
-시가총액
-상장주식수
-유동주식수
-bid
-ask
-거래정지 flag
-상장폐지일
-상장폐지 return
-시장구분
-산업분류
-```
-
-bid/ask가 없으면 그 사실을 명시하고 나머지 컬럼을 제공한다. total return과
-단순 수정주가수익률을 혼동하지 않도록 vendor field definition을 첨부한다.
-
-## 5. Beber 3-Year Pilot
-
-약관 table은 날짜 컬럼이 없는 **현재 snapshot**이다. 따라서 2023~2025년
-필터를 걸 수 없다. 추출일 현재 상태라는 사실을 metadata에 기록한다.
-
-공통 master를 받은 뒤 내가 전달하는 국내 active equity **30개
-협회펀드코드 whitelist**만 pilot에 사용한다. 30개는 share class 중복을
-제거하고 10년 이상 return record가 있는 펀드에서 선정한다.
-
-### 5.1 Current mandate limits
+### 6.2 Current mandate limits
 
 소스:
 
@@ -430,7 +323,7 @@ WRDSS.DW_ZI_펀드약관한도
 필터:
 
 ```text
-협회펀드코드 IN (내가 전달하는 30개 whitelist)
+협회펀드코드 IN (별도 전달하는 30개 whitelist)
 ```
 
 요청 컬럼:
@@ -443,9 +336,10 @@ WRDSS.DW_ZI_펀드약관한도
 최대투자비율
 ```
 
-row가 없는 경우를 0으로 생성하지 않는다.
+이 table은 날짜 컬럼이 없는 current snapshot이다. 추출일시를 metadata에
+기록한다. row가 없는 경우를 0으로 생성하지 않는다.
 
-### 5.2 Current mandate text
+### 6.3 Current mandate text
 
 소스:
 
@@ -456,7 +350,7 @@ WRDSS.DW_ZI_펀드약관투자
 필터:
 
 ```text
-협회펀드코드 IN (내가 전달하는 30개 whitelist)
+협회펀드코드 IN (별도 전달하는 30개 whitelist)
 ```
 
 요청 컬럼:
@@ -467,9 +361,17 @@ WRDSS.DW_ZI_펀드약관투자
 내용
 ```
 
-`내용`은 VARCHAR2 원문 전체를 잘림 없이 제공한다.
+`내용`은 VARCHAR2 원문 전체를 잘림 없이 제공한다. 다음 제약의 일관된
+코딩 가능성을 확인하는 것이 목적이다.
 
-### 5.3 Monthly style panel
+- borrowing/leverage
+- short sale
+- securities lending
+- derivatives
+- turnover
+- 종목 수·집중도 제한
+
+### 6.4 Monthly style panel
 
 소스:
 
@@ -480,9 +382,11 @@ WRDSS.DW_ZI_펀드스타일분석
 필터:
 
 ```text
-협회펀드코드 IN (내가 전달하는 30개 whitelist)
+협회펀드코드 IN (별도 전달하는 30개 whitelist)
 AND 기준일자 BETWEEN '20230101' AND '20251231'
 ```
+
+30개 코드이므로 DB join 없이 단순 `IN (...)`과 기간 chunk를 사용한다.
 
 요청 컬럼:
 
@@ -515,87 +419,104 @@ Y축값
 펀드베타KOSPI
 ```
 
-Pilot 통과 조건:
+예상 grain:
 
-- 30개 펀드에서 size/value-growth 9-box가 월별로 안정적으로 합계 100%
+```text
+기준일자 × 협회펀드코드
+```
+
+### 6.5 Beber pilot 통과 조건
+
+- 30개 펀드의 월별 size/value-growth 9-box 비중합이 안정적으로 100%
 - 약관한도에서 row 부재와 명시적 0%가 구분됨
-- `내용`에서 borrowing/leverage, short sale, securities lending,
-  derivatives, turnover 중 최소 세 가지를 동일 규칙으로 코딩 가능
+- 약관투자 원문에서 borrowing/leverage, short sale, securities lending,
+  derivatives, turnover 중 최소 세 가지를 동일한 규칙으로 코딩 가능
 - current mandate와 2023~2025년 style이 경제적으로 모순되지 않음
+- Kaniel fund-day panel에서 같은 펀드의 return history가 연결됨
 
-위 조건이 실패하면 Beber용 추가 추출을 중단한다.
+이 조건이 실패하면 Beber용 추가 추출과 장기 표본 구축을 중단한다.
 
-## 6. 이번 pilot에서 요청하지 않을 데이터
+## 7. 회사에 요청하지 않는 자료
 
-- `DW_ZI_펀드자산내역`: top-10뿐이므로 full holdings 분석에 부적합
+다음 자료는 불필요하거나 다른 원천에서 확보하므로 이번 회사 추출 대상에서
+제외한다.
+
+- Arnott 정기·수시변경 공시와 event-stock 시장자료
+- 한국 Carhart factor와 investor sentiment
+- `DW_ZI_펀드자산내역`: 자산구분별 top-10이라 full holdings가 아님
 - `DW_ZI_펀드지표분석`: raw return으로 성과지표를 직접 계산
-- `DW_ZI_운용사기간분석`: fund-level 합산 검증 후 필요할 때 요청
-- `DW_ZI_펀드약관보수`: 현재값만 있어 2023~2025년 fee history가 아님
-- `FA_대차자산`, `DW_FA_대차담보명세`: 시장 대차자료가 아님
-- 개인 펀드매니저 자료와 기관별 종목 holdings: WRDSS에 전용 table 없음
-- KOSDAQ150·KRX300: KOSPI200 pilot 통과 후 확장
-- 2026년 자료: incomplete year이므로 제외
+- `DW_ZI_운용사기간분석`: manager-day 검증 후 필요할 때 재검토
+- `DW_ZI_펀드약관보수`: 현재값만 있고 historical fee가 아님
+- 개인 펀드매니저 자료와 기관별 종목 holdings: WRDSS 전용 table 없음
+- 시장 대차·공매도 자료
+- KOSDAQ150·KRX300 추가 지수자료
+- 2026년 시계열 자료
 
-## 7. 전달 형식과 검수
+## 8. 전달 형식과 검수자료
 
-- Parquet 형식, UTF-8, 원본 numeric precision 유지
+### 8.1 데이터 파일
+
+- Parquet 형식
+- 한글 컬럼명과 문자열은 UTF-8
+- 원본 numeric precision 유지
 - 날짜는 원본 `YYYYMMDD` 또는 ISO date 중 하나로 통일
 - NULL, 0, 빈 문자열을 서로 변환하지 않음
-- 해지펀드, 거래정지종목, 상장폐지종목을 임의로 제거하지 않음
-- 각 파일에 source table, extraction timestamp, SQL, column definition 첨부
-- 각 파일에 min/max date와 key duplicate 검사 결과 첨부
+- chunk별 컬럼 순서와 dtype을 동일하게 유지
+- 해지펀드를 임의로 제거하지 않음
 
-예상 grain은 아래와 같다. 실제 key가 다르거나 이 grain에서 중복이 있으면
-임의 제거하지 말고 중복 원인을 함께 전달한다.
+### 8.2 파일별 manifest
+
+각 canonical parquet 또는 chunk 묶음에 다음 metadata를 함께 제공한다.
 
 ```text
-펀드일별분석: 기준일자 × 협회펀드코드
-운용사일별분석: 기준일자 × 운용사코드 × 제로인유형코드
-KRX지수구성: 일자 × 지수ISIN × 종목코드
-KRX지수산출: 일자 × ISIN
-펀드스타일분석: 기준일자 × 협회펀드코드
+source table
+extraction timestamp
+실행 SQL 또는 SQL template
+chunk start/end
+column definition
+row count
+min/max date
+key columns
+key duplicate count
 ```
 
-## 8. 담당자에게 보낼 요청 순서
+### 8.3 중복 처리
 
-fund whitelist와 Beber 30개 표본은 master를 본 뒤 내가 정해야 한다. 따라서
-두 번으로 요청한다.
+예상 key에서 중복이 발견되어도 임의로 `drop_duplicates`하지 않는다. 중복
+건수와 원인을 manifest에 기록하고 원자료를 그대로 전달한다.
 
-### 8.1 지금 보낼 1차 메시지
-
-```text
-안녕하세요. KAIST thesis 주제 feasibility 확인을 위해 3-year pilot 데이터
-추출을 요청드립니다.
-
-공통 시계열 기간은 2023-01-01~2025-12-31입니다. 2026년은 포함하지 않습니다.
-
-1. ZI fund master/class/type/attribute/codebook snapshot
-2. KOSPI200(ISIN KRD020020016) 구성종목·비중과 지수산출:
-   2023-01-01~2025-12-31
-3. effective date가 2024년인 KOSPI200 편입·편출 공시와 해당 종목의
-   2023-01-01~2025-12-31 일별 시장자료
-
-정확한 컬럼 목록과 필터는 첨부 명세에 기재했습니다. 일별 return factor,
-NULL/0, 설정일 placeholder를 변환하지 말고 원자료로 부탁드립니다.
-해지펀드와 상장폐지종목도 제외하지 말아 주세요.
-
-파일별 추출 SQL, extraction timestamp, min/max date, column definition을 함께
-부탁드립니다.
-```
-
-### 8.2 Master 검토 후 보낼 2차 메시지
+## 9. 담당자에게 보낼 요약 메시지
 
 ```text
-앞서 받은 master 기준으로 국내 공모 주식형 fund whitelist와 Beber pilot
-30개 fund code를 첨부드립니다.
+안녕하세요. 앞서 전달해 주신 KAIST thesis 1차 pilot 자료를 검수했습니다.
 
-1. 첨부 whitelist의 DW_ZI_펀드일별분석:
-   기준일자 2023-01-01~2025-12-31
-2. whitelist에 대응하는 운용사코드·제로인유형코드의
-   DW_ZI_운용사일별분석: 기준일자 2023-01-01~2025-12-31
-3. 첨부 30개 fund code의 현재 DW_ZI_펀드약관한도·펀드약관투자
-4. 같은 30개 fund code의 DW_ZI_펀드스타일분석:
-   기준일자 2023-01-01~2025-12-31
+수령 완료:
+1. ZI fund master/class/type/attribute/codebook 6개
+2. KOSPI200 구성종목·비중 및 지수산출 2023~2025
 
-컬럼과 원자료 보존 조건은 기존 명세와 동일하게 부탁드립니다.
+Arnott 공시와 종목별 시장자료는 다른 원천에서 확보할 수 있어 회사에 추가
+요청하지 않습니다.
+
+추가로 필요한 회사 자료는 다음과 같습니다.
+
+1. DW_ZI_펀드일별분석
+   - 2023-01-01~2025-12-31
+   - 대유형코드='20'
+   - 월별 또는 분기별 단순 SELECT
+2. DW_ZI_운용사일별분석
+   - 2023-01-01~2025-12-31
+   - 가능하면 기간 조건만 적용
+   - 자료가 너무 크면 별도로 전달하는 운용사코드 IN 조건 사용
+3. Beber 30개 whitelist 전달 후
+   - 현재 DW_ZI_펀드약관한도
+   - 현재 DW_ZI_펀드약관투자
+   - DW_ZI_펀드스타일분석 2023-01-01~2025-12-31
+
+수천 개 fund code target CTE, UNION ALL, 대형 table과 whitelist의 DB join은
+사용하지 않습니다. 기간·대유형 기준으로 SELECT한 파일을 로컬에서
+concat/filter하겠습니다.
+
+정확한 컬럼 목록과 원자료 보존 조건은 첨부 명세에 기재했습니다.
+기존 097/098/099 manifest JSON이 남아 있다면 함께 부탁드립니다.
+감사합니다.
 ```
