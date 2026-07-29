@@ -11,6 +11,7 @@ from .audit import audit_inputs
 from .config import ReplicationConfig, load_config
 from .panel import build_class_month_panel
 from .registry import load_registry, status_counts
+from .share_class_figures import generate_share_class_figures
 from .share_classes import validate_share_classes
 from .static_outputs import generate_static_outputs
 
@@ -106,6 +107,30 @@ def _validate_share_classes(args: argparse.Namespace) -> int:
     return 0
 
 
+def _share_class_figures(args: argparse.Namespace) -> int:
+    config = _load(args)
+    quality_dir = config.output_root / "quality" / "share_classes"
+    required = {
+        "comparison": quality_dir / "share_class_month_comparison.parquet",
+        "diagnostics": quality_dir / "share_class_group_diagnostics.csv",
+        "summary": quality_dir / "share_class_validation_summary.json",
+    }
+    missing = [str(path) for path in required.values() if not path.exists()]
+    if missing:
+        raise FileNotFoundError(
+            "Run validate-share-classes before figures: " + ", ".join(missing)
+        )
+    paths = generate_share_class_figures(
+        comparison_path=required["comparison"],
+        diagnostics_path=required["diagnostics"],
+        summary_path=required["summary"],
+        output_dir=quality_dir / "figures",
+    )
+    for path in paths:
+        print(path)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Build the CLI parser."""
 
@@ -119,7 +144,9 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser("status", help="Validate and summarize the output registry.")
-    subparsers.add_parser("audit", help="Audit source schemas and external-input presence.")
+    subparsers.add_parser(
+        "audit", help="Audit source schemas and external-input presence."
+    )
     subparsers.add_parser("static", help="Generate data-independent paper outputs.")
     subparsers.add_parser(
         "validate-inputs", help="Check whether factor and macro inputs are present."
@@ -129,6 +156,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="Compare representative rows with lag-TNA-weighted share classes.",
     )
     share_classes.add_argument("--panel", help="Optional class-month panel path.")
+    subparsers.add_parser(
+        "share-class-figures",
+        help="Plot TNA agreement, return gaps, and consolidation decisions.",
+    )
 
     panel = subparsers.add_parser(
         "build-panel", help="Build the point-in-time class-level monthly panel."
@@ -150,5 +181,6 @@ def main(argv: Sequence[str] | None = None) -> int:
         "build-panel": _build_panel,
         "validate-inputs": _validate_external,
         "validate-share-classes": _validate_share_classes,
+        "share-class-figures": _share_class_figures,
     }
     return handlers[args.command](args)

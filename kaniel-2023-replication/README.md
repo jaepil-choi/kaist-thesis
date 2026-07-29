@@ -19,6 +19,7 @@ Table 1–9, 부록 Figure A.1–A.26, Table A.1–A.14, Table B.1을 모두
 - Table 1, Table 2, Figure 3, Table B.1의 정적 산출물 생성
 - 한국 factor와 sentiment 입력 계약 및 검증
 - 합성 자료 기반 단위 테스트
+- share-class TNA 일치, 수익률 차이, 통합 판정 진단 Figure
 
 대표펀드 단위 share-class 통합은 아직 기본 실행에서 수행하지 않는다.
 `DW_ZI_클래스펀드`가 현재 snapshot이고 대표코드 행이 class 합계인지 독립
@@ -40,6 +41,7 @@ uv run python kaniel-2023-replication/run.py audit
 uv run python kaniel-2023-replication/run.py static
 uv run python kaniel-2023-replication/run.py build-panel --start 2023-01-01 --end 2023-12-31
 uv run python kaniel-2023-replication/run.py validate-share-classes
+uv run python kaniel-2023-replication/run.py share-class-figures
 uv run pytest kaniel-2023-replication/tests
 uv run ruff check kaniel-2023-replication
 ```
@@ -54,6 +56,11 @@ Parquet에 원 행을 남긴다.
 `validate-share-classes`는 각 대표펀드의 월 수익률을 하위 클래스의 전월 TNA
 가중수익률과 비교하고, 대표 TNA와 클래스 TNA 합계 및 대표코드 기간 coverage를
 함께 검사한다. 검증을 통과한 그룹만 대표코드 우선 규칙의 대상이 된다.
+
+`share-class-figures`는 검증 결과에서 TNA 허용오차별 일치율, 대표수익률과
+클래스 가중수익률의 월별 차이, 최종 consolidation 판정 분포를 생성한다.
+이들은 원 논문의 번호가 붙은 Figure가 아니라 한국 데이터 통합 규칙을
+확정하기 위한 품질진단 산출물이다.
 
 ## 외부 입력
 

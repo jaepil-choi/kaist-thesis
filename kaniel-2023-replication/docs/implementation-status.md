@@ -11,6 +11,7 @@
 - prior 36개월 Carhart beta와 Eq. (2) abnormal-return 산식
 - `F_ST_Rev`, `F_r2_1`, `F_r12_2` 시점 정렬
 - 대표수익률과 전월 TNA 가중 클래스 수익률 비교 및 그룹별 consolidation gate
+- share-class TNA 일치율, 수익률 차이, consolidation 판정 진단 Figure 3종
 
 ## 전체 class-month 중간 패널
 

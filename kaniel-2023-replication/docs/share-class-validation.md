@@ -69,6 +69,18 @@ gross return이라고 단정하지 않는다.
 TNA 자체의 판정은 대표 우선 524개, 대표 결측월 class fallback 3개,
 class-only 7개, 증거부족 175개, 수동검토 261개다.
 
+## 진단 Figure
+
+`uv run python kaniel-2023-replication/run.py share-class-figures`를 실행하면
+다음 품질진단 그림을 `outputs/quality/share_classes/figures/`에 생성한다.
+
+- `share_class_tna_agreement.png`: TNA 허용오차별 group-month 일치율
+- `share_class_return_gap.png`: 대표수익률과 클래스 가중수익률의 signed gap
+- `share_class_consolidation_decisions.png`: 대표그룹별 최종 통합 판정 분포
+
+이 그림은 원 논문의 Figure를 대체하지 않는다. 한국 펀드의 share-class
+통합 규칙과 수익률 기준 선택에 대한 데이터 품질 근거로 사용한다.
+
 ## 남은 확인
 
 `실현수익률`이 대표코드와 클래스코드에서 각각 gross/net 중 무엇을 뜻하는지,
