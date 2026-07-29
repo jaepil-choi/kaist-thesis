@@ -1,5 +1,11 @@
 # KAIST pilot parquet 초기 감사
 
+> [!IMPORTANT]
+> 이 문서는 2026-07-17 최초 반입분을 기록한 역사적 감사 문서다. 이후
+> fund-day·manager-day 전체 이력과 KOSPI200 확장본이 추가되었고,
+> 2026-07-29에 데이터 디렉터리를 재정리했다. 현재 경로·행 수·사용 우선순위는
+> `docs/about-data.md`를 기준으로 한다.
+
 작성일: 2026-07-17
 
 데이터 경로: `data/kaist_pilot/`
