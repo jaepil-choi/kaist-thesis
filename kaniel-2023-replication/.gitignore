@@ -1,0 +1,4 @@
+outputs/**
+!outputs/README.md
+inputs/external/**
+!inputs/external/.gitkeep

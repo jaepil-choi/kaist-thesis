@@ -1,0 +1,74 @@
+paper:
+  title: Machine-Learning the Skill of Mutual Fund Managers
+  citation: Kaniel, Lin, Pelger, and Van Nieuwerburgh (2023), JFE 150, 94-138
+  expected_output_count: 64
+
+outputs:
+  - {id: fig_01, kind: figure, scope: main, title: "Sentiment and economic-activity time series", stage: macro, status: blocked_external}
+  - {id: fig_02, kind: figure, scope: main, title: "Random and chronological fold assignments over sentiment", stage: model, status: planned}
+  - {id: fig_03, kind: figure, scope: main, title: "Single-hidden-layer feedforward network", stage: static, status: implemented}
+  - {id: fig_04, kind: figure, scope: main, title: "Equal and prediction portfolio weights", stage: model, status: planned}
+  - {id: fig_05, kind: figure, scope: main, title: "Cumulative abnormal returns by full-information prediction decile", stage: full_information, status: blocked_holdings}
+  - {id: fig_06, kind: figure, scope: main, title: "Expense ratios and after-fee decile performance", stage: fees, status: blocked_fee_history}
+  - {id: fig_07, kind: figure, scope: main, title: "Cumulative abnormal returns by information set", stage: model, status: planned_partial}
+  - {id: fig_08, kind: figure, scope: main, title: "Long-short cumulative abnormal returns by information set", stage: model, status: planned_partial}
+  - {id: fig_09, kind: figure, scope: main, title: "Fund-information prediction robustness and fund-size screens", stage: model, status: planned}
+  - {id: fig_10, kind: figure, scope: main, title: "Long-short performance by holding period", stage: model, status: planned}
+  - {id: fig_11, kind: figure, scope: main, title: "Chronological-split cumulative abnormal returns", stage: chronological, status: planned_partial}
+  - {id: fig_12, kind: figure, scope: main, title: "Individual and grouped variable importance", stage: model, status: planned_partial}
+  - {id: fig_13, kind: figure, scope: main, title: "Fund-characteristic effects conditional on sentiment", stage: model, status: planned_partial}
+  - {id: fig_14, kind: figure, scope: main, title: "Parsimonious flow-momentum-sentiment prediction surface", stage: parsimonious, status: planned}
+
+  - {id: table_01, kind: table, scope: main, title: "Fund- and stock-specific characteristics by category", stage: static, status: implemented}
+  - {id: table_02, kind: table, scope: main, title: "Fund momentum characteristics", stage: static, status: implemented}
+  - {id: table_03, kind: table, scope: main, title: "Prediction portfolio performance by information set", stage: model, status: planned_partial}
+  - {id: table_04, kind: table, scope: main, title: "Spanning regressions under alternative factor models", stage: factors, status: planned}
+  - {id: table_05, kind: table, scope: main, title: "Chronological-split prediction portfolio performance", stage: chronological, status: planned_partial}
+  - {id: table_06, kind: table, scope: main, title: "Sentiment interaction measures and significance", stage: model, status: planned_partial}
+  - {id: table_07, kind: table, scope: main, title: "Parsimonious-model portfolio performance", stage: parsimonious, status: planned}
+  - {id: table_08, kind: table, scope: main, title: "Univariate abnormal-return decompositions", stage: decomposition, status: blocked_holdings}
+  - {id: table_09, kind: table, scope: main, title: "Prediction-weighted abnormal-return decompositions", stage: decomposition, status: blocked_holdings}
+
+  - {id: fig_a_01, kind: figure, scope: appendix_a, title: "After-fee cumulative abnormal returns by prediction decile", stage: fees, status: blocked_fee_history}
+  - {id: fig_a_02, kind: figure, scope: appendix_a, title: "Equal-weight expenses and after-fee abnormal returns", stage: fees, status: blocked_fee_history}
+  - {id: fig_a_03, kind: figure, scope: appendix_a, title: "Equal-weight long-short performance by information set", stage: model, status: planned_partial}
+  - {id: fig_a_04, kind: figure, scope: appendix_a, title: "Equal-weight abnormal-return prediction deciles", stage: model, status: planned_partial}
+  - {id: fig_a_05, kind: figure, scope: appendix_a, title: "Equal-weight total-return prediction deciles", stage: full_information, status: blocked_holdings}
+  - {id: fig_a_06, kind: figure, scope: appendix_a, title: "Total-return long-short portfolios by information set", stage: full_information, status: blocked_holdings}
+  - {id: fig_a_07, kind: figure, scope: appendix_a, title: "One-year-horizon prediction portfolios", stage: model, status: planned_partial}
+  - {id: fig_a_08, kind: figure, scope: appendix_a, title: "Variable importance for one-year prediction", stage: model, status: planned_partial}
+  - {id: fig_a_09, kind: figure, scope: appendix_a, title: "Persistence of fund characteristics", stage: panel, status: planned_partial}
+  - {id: fig_a_10, kind: figure, scope: appendix_a, title: "Prediction-decile transition matrix", stage: model, status: planned}
+  - {id: fig_a_11, kind: figure, scope: appendix_a, title: "Predictability-state timing portfolios", stage: macro, status: blocked_external}
+  - {id: fig_a_12, kind: figure, scope: appendix_a, title: "Fund-characteristic effects conditional on activity", stage: macro, status: blocked_external}
+  - {id: fig_a_13, kind: figure, scope: appendix_a, title: "Sentiment versus activity interaction measures", stage: macro, status: blocked_external}
+  - {id: fig_a_14, kind: figure, scope: appendix_a, title: "Prediction portfolios excluding small funds", stage: model, status: planned}
+  - {id: fig_a_15, kind: figure, scope: appendix_a, title: "Total-return prediction deciles", stage: full_information, status: blocked_holdings}
+  - {id: fig_a_16, kind: figure, scope: appendix_a, title: "Expense and turnover by prediction decile over time", stage: fees, status: blocked_fee_turnover}
+  - {id: fig_a_17, kind: figure, scope: appendix_a, title: "Chronological-split prediction deciles", stage: chronological, status: planned_partial}
+  - {id: fig_a_18, kind: figure, scope: appendix_a, title: "Chronological long-short portfolios by information set", stage: chronological, status: planned_partial}
+  - {id: fig_a_19, kind: figure, scope: appendix_a, title: "Chronological holding-period results", stage: chronological, status: planned}
+  - {id: fig_a_20, kind: figure, scope: appendix_a, title: "Chronological variable importance", stage: chronological, status: planned_partial}
+  - {id: fig_a_21, kind: figure, scope: appendix_a, title: "Chronological sentiment-conditioned effects", stage: chronological, status: planned_partial}
+  - {id: fig_a_22, kind: figure, scope: appendix_a, title: "Chronological activity-conditioned effects", stage: chronological, status: blocked_external}
+  - {id: fig_a_23, kind: figure, scope: appendix_a, title: "Expanding-window prediction deciles", stage: expanding, status: planned_partial}
+  - {id: fig_a_24, kind: figure, scope: appendix_a, title: "Expanding-window long-short portfolios", stage: expanding, status: planned_partial}
+  - {id: fig_a_25, kind: figure, scope: appendix_a, title: "Expanding-window sentiment-conditioned effects", stage: expanding, status: planned_partial}
+  - {id: fig_a_26, kind: figure, scope: appendix_a, title: "Expanding-window variable importance", stage: expanding, status: planned_partial}
+
+  - {id: table_a_01, kind: table, scope: appendix_a, title: "Prediction-weighted performance by expanded information sets", stage: model, status: planned_partial}
+  - {id: table_a_02, kind: table, scope: appendix_a, title: "Equal-weight long-short performance by information set", stage: model, status: planned_partial}
+  - {id: table_a_03, kind: table, scope: appendix_a, title: "Equal-weight abnormal-return decompositions", stage: decomposition, status: blocked_holdings}
+  - {id: table_a_04, kind: table, scope: appendix_a, title: "One-year-horizon prediction portfolio performance", stage: model, status: planned_partial}
+  - {id: table_a_05, kind: table, scope: appendix_a, title: "Sentiment and activity macro specifications", stage: macro, status: blocked_external}
+  - {id: table_a_06, kind: table, scope: appendix_a, title: "Alternative macro-variable portfolio performance", stage: macro, status: blocked_external}
+  - {id: table_a_07, kind: table, scope: appendix_a, title: "High- and low-predictability state performance", stage: macro, status: blocked_external}
+  - {id: table_a_08, kind: table, scope: appendix_a, title: "Fund-characteristic interaction measures", stage: model, status: planned_partial}
+  - {id: table_a_09, kind: table, scope: appendix_a, title: "Robustness to minimum fund size and weighting", stage: model, status: planned}
+  - {id: table_a_10, kind: table, scope: appendix_a, title: "Total-return prediction portfolio performance", stage: full_information, status: blocked_holdings}
+  - {id: table_a_11, kind: table, scope: appendix_a, title: "Chronological prediction portfolios and decompositions", stage: chronological, status: planned_partial}
+  - {id: table_a_12, kind: table, scope: appendix_a, title: "Chronological total-return portfolio performance", stage: full_information, status: blocked_holdings}
+  - {id: table_a_13, kind: table, scope: appendix_a, title: "Chronological total-return spanning regressions", stage: full_information, status: blocked_holdings}
+  - {id: table_a_14, kind: table, scope: appendix_a, title: "Expanding-window abnormal-return portfolios", stage: expanding, status: planned_partial}
+
+  - {id: table_b_01, kind: table, scope: appendix_b, title: "Neural-network tuning parameter grid", stage: static, status: implemented}

@@ -1,0 +1,57 @@
+random_seed: 202307
+
+data:
+  fund_daily: data/kaist_pilot/canonical/kaniel_2023/kaist_kaniel_fund_daily_full_history.parquet
+  manager_daily: data/kaist_pilot/canonical/kaniel_2023/kaist_kaniel_manager_daily_full_history.parquet
+  fund_master: data/kaist_pilot/canonical/common/zi_reference/dw_zi_펀드기본정보.parquet
+  fund_attributes: data/kaist_pilot/canonical/common/zi_reference/dw_zi_펀드별속성코드.parquet
+  class_relations: data/kaist_pilot/canonical/common/zi_reference/dw_zi_클래스펀드.parquet
+  factor_monthly: kaniel-2023-replication/inputs/external/korea_carhart_monthly.csv
+  sentiment_monthly: kaniel-2023-replication/inputs/external/korea_sentiment_monthly.csv
+  activity_monthly: kaniel-2023-replication/inputs/external/korea_activity_monthly.csv
+
+outputs:
+  root: kaniel-2023-replication/outputs
+
+universe:
+  large_type_code: "20"
+  active_type_codes:
+    - "2001"
+    - "20020"
+    - "20030"
+    - "20040"
+  snapshot_excluded_attributes:
+    - "S104"
+    - "S105"
+    - "S106"
+    - "M113"
+  use_snapshot_attributes_as_historical_filter: false
+
+panel:
+  batch_size: 250000
+  plausible_daily_factor_min: 0.5
+  plausible_daily_factor_max: 1.5
+
+share_class_validation:
+  minimum_overlap_months: 24
+  return_tolerance_bps: 5.0
+  minimum_return_match_rate: 0.90
+  tna_tolerance_fraction: 0.02
+  minimum_tna_match_rate: 0.80
+  complete_representative_coverage_rate: 0.95
+  minimum_representative_higher_rate: 0.90
+  maximum_fee_like_median_bps: 25.0
+
+abnormal_return:
+  rolling_window_months: 36
+  minimum_history_months: 30
+  momentum_minimum_observations: 8
+
+model:
+  hidden_layers: 1
+  hidden_units: 64
+  dropout_keep_probability: 0.95
+  learning_rate: 0.01
+  l1_penalty: 0.0
+  l2_penalty: 0.001
+  ensemble_size: 8
