@@ -1,0 +1,25 @@
+random_seed: 202303
+
+data:
+  constituents: data/kaist_pilot/canonical/arnott_2023/kaist_kospi200_constituents_extended.parquet
+  index_levels: data/kaist_pilot/canonical/arnott_2023/kaist_kospi200_index_levels_extended.parquet
+  stock_prices: data/kaist_pilot/canonical/common/korean_equity/adjusted_prices.parquet
+
+outputs:
+  root: arnott-2023-replication/outputs
+
+events:
+  scheduled_only: true
+  require_both_sides: true
+  path_min_offset: -60
+  path_max_offset: 250
+  minimum_return_coverage: 0.90
+  windows:
+    - {label: pre_20_to_6, start: -20, end: -6}
+    - {label: pre_5_to_1, start: -5, end: -1}
+    - {label: effective_day, start: 0, end: 0}
+    - {label: post_1_to_5, start: 1, end: 5}
+    - {label: post_1_to_20, start: 1, end: 20}
+    - {label: post_1_to_60, start: 1, end: 60}
+    - {label: post_1_to_120, start: 1, end: 120}
+    - {label: post_1_to_250, start: 1, end: 250}

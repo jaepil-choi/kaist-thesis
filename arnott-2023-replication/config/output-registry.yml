@@ -1,0 +1,20 @@
+paper:
+  title: Earning Alpha by Avoiding the Index Rebalancing Crowd
+  citation: Arnott, Brightman, Kalesnik, and Wu (2023), Financial Analysts Journal 79(2)
+  expected_output_count: 9
+
+paper_outputs:
+  - {id: table_01, kind: table, title: "Additions and deletions by subperiod", status: planned_exact_needs_announcement}
+  - {id: table_02, kind: table, title: "Performance around announcement and effective dates", status: blocked_announcement}
+  - {id: table_03, kind: table, title: "Relative valuation of additions and deletions", status: blocked_announcement_reason}
+  - {id: table_04, kind: table, title: "Replicated index trade-date variants", status: blocked_announcement}
+  - {id: table_05, kind: table, title: "Alternative constituent-selection portfolios", status: planned_extension}
+  - {id: table_06, kind: table, title: "Alternative-index returns and factor alphas", status: planned_extension}
+  - {id: fig_01, kind: figure, title: "Additions and discretionary deletions relative to market", status: blocked_announcement_reason}
+  - {id: fig_02, kind: figure, title: "Cumulative excess return by index trade date", status: blocked_announcement}
+  - {id: fig_03, kind: figure, title: "Cumulative return of alternative constituent-selection methods", status: planned_extension}
+
+korea_extensions:
+  - {id: kr_table_01, kind: table, title: "KOSPI200 effective-date membership changes", status: implemented}
+  - {id: kr_table_02, kind: table, title: "Effective-date market-adjusted event returns", status: implemented}
+  - {id: kr_fig_01, kind: figure, title: "Effective-date addition/deletion event paths", status: implemented}

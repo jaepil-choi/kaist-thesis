@@ -262,6 +262,17 @@ overweight/underweight를 구성할 수 없다. WRDSS 1,044개 object에서도
 
 **상태: 원문 정독·관련 Priority 1~6 검증 완료 — 현재 1순위.**
 
+**2026-08-07 구현 상태**: `kaniel-2023-replication/`에 기존 fund-day→
+class-month panel, abnormal return, fund momentum, share-class gate에 더해 국내주식
+월별 MKT·SMB·HML·MOM builder, random/chronological 3-fold cross-OOS 64-unit
+ReLU MLP ensemble, 식 (4)–(6) prediction-weighted decile portfolio를 구현했다.
+다만 이는 **코드 완료이지 empirical replication 완료가 아니다**. 한국 RF와
+sentiment가 없고, 재무 facts에는 실제 historical announcement timestamp가
+없어 exact HML을 PIT로 만들 수 없다. 기본 CLI는 이 상태에서 hard fail하며,
+명시적 non-PIT override 결과만 sensitivity로 분류한다. sklearn backend가
+dropout 0.95를 지원하지 않는 차이도 남아 있으므로 Table 7은 아직
+`implemented`로 승격하지 않았다.
+
 - **저자**: Ron Kaniel, Zihan Lin, Markus Pelger, Stijn Van Nieuwerburgh
 - **저널**: Journal of Financial Economics (tier 1), 2023
 - **피인용**: 107 (OpenAlex, 2026-07-17 확인)
@@ -393,6 +404,28 @@ WRDSS에 없다. 발견된 `FA_대차자산`·`DW_FA_대차담보명세`는 자�
 ### 8. Earning Alpha by Avoiding the Index Rebalancing Crowd
 
 **상태: Priority 9 실측 완료 — 데이터 기준 현재 2순위.**
+
+**2026-08-07 구현 및 1차 실측**: root에 `arnott-2023-replication/`을 만들고
+원 논문의 Table 1–6·Figure 1–3을 registry에 등록했다. 현재 데이터로는 인접
+KOSPI200 membership snapshot을 diff하고, 과거에 이미 기록된
+`NEXT_REBALANCE_DATE`로 정기변경만 고른 뒤, 효력일 전후 종목수익률을
+KOSPI200 대비로 복리 계산하는 한국 extension을 실행했다. 정기변경 16회,
+편입·편출 201건이며 가격 coverage를 통과한 표본에서 다음 결과가 나왔다.
+
+- 효력일 20~6거래일 전 이벤트별 편출 minus 편입 평균: -8.24%p
+  (이벤트 군집 t=-3.58, 15개 이벤트)
+- 효력일 5~1거래일 전: -1.97%p (이벤트 군집 t=-1.12, 16개 이벤트)
+- 효력일 당일: +2.15%p (이벤트 군집 t=4.21, 16개 이벤트)
+- 효력일 후 1~250거래일: -1.77%p (이벤트 군집 t=-0.32, 14개 이벤트)
+
+같은 리밸런싱에 속한 종목 간 상관을 반영하기 위해 이벤트별 평균 스프레드의
+시계열 표준오차를 우선 보고하며, 종목 단위 Welch 검정은 기술통계로만 남긴다.
+편입종목의 사전 상승과 효력일 당일 반전은 관측되지만, 현재 표본은 원 논문의
+장기 편출-minus-편입 reversal을 지지하지 않는다. 더구나 수정수익률의
+현금배당·상장폐지 포함 여부가 아직 확정되지 않아 수치는 provisional이다.
+announcement timestamp와 변경사유가 없으므로 발표일 grace period,
+discretionary deletion, trade-on-announcement Table/Figure는 계속 blocked이며,
+효력일을 발표일 proxy로 바꾸지 않았다.
 
 - **저자**: Robert D. Arnott, Christopher Brightman, Vitali Kalesnik, Lillian Wu
 - **저널**: Financial Analysts Journal (tier 4), 2023

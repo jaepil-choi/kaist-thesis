@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import pyarrow.dataset as ds
 import pyarrow.parquet as pq
 
 from .config import ReplicationConfig
@@ -71,7 +72,12 @@ def _metadata_date_range(parquet: pq.ParquetFile, date_column: str) -> tuple[Any
 def audit_inputs(config: ReplicationConfig) -> dict[str, Any]:
     """Audit physical schemas without modifying the source datasets."""
 
-    result: dict[str, Any] = {"datasets": {}, "external_inputs": {}}
+    result: dict[str, Any] = {
+        "datasets": {},
+        "stock_factor_inputs": {},
+        "external_inputs": {},
+        "methodology_gates": {},
+    }
     for name, contract in DATASETS.items():
         path = config.path("data", name)
         if not path.exists():
@@ -99,6 +105,31 @@ def audit_inputs(config: ReplicationConfig) -> dict[str, Any]:
             "path": str(path),
             "exists": path.exists(),
         }
+
+    price_path = config.path("data", "stock_prices")
+    price_parquet = pq.ParquetFile(price_path)
+    result["stock_factor_inputs"]["stock_prices"] = {
+        "path": str(price_path),
+        "rows": price_parquet.metadata.num_rows,
+        "columns": price_parquet.schema_arrow.names,
+    }
+    statement_path = config.path("data", "statement_facts")
+    statement_dataset = ds.dataset(
+        statement_path, format="parquet", partitioning="hive"
+    )
+    result["stock_factor_inputs"]["statement_facts"] = {
+        "path": str(statement_path),
+        "rows": statement_dataset.count_rows(),
+        "columns": statement_dataset.schema.names,
+    }
+    construction = config.raw["factor_construction"]
+    result["methodology_gates"] = {
+        "historical_announcement_timestamps": False,
+        "reporting_lag_months": construction["reporting_lag_months"],
+        "allow_non_pit_book_equity": construction["allow_non_pit_book_equity"],
+        "market_cap_basis_verified": construction["market_cap_basis_verified"],
+        "price_total_return_verified": construction["price_total_return_verified"],
+    }
 
     manifest = config.output_root / "manifests" / "input_audit.json"
     write_manifest(manifest, result)

@@ -1,6 +1,6 @@
 # Implementation status
 
-기준일: 2026-07-29
+기준일: 2026-08-07
 
 ## 구현 완료
 
@@ -12,6 +12,11 @@
 - `F_ST_Rev`, `F_r2_1`, `F_r12_2` 시점 정렬
 - 대표수익률과 전월 TNA 가중 클래스 수익률 비교 및 그룹별 consolidation gate
 - share-class TNA 일치율, 수익률 차이, consolidation 판정 진단 Figure 3종
+- 일별 주식수익률의 월별 복리연결 및 lagged market-cap/momentum formation
+- annual June 2×3 size/book-to-market, monthly 2×3 momentum factor construction
+- 재무 announcement timestamp 부재 시 HML 생성을 막는 기본 PIT gate
+- random/chronological 3-fold cross-OOS MLP ensemble과 extreme-decile portfolio
+- Eq. (4)–(6) prediction weights와 equal-weight 비교
 
 ## 전체 class-month 중간 패널
 
@@ -38,7 +43,14 @@
 5. 극단 return factor가 분할·병합·청산 조정인지 데이터 오류인지 확인
 6. 역사적 fee와 turnover
 7. survivorship-bias-free full holdings와 46개 stock characteristics
+8. 재무제표 실제 공시시각과 historical revision vintage
+9. `market_cap`의 total/free-float 기준 및 수정수익률의 total-return 정의
+10. sklearn backend의 dropout 0.95 미지원과 tuning-grid validation 미구현
 
 현재 자료만으로는 parsimonious `flow + F_r12_2 + sentiment` replication을
 우선 진행할 수 있다. fee·turnover·holdings 관련 결과는 proxy로 채우지 않고
 registry에서 blocked로 유지한다.
+
+factor/model/portfolio **코드는 구현됐지만**, 위 입력 gate가 닫히지 않았으므로
+Table 7을 `implemented`로 바꾸지 않는다. non-PIT override 산출물은 sensitivity로만
+분류한다.

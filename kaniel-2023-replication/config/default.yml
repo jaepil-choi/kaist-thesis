@@ -6,6 +6,8 @@ data:
   fund_master: data/kaist_pilot/canonical/common/zi_reference/dw_zi_펀드기본정보.parquet
   fund_attributes: data/kaist_pilot/canonical/common/zi_reference/dw_zi_펀드별속성코드.parquet
   class_relations: data/kaist_pilot/canonical/common/zi_reference/dw_zi_클래스펀드.parquet
+  stock_prices: data/kaist_pilot/canonical/common/korean_equity/adjusted_prices.parquet
+  statement_facts: data/kaist_pilot/canonical/common/korean_equity/fng_statement_facts
   factor_monthly: kaniel-2023-replication/inputs/external/korea_carhart_monthly.csv
   sentiment_monthly: kaniel-2023-replication/inputs/external/korea_sentiment_monthly.csv
   activity_monthly: kaniel-2023-replication/inputs/external/korea_activity_monthly.csv
@@ -47,7 +49,15 @@ abnormal_return:
   minimum_history_months: 30
   momentum_minimum_observations: 8
 
+factor_construction:
+  reporting_lag_months: null
+  allow_non_pit_book_equity: false
+  market_cap_basis_verified: false
+  price_total_return_verified: false
+
 model:
+  backend: sklearn_mlp_no_dropout
+  sampling_scheme: random
   hidden_layers: 1
   hidden_units: 64
   dropout_keep_probability: 0.95
@@ -55,3 +65,4 @@ model:
   l1_penalty: 0.0
   l2_penalty: 0.001
   ensemble_size: 8
+  max_iter: 300

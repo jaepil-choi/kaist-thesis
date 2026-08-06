@@ -16,6 +16,9 @@ Table 1–9, 부록 Figure A.1–A.26, Table A.1–A.14, Table B.1을 모두
 - 입력 Parquet schema 및 행 수 감사
 - 국내 active equity class-month 패널의 streaming 구축
 - Carhart rolling abnormal return과 fund momentum 산식
+- 국내주식 raw input의 월별 MKT·SMB·HML·MOM factor builder와 PIT hard gate
+- random/chronological 3-fold cross-OOS 64-unit ReLU MLP ensemble
+- 논문 식 (4)–(6)의 prediction-weighted top/bottom decile portfolio
 - Table 1, Table 2, Figure 3, Table B.1의 정적 산출물 생성
 - 한국 factor와 sentiment 입력 계약 및 검증
 - 합성 자료 기반 단위 테스트
@@ -42,6 +45,8 @@ uv run python kaniel-2023-replication/run.py static
 uv run python kaniel-2023-replication/run.py build-panel --start 2023-01-01 --end 2023-12-31
 uv run python kaniel-2023-replication/run.py validate-share-classes
 uv run python kaniel-2023-replication/run.py share-class-figures
+uv run python kaniel-2023-replication/run.py build-stock-factors --help
+uv run python kaniel-2023-replication/run.py run-parsimonious
 uv run pytest kaniel-2023-replication/tests
 uv run ruff check kaniel-2023-replication
 ```
@@ -72,6 +77,16 @@ Parquet에 원 행을 남긴다.
 
 역사적 fee, turnover, full holdings가 확보되기 전에는 관련 Figure/Table을
 가짜 proxy로 채우지 않는다.
+
+`build-stock-factors`의 기본 동작도 hard fail이다. 현재 재무 facts에는 당시
+실제 announcement timestamp가 없고 2026년에 수집한 여러 dump revision이
+섞여 있기 때문이다. `--allow-non-pit-book-equity`와 명시적 reporting lag를
+함께 준 실행만 sensitivity output으로 허용하며 exact factor로 승격하지 않는다.
+
+`run-parsimonious`는 외부 factor·RF·sentiment와 class-month panel이 모두 있을
+때만 실행된다. 현재 sklearn backend는 논문의 64-unit ReLU, Adam, L2, 8-model
+ensemble을 구현하지만 dropout 0.95는 구현하지 않는다. 이 차이는 manifest에
+남으며 exact neural-network 결과로 간주하지 않는다.
 
 ## 데이터 계보
 

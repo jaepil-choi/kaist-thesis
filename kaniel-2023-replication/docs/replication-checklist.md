@@ -17,6 +17,17 @@
 - [ ] 예측 portfolio weighting과 decile breakpoints 고정
 - [ ] seed, tuning grid, ensemble 규칙 고정
 
+## 구현 인프라
+
+- [x] 일별 주식자료의 월별 복리수익률과 lagged formation 변수
+- [x] MKT·SMB·HML·MOM 2×3 factor construction 함수
+- [x] actual announcement timestamp 부재 시 HML hard fail
+- [x] random/chronological 3-fold cross-OOS prediction
+- [x] 64-unit ReLU MLP와 8-fit ensemble
+- [x] Eq. (4)–(6) prediction-weighted extreme deciles
+- [ ] dropout 0.95를 지원하는 exact backend
+- [ ] tuning grid의 train/validation 선택 절차
+
 ## 본문 산출물
 
 - [ ] Figure 1–14
