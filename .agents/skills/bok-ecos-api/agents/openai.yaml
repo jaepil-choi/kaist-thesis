@@ -1,0 +1,4 @@
+interface:
+  display_name: "한국은행 ECOS API"
+  short_description: "한국은행 ECOS 통계 탐색·시계열 조회·응답 검증 자동화"
+  default_prompt: "Use $bok-ecos-api to discover the correct ECOS table and item codes, then retrieve a bounded and validated time series."
