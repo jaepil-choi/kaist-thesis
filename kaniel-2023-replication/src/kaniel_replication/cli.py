@@ -19,6 +19,7 @@ from .model import (
     form_prediction_portfolios,
 )
 from .provenance import sha256, write_manifest
+from .proxy_outputs import generate_proxy_outputs
 from .registry import load_registry, status_counts
 from .share_class_figures import generate_share_class_figures
 from .share_classes import validate_share_classes
@@ -287,6 +288,33 @@ def _run_parsimonious(args: argparse.Namespace) -> int:
     return 0
 
 
+def _proxy_outputs(args: argparse.Namespace) -> int:
+    config = _load(args)
+    predictions = (
+        config.output_root
+        / "intermediate"
+        / "parsimonious_proxy_cross_oos_predictions.parquet"
+    )
+    required = {
+        "predictions": predictions,
+        "sentiment": config.path("data", "sentiment_monthly"),
+        "activity": config.path("data", "activity_monthly"),
+    }
+    missing = [f"{key}: {path}" for key, path in required.items() if not path.exists()]
+    if missing:
+        raise FileNotFoundError("Missing proxy-output inputs: " + "; ".join(missing))
+    paths = generate_proxy_outputs(
+        predictions_path=predictions,
+        sentiment_path=required["sentiment"],
+        activity_path=required["activity"],
+        output_root=config.output_root,
+        random_seed=int(config.raw["random_seed"]),
+    )
+    for path in paths:
+        print(path)
+    return 0
+
+
 def _validate_share_classes(args: argparse.Namespace) -> int:
     config = _load(args)
     panel_path = (
@@ -370,6 +398,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="Run flow + fund momentum + sentiment cross-OOS prediction.",
     )
     parsimonious.add_argument("--panel")
+    subparsers.add_parser(
+        "proxy-outputs",
+        help="Generate the Korean Table 7 comparison and supported empirical figures.",
+    )
     share_classes = subparsers.add_parser(
         "validate-share-classes",
         help="Compare representative rows with lag-TNA-weighted share classes.",
@@ -401,6 +433,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "validate-inputs": _validate_external,
         "build-stock-factors": _build_stock_factors,
         "run-parsimonious": _run_parsimonious,
+        "proxy-outputs": _proxy_outputs,
         "validate-share-classes": _validate_share_classes,
         "share-class-figures": _share_class_figures,
     }

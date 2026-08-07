@@ -20,6 +20,7 @@
 - ECOS 월별 11개 시계열 3,191건 수집·검증 및 RF·경기상태 기본 입력 연결
 - ECOS 5개 구성요소의 고정-calibration PCA sentiment proxy와 1개월 lag
 - non-PIT Carhart sensitivity부터 rolling alpha, 3-fold ML, decile portfolio까지 실행
+- Figure 1·2·4·14 proxy와 Figure 8 partial proxy, 미국 Table 7 비교표 생성
 
 ## ECOS 입력 확보 현황
 
@@ -44,10 +45,17 @@ proxy는 2005~2014에서 loading을 고정하고 관측월을 다음 달에 사�
 - top/bottom portfolio: 45개월, 결측 0
 - equal-weight long-short 평균: 월 0.2227%
 - prediction-weighted long-short 평균: 월 0.3364%
+- prediction-weighted long-short 월 Sharpe: 0.1859
+- prediction-weighted long-short t-stat: 1.2467
+- prediction-weighted long-short factor R2: -1.4401%
+- 미국 원문 Table 7 long-short: 평균 0.40%, 월 Sharpe 0.25, t-stat 5.4,
+  factor R2 0.70%
 
-이 평균은 45개월의 기술통계다. 표준오차·통계적 유의성·거래비용 검정 전에는
-경제적 성과 확정치로 해석하지 않는다. 결과는 `implemented_proxy`이며 exact
-Table 7과 구분한다.
+한국 t-stat 1.25는 통계적으로 유의하지 않고 factor R2도 음수다. 또한 미국은
+top +0.17%, bottom -0.23%인 반면 한국은 top +0.887%, bottom도 +0.551%다.
+따라서 평균 spread 크기만 비슷할 뿐 원문의 양·음 alpha 분리와 level prediction은
+재현되지 않았다. 결과는 `implemented_proxy`이며 exact Table 7과 구분한다.
+상세 비교는 `docs/us-korea-comparison.md`에 있다.
 
 ## 전체 class-month 중간 패널
 

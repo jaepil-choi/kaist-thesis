@@ -23,6 +23,7 @@ Table 1–9, 부록 Figure A.1–A.26, Table A.1–A.14, Table B.1을 모두
 - 한국 factor와 sentiment 입력 계약 및 검증
 - ECOS 통안증권 91일 RF, ESI 경기상태, 고정-calibration PCA sentiment proxy
 - proxy sentiment와 non-PIT 3개월-lag Carhart를 사용한 parsimonious 전구간 실행
+- Table 7 미국 원문 비교 통계와 Figure 1·2·4·8·14 proxy/partial 산출물
 - 합성 자료 기반 단위 테스트
 - share-class TNA 일치, 수익률 차이, 통합 판정 진단 Figure
 
@@ -50,6 +51,7 @@ uv run python kaniel-2023-replication/run.py share-class-figures
 uv run python scripts/kaist_pilot/build_kaniel_ecos_inputs.py
 uv run python kaniel-2023-replication/run.py build-stock-factors --start 2015-01-01 --end 2026-07-20 --reporting-lag-months 3 --allow-non-pit-book-equity
 uv run python kaniel-2023-replication/run.py run-parsimonious
+uv run python kaniel-2023-replication/run.py proxy-outputs
 uv run pytest kaniel-2023-replication/tests
 uv run ruff check kaniel-2023-replication
 ```
@@ -98,6 +100,12 @@ Figure/Table을 가짜 proxy로 채우지 않는다. 다만 parsimonious 모형�
 portfolio를 생성했다. 출력 파일명과 manifest에 `proxy`를 명시한다. 현재
 sklearn backend는 논문의 64-unit ReLU, Adam, L2, 8-model ensemble을 구현하지만
 dropout 0.95는 구현하지 않으므로 exact neural-network 결과로 간주하지 않는다.
+
+`proxy-outputs`는 저장된 OOS prediction에서 Table 7 portfolio와 미국 비교표를
+다시 계산하고, 현재 입력으로 정당화되는 Figure 1·2·4·8·14를 생성한다.
+Figure 8은 한 정보집합만 있는 partial proxy이고 Figure 14는 관측 OOS 예측의
+bin 평균이므로 원문의 exact continuous prediction surface가 아니다. 결과
+해석은 `docs/us-korea-comparison.md`에 있다.
 
 ## 데이터 계보
 

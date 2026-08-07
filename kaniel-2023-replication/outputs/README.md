@@ -9,6 +9,10 @@
 - `intermediate/korea_carhart_monthly_non_pit.csv`: 3개월 reporting-lag factor
 - `intermediate/parsimonious_proxy_cross_oos_predictions.parquet`: 136,641 predictions
 - `tables/table_07_parsimonious_proxy_portfolios.csv`: 45개월 portfolio
+- `tables/table_07_parsimonious_proxy_summary.csv`: mean·SR·t·factor R2
+- `tables/table_07_us_korea_comparison.csv`: 원문 미국 Table 7과 한국 proxy 비교
+- `figures/parsimonious_proxy/`: Figure 1·2·4·8·14 proxy/partial PNG
 - `manifests/parsimonious_proxy.json`: 입력 해시와 proxy/non-PIT/dropout 한계
+- `manifests/parsimonious_proxy_outputs.json`: 비교표와 figure 계보
 
 파일명에 `proxy` 또는 `non_pit`가 없는 exact Table 7로 재명명하지 않는다.

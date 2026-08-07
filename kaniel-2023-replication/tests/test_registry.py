@@ -11,8 +11,9 @@ def test_registry_has_all_paper_outputs() -> None:
     registry = load_registry(PROJECT / "config" / "output-registry.yml")
     assert len(registry["outputs"]) == 64
     assert status_counts(registry)["implemented"] == 4
-    assert status_counts(registry)["implemented_proxy"] == 1
-    assert status_counts(registry)["planned_proxy"] == 8
+    assert status_counts(registry)["implemented_proxy"] == 5
+    assert status_counts(registry)["implemented_proxy_partial"] == 1
+    assert status_counts(registry)["planned_proxy"] == 7
     assert {item["id"] for item in registry["outputs"]} >= {
         "fig_01",
         "fig_14",

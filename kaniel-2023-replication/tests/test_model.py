@@ -50,3 +50,4 @@ def test_cross_oos_predictions_and_extreme_portfolios() -> None:
     portfolios = form_prediction_portfolios(predicted)
     assert len(portfolios) == len(months)
     assert portfolios["long_short_prediction"].notna().all()
+    assert portfolios["long_short_forecast"].notna().all()

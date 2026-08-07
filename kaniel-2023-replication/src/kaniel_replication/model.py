@@ -163,7 +163,9 @@ def fit_cross_oos_mlp(
     return result
 
 
-def _prediction_weighted_return(group: pd.DataFrame, decile: int) -> float:
+def prediction_weights(group: pd.DataFrame, decile: int) -> pd.Series:
+    """Return the paper's shifted-and-scaled weights for an extreme decile."""
+
     prediction = group["prediction"].astype(float)
     if decile == 10:
         shifted = prediction - prediction.min()
@@ -176,7 +178,14 @@ def _prediction_weighted_return(group: pd.DataFrame, decile: int) -> float:
         weights = np.repeat(1.0 / len(group), len(group))
     else:
         weights = shifted / denominator
-    return float(np.dot(weights, group["target_abnormal_return"]))
+    return pd.Series(weights, index=group.index, dtype=float)
+
+
+def _prediction_weighted_value(
+    group: pd.DataFrame, decile: int, value_column: str
+) -> float:
+    weights = prediction_weights(group, decile)
+    return float(np.dot(weights, group[value_column]))
 
 
 def form_prediction_portfolios(
@@ -200,8 +209,14 @@ def form_prediction_portfolios(
         top = valid.loc[valid["decile"].eq(10)]
         top_equal = top["target_abnormal_return"].mean()
         bottom_equal = bottom["target_abnormal_return"].mean()
-        top_prediction = _prediction_weighted_return(top, 10)
-        bottom_prediction = _prediction_weighted_return(bottom, 1)
+        top_prediction = _prediction_weighted_value(
+            top, 10, "target_abnormal_return"
+        )
+        bottom_prediction = _prediction_weighted_value(
+            bottom, 1, "target_abnormal_return"
+        )
+        top_forecast = _prediction_weighted_value(top, 10, "prediction")
+        bottom_forecast = _prediction_weighted_value(bottom, 1, "prediction")
         rows.append(
             {
                 "month": month,
@@ -212,6 +227,9 @@ def form_prediction_portfolios(
                 "top_prediction": top_prediction,
                 "bottom_prediction": bottom_prediction,
                 "long_short_prediction": top_prediction - bottom_prediction,
+                "top_forecast": top_forecast,
+                "bottom_forecast": bottom_forecast,
+                "long_short_forecast": top_forecast - bottom_forecast,
             }
         )
     return pd.DataFrame.from_records(rows)

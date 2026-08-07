@@ -4,20 +4,20 @@ paper:
   expected_output_count: 64
 
 outputs:
-  - {id: fig_01, kind: figure, scope: main, title: "Sentiment and economic-activity time series", stage: macro, status: planned_proxy}
-  - {id: fig_02, kind: figure, scope: main, title: "Random and chronological fold assignments over sentiment", stage: model, status: planned}
+  - {id: fig_01, kind: figure, scope: main, title: "Sentiment and economic-activity time series", stage: macro, status: implemented_proxy}
+  - {id: fig_02, kind: figure, scope: main, title: "Random and chronological fold assignments over sentiment", stage: model, status: implemented_proxy}
   - {id: fig_03, kind: figure, scope: main, title: "Single-hidden-layer feedforward network", stage: static, status: implemented}
-  - {id: fig_04, kind: figure, scope: main, title: "Equal and prediction portfolio weights", stage: model, status: planned}
+  - {id: fig_04, kind: figure, scope: main, title: "Equal and prediction portfolio weights", stage: model, status: implemented_proxy}
   - {id: fig_05, kind: figure, scope: main, title: "Cumulative abnormal returns by full-information prediction decile", stage: full_information, status: blocked_holdings}
   - {id: fig_06, kind: figure, scope: main, title: "Expense ratios and after-fee decile performance", stage: fees, status: blocked_fee_history}
   - {id: fig_07, kind: figure, scope: main, title: "Cumulative abnormal returns by information set", stage: model, status: planned_partial}
-  - {id: fig_08, kind: figure, scope: main, title: "Long-short cumulative abnormal returns by information set", stage: model, status: planned_partial}
+  - {id: fig_08, kind: figure, scope: main, title: "Long-short cumulative abnormal returns by information set", stage: model, status: implemented_proxy_partial}
   - {id: fig_09, kind: figure, scope: main, title: "Fund-information prediction robustness and fund-size screens", stage: model, status: planned}
   - {id: fig_10, kind: figure, scope: main, title: "Long-short performance by holding period", stage: model, status: planned}
   - {id: fig_11, kind: figure, scope: main, title: "Chronological-split cumulative abnormal returns", stage: chronological, status: planned_partial}
   - {id: fig_12, kind: figure, scope: main, title: "Individual and grouped variable importance", stage: model, status: planned_partial}
   - {id: fig_13, kind: figure, scope: main, title: "Fund-characteristic effects conditional on sentiment", stage: model, status: planned_partial}
-  - {id: fig_14, kind: figure, scope: main, title: "Parsimonious flow-momentum-sentiment prediction surface", stage: parsimonious, status: planned}
+  - {id: fig_14, kind: figure, scope: main, title: "Parsimonious flow-momentum-sentiment prediction surface", stage: parsimonious, status: implemented_proxy}
 
   - {id: table_01, kind: table, scope: main, title: "Fund- and stock-specific characteristics by category", stage: static, status: implemented}
   - {id: table_02, kind: table, scope: main, title: "Fund momentum characteristics", stage: static, status: implemented}
