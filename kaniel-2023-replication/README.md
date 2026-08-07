@@ -21,6 +21,8 @@ Table 1–9, 부록 Figure A.1–A.26, Table A.1–A.14, Table B.1을 모두
 - 논문 식 (4)–(6)의 prediction-weighted top/bottom decile portfolio
 - Table 1, Table 2, Figure 3, Table B.1의 정적 산출물 생성
 - 한국 factor와 sentiment 입력 계약 및 검증
+- ECOS 통안증권 91일 RF, ESI 경기상태, 고정-calibration PCA sentiment proxy
+- proxy sentiment와 non-PIT 3개월-lag Carhart를 사용한 parsimonious 전구간 실행
 - 합성 자료 기반 단위 테스트
 - share-class TNA 일치, 수익률 차이, 통합 판정 진단 Figure
 
@@ -45,7 +47,8 @@ uv run python kaniel-2023-replication/run.py static
 uv run python kaniel-2023-replication/run.py build-panel --start 2023-01-01 --end 2023-12-31
 uv run python kaniel-2023-replication/run.py validate-share-classes
 uv run python kaniel-2023-replication/run.py share-class-figures
-uv run python kaniel-2023-replication/run.py build-stock-factors --help
+uv run python scripts/kaist_pilot/build_kaniel_ecos_inputs.py
+uv run python kaniel-2023-replication/run.py build-stock-factors --start 2015-01-01 --end 2026-07-20 --reporting-lag-months 3 --allow-non-pit-book-equity
 uv run python kaniel-2023-replication/run.py run-parsimonious
 uv run pytest kaniel-2023-replication/tests
 uv run ruff check kaniel-2023-replication
@@ -69,24 +72,32 @@ Parquet에 원 행을 남긴다.
 
 ## 외부 입력
 
-`inputs/README.md`의 계약에 맞춰 다음 월별 파일이 필요하다.
+`inputs/README.md`의 계약에 맞춰 다음 월별 파일을 사용한다.
 
-- 한국 Carhart 4요인과 무위험수익률
-- 한국 투자심리
-- CFNAI에 대응하는 한국 실물활동 지표 또는 명시적인 대체변수
+- **확보**: ECOS 통안증권 91일물 기반 월 무위험수익률
+- **확보(robustness proxy)**: ECOS ESI 순환변동치 기반 경기상태
+- **확보(sensitivity)**: 3개월 reporting lag를 적용한 non-PIT Carhart 4요인
+- **확보(proxy)**: 5개 ECOS 시장활동 구성요소의 고정-calibration PCA sentiment
+- **미확보(exact)**: 공시일 기반 PIT HML과 Baker–Wurgler 정의에 가까운 sentiment
 
-역사적 fee, turnover, full holdings가 확보되기 전에는 관련 Figure/Table을
-가짜 proxy로 채우지 않는다.
+ECOS-only sentiment는 2005~2014의 평균·표준편차·첫 PC loading을 고정하고
+관측값에 1개월 availability lag를 적용한다. 상세 항목 코드·loading·추가
+필요자료는 `docs/kaniel-ecos-inputs.md`에 있다.
+
+역사적 fee, turnover, full holdings가 확보되기 전에는 해당 변수가 필수인
+Figure/Table을 가짜 proxy로 채우지 않는다. 다만 parsimonious 모형과 macro
+단계는 명시적인 ECOS-only sentiment proxy로 계속 구현한다.
 
 `build-stock-factors`의 기본 동작도 hard fail이다. 현재 재무 facts에는 당시
 실제 announcement timestamp가 없고 2026년에 수집한 여러 dump revision이
 섞여 있기 때문이다. `--allow-non-pit-book-equity`와 명시적 reporting lag를
 함께 준 실행만 sensitivity output으로 허용하며 exact factor로 승격하지 않는다.
 
-`run-parsimonious`는 외부 factor·RF·sentiment와 class-month panel이 모두 있을
-때만 실행된다. 현재 sklearn backend는 논문의 64-unit ReLU, Adam, L2, 8-model
-ensemble을 구현하지만 dropout 0.95는 구현하지 않는다. 이 차이는 manifest에
-남으며 exact neural-network 결과로 간주하지 않는다.
+`run-parsimonious`는 factor·RF·sentiment와 class-month panel이 모두 있을 때만
+실행된다. 2026-08-07 sensitivity 실행은 136,641개 OOS prediction과 45개월
+portfolio를 생성했다. 출력 파일명과 manifest에 `proxy`를 명시한다. 현재
+sklearn backend는 논문의 64-unit ReLU, Adam, L2, 8-model ensemble을 구현하지만
+dropout 0.95는 구현하지 않으므로 exact neural-network 결과로 간주하지 않는다.
 
 ## 데이터 계보
 

@@ -266,12 +266,14 @@ overweight/underweight를 구성할 수 없다. WRDSS 1,044개 object에서도
 class-month panel, abnormal return, fund momentum, share-class gate에 더해 국내주식
 월별 MKT·SMB·HML·MOM builder, random/chronological 3-fold cross-OOS 64-unit
 ReLU MLP ensemble, 식 (4)–(6) prediction-weighted decile portfolio를 구현했다.
-다만 이는 **코드 완료이지 empirical replication 완료가 아니다**. 한국 RF와
-sentiment가 없고, 재무 facts에는 실제 historical announcement timestamp가
-없어 exact HML을 PIT로 만들 수 없다. 기본 CLI는 이 상태에서 hard fail하며,
-명시적 non-PIT override 결과만 sensitivity로 분류한다. sklearn backend가
-dropout 0.95를 지원하지 않는 차이도 남아 있으므로 Table 7은 아직
-`implemented`로 승격하지 않았다.
+**2026-08-07 proxy 실행 상태**: ECOS 5개 시장활동 구성요소를 2005~2014
+고정-calibration PCA로 결합하고 1개월 availability lag를 적용한 불완전
+sentiment proxy를 만들었다. 3개월 reporting lag의 명시적 non-PIT Carhart
+sensitivity와 결합해 전체 class-month panel에서 136,641개 OOS prediction과
+45개월 portfolio를 생성했다. 따라서 parsimonious 단계는 `implemented_proxy`다.
+다만 Baker–Wurgler exact-definition sentiment와 historical announcement
+기반 PIT HML은 여전히 없고 sklearn backend도 dropout 0.95를 구현하지 않으므로
+exact empirical replication 또는 `implemented`로 승격하지 않는다.
 
 - **저자**: Ron Kaniel, Zihan Lin, Markus Pelger, Stijn Van Nieuwerburgh
 - **저널**: Journal of Financial Economics (tier 1), 2023
@@ -324,8 +326,9 @@ Priority 1 실측 결과는 다음과 같다. `DW_ZI_펀드일별분석`은 1996
 과거 전 기간에 가산해 gross return을 만드는 것은 허용하기 어렵다. turnover
 자료도 ZI 30개 안에는 없다. 이 한계는 13개 특성·gross-return 확장에는
 영향을 주지만, `flow`·fund momentum·sentiment 중심의 parsimonious model은
-막지 않는다. 남은 핵심 확인은 실현수익률의 순보수·분배금 처리, share-class
-합산 공식, 한국 Carhart factor와 Baker–Wurgler sentiment 대용변수다.
+막지 않는다. 이 최소 모형은 ECOS-only proxy로 실행했다. 남은 핵심 확인은
+실현수익률의 순보수·분배금 처리, share-class
+합산 공식, PIT Carhart factor와 Baker–Wurgler exact-definition sentiment다.
 
 **원문 검토 상태**: PDF/Markdown 정독 완료. 정확한 predictor는 46개
 holdings-based stock characteristics와 13개 fund/family characteristics다.

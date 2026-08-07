@@ -145,13 +145,15 @@ ZI `DW_ZI_펀드자산내역`에서 확인된 필드:
 - 한국형 MKT, SMB, HML, MOM; 확장 시 RMW, CMA, short/long reversal
 - 한국 투자심리(sentiment)와 경기상태
 
-권장 방식:
+확보 및 권장 방식:
 
+- ECOS 통안증권 91일물을 월 decimal로 변환한 RF를 2006-09부터 확보했다.
 - factor는 FnGuide 주가·시가총액·장부가치로 직접 PIT 구성한다.
 - sentiment는 두 버전으로 분석한다.
-  1. 한국은행 소비자심리지수/경제심리지수와 같은 공개 월별 지표
-  2. Baker–Wurgler에 가까운 한국형 합성지수: 시장 turnover, IPO 수·첫날 수익률, 주식발행 비중, dividend premium, 가능하면 closed-end-fund discount
+  1. 확보한 ECOS ESI·CCSI를 한국 경기상태 robustness proxy로 사용하되 발표시차를 반영한다.
+  2. Baker–Wurgler에 가까운 한국형 합성지수: 확보한 시장 turnover에 IPO 수·첫날 수익률, 주식발행 비중, dividend premium, 가능하면 closed-end-fund discount를 추가한다.
 - IPO 상장일·공모가·공모금액과 공모가 대비 주가 흐름은 [KRX KIND](https://kind.krx.co.kr/listinvstg/listingcompany.do?method=searchListingTypeMain)에서 확인할 수 있다.
+- ECOS에서 확보한 개인 매수·매도 거래대금, 투자자 예탁금, 신용융자잔고와 회전율로 고정-calibration PCA proxy를 만들었다. 이는 실행용 불완전 proxy이지 exact sentiment가 아니다.
 
 ## 4. 논문별 상세 요구사항
 
@@ -165,10 +167,10 @@ ZI `DW_ZI_펀드자산내역`에서 확인된 필드:
 
 | 변수 | 원 논문 정의 | 회사 DB 매핑 | 상태 |
 |---|---|---|---|
-| 다음 달 abnormal return | 최근 36개월 Carhart beta로 다음 달 factor compensation 제거 | ZI `실현수익률` + 직접 만든 한국 Carhart factors | 원자료 있음, factor 구축 필요 |
+| 다음 달 abnormal return | 최근 36개월 Carhart beta로 다음 달 factor compensation 제거 | ZI `실현수익률` + 직접 만든 한국 Carhart factors | non-PIT 3개월-lag sensitivity 실행 |
 | `flow` | `TNA_t / (TNA_{t-1}(1+R_t)) - 1` | ZI `순자산`, `실현수익률` | 가능 |
 | `F_r12_2` | 예측 직전 2~12개월 abnormal return 평균; 최소 8개 관측 | 위 abnormal return panel | 가능 |
-| `sentiment` | Baker–Wurgler investor sentiment | 한국형 sentiment 별도 구축 | 핵심 미확정 |
+| `sentiment` | Baker–Wurgler investor sentiment | ECOS 5개 구성요소 고정-calibration PCA | 불완전 proxy 실행, exact 지수 미완성 |
 | fee/net return | expense ratio 및 수수료 후 abnormal return | `DW_ZI_펀드약관보수` | 단위·합산식 확인; 현재값만 있어 역사적 gross return 복원 불가 |
 | share-class 통합 | class TNA 가중 fund-level return | `DW_ZI_클래스펀드` + 일별분석 | 구조 확인; 가중합산 공식 검증 필요 |
 | active domestic equity universe | 국내주식 중심 active fund | 유형/속성코드 + 자산평가액 | 가능 |
@@ -215,7 +217,7 @@ ZI 대응:
 4. ~~보수율의 과거 이력~~ — 이력 없음, 현재 snapshot만 존재; 역사적 gross return 복원에 사용하지 않음
 5. ~~ZI turnover ratio 원천~~ — ZI 30개에는 없음; 외부 원천이 없으면 해당 predictor 제외
 6. 운용사코드 변경·합병 history
-7. 한국형 Carhart factor와 sentiment 선택
+7. ~~실행용 factor와 sentiment~~ — non-PIT Carhart와 ECOS-only PCA proxy로 완료; exact PIT/Baker–Wurgler 확장은 남음
 
 ## 4.2 Chalmers & Dayani (2026) — ZI 기준 보류/no-go
 
@@ -637,7 +639,7 @@ short·lending·borrowing·turnover는 `FF02` 자유서술 96행 전체를 스�
 
 DB 확인 순서는 다음이 가장 효율적이다.
 
-1. **Kaniel을 기본 선택**으로 두고, return의 보수·분배금 처리와 한국 factor/sentiment를 확인한다.
+1. **Kaniel을 기본 선택**으로 두고, 실행 완료한 factor/sentiment proxy를 exact-definition 입력과 비교하며 return의 보수·분배금 처리를 확인한다.
 2. **Arnott를 데이터 기준 2순위**로 두고, KRX 구성종목 전후 diff와 announcement date·변경사유를 확인한다.
 3. ~~최적화·mandate 주제를 선호하면 Beber를 조건부 3순위로 두되, short/lending/borrowing/turnover 자유서술 코딩과 표본 수를 gate test한다.~~ **2026-07-18: Beber는 30-fund pilot 실측으로 gate test를 완료했고 결과는 실패다. 제외로 확정하며 더 이상 조건부 후보가 아니다.**
 4. Kaniel의 share-class 합산과 운용사 변수를 검증한다. family data는 1999년부터 존재하지만 개인 manager 변수는 제외한다.

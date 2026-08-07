@@ -93,7 +93,12 @@ def _build_panel(args: argparse.Namespace) -> int:
 def _validate_external(args: argparse.Namespace) -> int:
     config = _load(args)
     missing = []
-    for key in ("factor_monthly", "sentiment_monthly", "activity_monthly"):
+    for key in (
+        "factor_monthly",
+        "risk_free_monthly",
+        "sentiment_monthly",
+        "activity_monthly",
+    ):
         path = config.path("data", key)
         print(f"{key}: {'OK' if path.exists() else 'MISSING'} - {path}")
         if not path.exists():
@@ -115,8 +120,16 @@ def _build_stock_factors(args: argparse.Namespace) -> int:
             "Exact HML is blocked because historical announcement timestamps are absent. "
             "Use --allow-non-pit-book-equity only for a labeled sensitivity run."
         )
-    if not args.risk_free:
-        raise ValueError("--risk-free is required and must contain month,rf in decimal units")
+    risk_free_path = (
+        Path(args.risk_free).resolve()
+        if args.risk_free
+        else config.path("data", "risk_free_monthly")
+    )
+    if not risk_free_path.exists():
+        raise FileNotFoundError(
+            "Risk-free input is missing; provide --risk-free or configure "
+            "data.risk_free_monthly with month,rf in decimal units"
+        )
     price_path = config.path("data", "stock_prices")
     filters = []
     if args.start:
@@ -154,7 +167,6 @@ def _build_stock_factors(args: argparse.Namespace) -> int:
         allow_non_pit=allow_non_pit,
     )
     equity_factors = build_carhart_equity_factors(monthly, book)
-    risk_free_path = Path(args.risk_free).resolve()
     factors = attach_risk_free(equity_factors, pd.read_csv(risk_free_path))
     output = (
         Path(args.output).resolve()
@@ -238,17 +250,25 @@ def _run_parsimonious(args: argparse.Namespace) -> int:
     tables = config.output_root / "tables"
     intermediate.mkdir(parents=True, exist_ok=True)
     tables.mkdir(parents=True, exist_ok=True)
-    prediction_path = intermediate / "parsimonious_cross_oos_predictions.parquet"
-    portfolio_path = tables / "table_07_parsimonious_portfolios.csv"
+    prediction_path = intermediate / "parsimonious_proxy_cross_oos_predictions.parquet"
+    portfolio_path = tables / "table_07_parsimonious_proxy_portfolios.csv"
     predictions.to_parquet(prediction_path, index=False)
     portfolios.to_csv(portfolio_path, index=False, encoding="utf-8")
     write_manifest(
-        config.output_root / "manifests" / "parsimonious.json",
+        config.output_root / "manifests" / "parsimonious_proxy.json",
         {
-            "kind": "parsimonious_cross_oos",
-            "inputs": {key: str(path) for key, path in required_paths.items()},
+            "kind": "parsimonious_proxy_cross_oos",
+            "inputs": {
+                key: {"path": str(path), "sha256": sha256(path)}
+                for key, path in required_paths.items()
+            },
+            "sentiment_definition": config.raw["sentiment"],
             "model": model,
-            "dropout_gap": "sklearn MLP backend does not implement paper dropout_keep_probability=0.95",
+            "limitations": [
+                "Sentiment is an incomplete ECOS-only proxy, not Baker-Wurgler.",
+                "Carhart factors use a labeled non-PIT reporting-lag sensitivity.",
+                "The sklearn MLP backend does not implement dropout_keep_probability=0.95.",
+            ],
             "prediction_rows": int(predictions["prediction"].notna().sum()),
             "portfolio_months": len(portfolios),
         },
@@ -340,7 +360,10 @@ def build_parser() -> argparse.ArgumentParser:
     stock_factors.add_argument("--end")
     stock_factors.add_argument("--reporting-lag-months", type=int)
     stock_factors.add_argument("--allow-non-pit-book-equity", action="store_true")
-    stock_factors.add_argument("--risk-free")
+    stock_factors.add_argument(
+        "--risk-free",
+        help="Optional override for the configured month,rf CSV.",
+    )
     stock_factors.add_argument("--output")
     parsimonious = subparsers.add_parser(
         "run-parsimonious",

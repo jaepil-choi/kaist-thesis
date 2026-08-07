@@ -119,9 +119,17 @@ def _weighted_return(group: pd.DataFrame) -> float:
 def _assign_annual_value_buckets(
     monthly: pd.DataFrame, book_equity: pd.DataFrame
 ) -> pd.DataFrame:
-    june = monthly.loc[monthly["month"].dt.month.eq(6), ["month", "ticker", "market_cap"]].copy()
+    june = monthly.loc[
+        monthly["month"].dt.month.eq(6),
+        ["month", "ticker", "market_cap"],
+    ].copy()
+    june["month"] = pd.to_datetime(june["month"], errors="raise").astype(
+        "datetime64[ns]"
+    )
     book = book_equity.copy()
-    book["available_date"] = pd.to_datetime(book["available_date"], errors="raise")
+    book["available_date"] = pd.to_datetime(
+        book["available_date"], errors="raise"
+    ).astype("datetime64[ns]")
     records: list[pd.DataFrame] = []
     for ticker, formation in june.groupby("ticker", sort=False):
         history = book.loc[book["ticker"].eq(ticker)].sort_values("available_date")

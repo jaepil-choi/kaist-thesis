@@ -57,6 +57,8 @@ def test_monthly_carhart_builder_uses_lagged_formation_data() -> None:
             ],
         }
     )
+    monthly["month"] = monthly["month"].astype("datetime64[us]")
+    book["available_date"] = book["available_date"].astype("datetime64[s]")
     factors = build_carhart_equity_factors(monthly, book)
     usable = factors.dropna(subset=["mkt", "smb", "hml", "mom"])
     assert not usable.empty

@@ -99,7 +99,12 @@ def audit_inputs(config: ReplicationConfig) -> dict[str, Any]:
             "date_max": date_max,
         }
 
-    for name in ("factor_monthly", "sentiment_monthly", "activity_monthly"):
+    for name in (
+        "factor_monthly",
+        "risk_free_monthly",
+        "sentiment_monthly",
+        "activity_monthly",
+    ):
         path = config.path("data", name)
         result["external_inputs"][name] = {
             "path": str(path),

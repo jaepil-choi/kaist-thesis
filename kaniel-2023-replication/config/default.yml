@@ -8,9 +8,10 @@ data:
   class_relations: data/kaist_pilot/canonical/common/zi_reference/dw_zi_클래스펀드.parquet
   stock_prices: data/kaist_pilot/canonical/common/korean_equity/adjusted_prices.parquet
   statement_facts: data/kaist_pilot/canonical/common/korean_equity/fng_statement_facts
-  factor_monthly: kaniel-2023-replication/inputs/external/korea_carhart_monthly.csv
-  sentiment_monthly: kaniel-2023-replication/inputs/external/korea_sentiment_monthly.csv
-  activity_monthly: kaniel-2023-replication/inputs/external/korea_activity_monthly.csv
+  factor_monthly: kaniel-2023-replication/outputs/intermediate/korea_carhart_monthly_non_pit.csv
+  risk_free_monthly: data/kaist_pilot/canonical/kaniel_2023/ecos/derived/risk_free_monthly.csv
+  sentiment_monthly: data/kaist_pilot/canonical/kaniel_2023/ecos/derived/korea_sentiment_proxy_monthly.csv
+  activity_monthly: data/kaist_pilot/canonical/kaniel_2023/ecos/derived/korea_activity_monthly.csv
 
 outputs:
   root: kaniel-2023-replication/outputs
@@ -54,6 +55,19 @@ factor_construction:
   allow_non_pit_book_equity: false
   market_cap_basis_verified: false
   price_total_return_verified: false
+
+sentiment:
+  kind: ecos_only_fixed_calibration_pca_proxy
+  exact_baker_wurgler: false
+  calibration_start: 2005-01-31
+  calibration_end: 2014-12-31
+  application_start: 2015-01-31
+  availability_lag_months: 1
+  missing_components:
+    - IPO count
+    - IPO first-day return
+    - equity share in total issuance
+    - dividend premium
 
 model:
   backend: sklearn_mlp_no_dropout

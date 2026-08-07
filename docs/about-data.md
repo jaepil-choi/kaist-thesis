@@ -28,8 +28,8 @@ data/kaist_pilot/
 └── archive/                   # no-go 판정 근거
 ```
 
-현재 물리 파일은 63개, 3,613,535,275바이트다. 구성은 canonical 39개,
-metadata 21개, archive 3개다. `data/kaist_pilot/`에는 이 데이터·계보
+현재 물리 파일은 81개, 3,615,073,678바이트다. 구성은 canonical 56개,
+metadata 22개, archive 3개다. `data/kaist_pilot/`에는 이 데이터·계보
 파일만 두고, 설명 문서는 이 문서에서 관리한다.
 
 ## 3. Canonical 데이터셋
@@ -53,10 +53,31 @@ TNA·fund count·family momentum 검증용이다.
   gross/net·분배금 처리는 vendor 정의 확인이 남아 있다.
 - share-class는 `펀드구분=1` 관계만 사용하고 모자펀드 many-to-many 관계를
   같은 방식으로 합치지 않는다.
-- 한국 Carhart factor의 국내주식 입력은 §3.4로 복사했지만 월별 factor 구성은
-  아직 필요하다. sentiment는 별도 외부 입력이 필요하다.
+- 한국 Carhart factor의 국내주식 입력은 §3.4로 복사했고 ECOS 통안증권 91일
+  RF도 확보했지만, 월별 MKT·SMB·HML·MOM 완성본은 아직 필요하다.
+- ECOS ESI 경기상태 proxy와 5개 시장활동 구성요소의 고정-calibration PCA
+  sentiment proxy를 확보했다. IPO·발행·dividend premium을 포함한
+  exact-definition Baker–Wurgler sentiment는 아직 없다.
 - 역사적 fee와 turnover가 없으므로 현재 snapshot fee를 과거 전 기간에
   적용하거나 top-10 holdings로 turnover를 근사하지 않는다.
+
+### 3.1.1 Kaniel용 ECOS 월별 입력 — 2026-08-07 수집
+
+경로: `canonical/kaniel_2023/ecos/`
+
+| 구분 | 파일 | 행 수 | 기간 | 용도 |
+|---|---|---:|---|---|
+| derived | `risk_free_monthly.csv` | 239 | 2006-09~2026-07 | 통안증권 91일 기반 월 decimal RF |
+| derived | `risk_free_proxies_monthly.csv` | 425 | 1991-03~2026-07 | 통안증권·CD 비교 |
+| derived | `korea_activity_monthly.csv` | 283 | 2003-01~2026-07 | ESI 순환변동치 기반 robustness proxy |
+| derived | `macro_proxies_monthly.csv` | 283 | 2003-01~2026-07 | ESI 원계열·순환변동치·CCSI |
+| derived | `sentiment_ecos_components_monthly.csv` | 338 | 1998-06~2026-07 | 회전율·개인수급·예탁금·신용융자 후보 패널 |
+| derived | `korea_sentiment_proxy_monthly.csv` | 139 | 2015-01~2026-07 | 고정-calibration PCA, 1개월 lag proxy |
+
+raw JSON 11개와 변환 CSV 6개의 표·항목 코드, 단위, 기간, SHA-256은
+`metadata/manifests/113_kaniel_ecos_inputs_20260807.json`에 기록했다. API key는
+저장하지 않았고 request template은 redaction했다. 상세 정의와 미확보
+sentiment 구성요소는 `docs/kaniel-ecos-inputs.md`를 따른다.
 
 ### 3.2 Arnott et al. (2023) — 현재 2순위
 
