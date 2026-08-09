@@ -1,0 +1,8 @@
+# Model parameters
+model_name: "FourierFFN"  # name of a class defined in models folder and initialized in model folder's __init__.py
+model: {  #  contains parameter settings for __init__() function of class with name `model_name`
+  lookback: 30,  # number of days of preprocessed residual time series to feed into model
+  dropout: 0.25,
+  hidden_units: [30,16,8,4],  # must start with lookback
+}
+preprocess_func: "preprocess_fourier"

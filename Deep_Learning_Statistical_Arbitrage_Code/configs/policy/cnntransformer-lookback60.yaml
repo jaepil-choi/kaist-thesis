@@ -1,0 +1,15 @@
+# Model parameters
+model_name: "CNNTransformer"  # name of a class defined in models folder and initialized in model folder's __init__.py
+model: {  #  contains parameter settings for __init__() function of class with name `model_name`
+  lookback: 60,  # number of days of preprocessed residual time series to feed into model
+  dropout: 0.25,
+  filter_numbers: [1,8],
+  filter_size: 2,  
+  attention_heads: 4,
+  hidden_units_factor: 2,  # multiplicand of last item in `filter_numbers`; determines number of hidden units (e.g. 2*8 = 16)
+  # hidden_units: 16,  # use either hidden_units or hidden_units_factor, but not both
+  normalization_conv: True,  # normalize convolutions or not
+  use_transformer: True,
+  use_convolution: True,
+}
+preprocess_func: "preprocess_cumsum"  # name of a function defined in preprocess.py

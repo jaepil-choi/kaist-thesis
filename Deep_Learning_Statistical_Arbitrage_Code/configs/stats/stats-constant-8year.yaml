@@ -1,0 +1,4 @@
+CNNTransformer:
+  results_dir: 'results/results-constant-8year-replication'
+  run_id: ''
+  tag: ''

@@ -1,0 +1,14 @@
+CNNTransformer:
+  results_dir: 'results/results-main-replication'
+  run_id: ''
+  tag: ''
+
+FourierFFN:
+  results_dir: 'results/results-main-replication'
+  run_id: ''
+  tag: ''
+
+OUThreshold:
+  results_dir: 'results/results-main-replication'
+  run_id: ''
+  tag: ''

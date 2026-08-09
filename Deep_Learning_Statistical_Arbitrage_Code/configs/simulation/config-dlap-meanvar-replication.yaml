@@ -1,0 +1,91 @@
+# Major parameters
+mode: "test"  # "train" or "test"; "train" will train a model and save it to the output_dir; "test" will load a model from the trained_model_dir and run it on the test set
+results_tag: "replication"  # optional; try not to use underscores in this tag, use hyphens instead
+debug: False  # set to True to turn on debug logging and file naming
+# Computation parameters
+device: "cuda"  # "cpu" or "cuda"
+# Data parameters
+output_dir: "./results/results-meanvar-replication"  # path to where results will be stored
+data_dir: "./data"  # path to where raw data is stored
+residuals_dir: "./residuals-replication"  # path to where residual time series and composition matrices are stored
+start_date: "1998-01-02"  # inclusive date to start trading policy usage
+end_date: "2016-12-30"  # inclusive date to end trading policy usage
+use_comp_mtx: True  # use residual composition matrix to compute turnover, short proportion, etc.
+cap_proportion: 0.01  # defines asset universe: 0.01 corresponds to a residual data set
+factor_models: {  # number of factors per residual time series to test, for each factor model (these run sequentially)
+    IPCA: [5],
+    PCA: [],
+    FamaFrench: [],
+}
+factor_model_settings: {
+    IPCA: {
+        directory: "ipca",
+        residual_tag: "IPCA_DailyOOSresiduals",
+        comp_mtx_tag: "IPCA_DailyMatrixOOSresiduals",
+        initial_months: 420,
+        window_size: 240,
+        initial_oos_year: 1998,
+        reestimation_freq: 12,
+    },
+    PCA: {
+        directory: "pca",
+        residual_tag: "AvPCA_OOSresiduals",
+        comp_mtx_tag: "AvPCA_OOSMatrixresiduals",
+        initial_months: 420,
+        rolling_window: 60,
+        covariance_window_size: 252,
+        initial_oos_year: 1998,
+    },
+    FamaFrench: {
+        directory: "famafrench",
+        residual_tag: "DailyFamaFrench_OOSresiduals",
+        comp_mtx_tag: "DailyFamaFrench_OOSMatrixresiduals",
+        initial_months: 420,
+        rolling_window: 60,
+        initial_oos_year: 1998,
+    },
+}
+perturbation: {  # perturbation of residual time series by noise is optional, leave empty to disable
+    # "noise_type" : "gaussian",
+    # "noise_mean" : 0.0,
+    # "noise_std_pct" : 2,
+    # "noise_only" : False,
+    # "per_residual" : True,
+}
+# Training parameters
+num_epochs: 100
+optimizer_name: "Adam"  # see PyTorch docs for potential optimizers
+optimizer_opts: {  # see PyTorch docs for optimizer options
+  lr: 0.001,
+}
+batch_size: 125
+stride: 125  # size of test partition to roll forward in time
+rolling_retrain: False  # set to False for no rolling retraining (i.e. train once, test for all data past training set)
+length_training: 1000  # size of rolling training window in trading days
+early_stopping: False  # employ early stopping or not
+objective: "meanVar"  # objective function: 'sharpe' or 'meanVar'
+validation_freq: 10  # how often to perform validation/testing during training (must be <= num_epochs)
+# Trading parameters
+weight_policy: {
+  type: "residuals",  # could be "assets", to apply this weight policy in asset-weight-space (vs residual-weight-space)
+  name: "normal",  # could be "normal" (no policy), "sparse_percent" (needs "percent" and "top_type" properties), or "moving_average" (needs "window" property)
+  # window: 6,  # for moving_average policy, number of days to average prior portfolio weights
+  # percent: 0.10,  # for sparse_percent policy, percent (in decimal) of largest residual weights to keep
+  # top_type: "weights"  # "weights" for selecting weights by weights' magnitudes, "residuals" for selecting weights by residuals' magnitudes
+}
+holding_days: 1  # number of days to hold portfolio to optimize for
+# Market frictions parameters
+trans_cost: 0  # cost in bps per txn side per equity, e.g. 0.0005
+hold_cost: 0  # cost in bps for short positions per equity per day, e.g. 0.0001
+# Other parameters
+initial_t: 0  # subperiod index to start from (usually out of 20-50). set to 0 to start from initial
+factor_model_tag: ""  # tag used to compute preprocessed data, factor model output, residuals, etc; used in run_factor_model.py
+filter_assets_in_comp_mtx: False  # True to filter assets in the composition matrix to just those which will be used (True will confer a speedup)
+gpu_data: True  # True to use GPU for all data processing of composition matrices in training loop; only enable if >36 GB GPU memory is available
+disable_prefilter: True  # True to disable prefiltering of residuals (False will confer a speedup)
+test_model: {
+  log_tag: "trained-model",
+  subperiod_start: 0,
+  subperiod_end: 031,
+  trained_model_dir: "./trained-models/meanvar-replication",
+}

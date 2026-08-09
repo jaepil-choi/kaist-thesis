@@ -1,0 +1,4 @@
+CNNTransformer:
+  results_dir: 'results/results-lookback60-replication'
+  run_id: ''
+  tag: ''

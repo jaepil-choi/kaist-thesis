@@ -1,0 +1,9 @@
+CNNTransformer:
+  results_dir: 'results/results-meanvar-replication'
+  run_id: ''
+  tag: ''
+
+FourierFFN:
+  results_dir: 'results/results-meanvar-replication'
+  run_id: ''
+  tag: ''

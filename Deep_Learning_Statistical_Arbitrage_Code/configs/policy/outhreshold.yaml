@@ -1,0 +1,9 @@
+# Model parameters
+model_name: "OUThreshold"  # name of a class defined in models folder and initialized in model folder's __init__.py
+model: {  #  contains parameter settings for __init__() function of class with name `model_name`
+  lookback: 30,  # number of days of preprocessed residual time series to feed into model
+  signal_threshold: 1.25,  # threshold for trading signal to generate positions, defined as c_thresh in the paper
+  r2_threshold: 0.25,  # minimum R² value required for trading, defined as c_crit in the paper
+  use_robust_estimators: False  # use robust estimators to compute means, variances, and covariances
+}
+preprocess_func: "preprocess_cumsum"  # name of a function defined in preprocess.py
