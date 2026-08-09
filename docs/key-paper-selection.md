@@ -14,14 +14,24 @@ journal key paper를 한국 데이터로 replicate/extend"하는 게 목표이�
 있는가, (2) 그 논문이 기존 방법론을 적용하는 설계인가(새 방법론 제안이면
 master's thesis에 부적합)이다. 아래 각 후보의 "데이터·재현성" 메모 참고.
 
-### 현재 판정 및 실행 우선순위 (2026-07-18 갱신)
+### 현재 판정 및 실행 우선순위 (2026-08-09 갱신)
 
-후보 논문의 PDF/Markdown 원문 정독과 회사 DW Priority 1~10 중 1~6·9·10
-조사를 완료했다.
-아래 순서는 **주제 선호가 아니라 현재 확인된 데이터의 실행확실성 순서**다.
+기존 #1~#9 후보는 PDF/Markdown 원문 정독과 회사 DW Priority 1~10 중
+1~6·9·10 조사를 완료했다. #10은 2026-08-09 새로 발굴한 후보로, 현재는
+출판사 초록과 공식 공개 코드를 확인했으며 원문은 아직 확보하지 않았다.
+아래 기존 1~2위는 **주제 선호가 아니라 현재 확인된 데이터의 실행확실성
+순서**이고, #10은 사용자의 새 관심사에 따른 별도 우선검토 후보다.
 세부 변수·회사 DB 확인 항목은 `docs/candidate-paper-data-inventory.md`, 실제
 DW 조사 로그는 `kwam-report-automation/temp/data-exploration/
 findings-zi-fund-data.md`에 정리되어 있다.
+
+- **신규 우선검토 — #10 Deep Learning Statistical Arbitrage** — 조건부 잠재
+  factor의 residual portfolio, convolutional transformer, 제약조건을 반영한
+  최적 trading policy를 결합한 최신 statistical-arbitrage 연구. 사용자의
+  pairs trading·machine learning·deep learning 관심과 가장 직접적으로 맞는다.
+  다만 원문 미확보 상태이고, 한국 일별 수정수익률·point-in-time universe·
+  월별 46개 기업특성·공매도/거래비용 자료의 coverage를 아직 실측하지 않았으므로
+  현재 판정은 **후보/go가 아니라 원문 정독 및 data gate 대기**다.
 
 1. **#5 Machine-learning the skill of mutual fund managers** — 펀드 특성으로
    미래 risk-adjusted performance를 예측하는 ML 기반 fund skill 연구.
@@ -525,6 +535,65 @@ flow·return·fee·volatility를 설명한다. ZI top-10은 이 정의를 충족
 못하므로, 금융투자협회·운용사·별도 vendor에서 최소 8~10년의 full holdings를
 확보하기 전에는 실제 go로 전환하지 않는다.
 
+### 10. Deep Learning Statistical Arbitrage
+
+**상태: 신규 우선검토 후보 — 출판사 초록·공식 코드 확인, 원문 미확보.**
+
+- **저자**: Jorge Guijarro-Ordonez, Markus Pelger, Greg Zanotti
+- **저널**: Management Science (tier 2), 2025
+- **온라인 공개일**: 2025-12-04
+- **DOI**: https://doi.org/10.1287/mnsc.2022.03132
+- **OpenAlex ID**: W3169684115
+
+**메타데이터 주의**: OpenAlex는 이 논문의 오래된 working-paper record를
+2021년 논문처럼 표시하고 피인용도 과소 집계한다. 서지정보는 INFORMS의 공식
+출판 페이지를 source of truth로 삼는다. 논문은 2025년 12월 Management
+Science Articles in Advance로 정식 공개됐다.
+
+**Abstract 요약**: 비슷한 자산 사이의 일시적 가격차를 이용하는 statistical
+arbitrage를 세 단계로 일반화한다. 먼저 조건부 잠재 asset-pricing factor로
+설명되지 않는 residual portfolio를 만들어 유사자산의 상대가격 오차를
+추출한다. 다음으로 convolutional transformer가 residual의 시계열 신호를
+학습하고, 마지막으로 거래비용·short exposure·leverage 등 제약 아래
+risk-adjusted return을 최대화하는 trading policy를 구성한다. 미국 대형주
+일별자료의 표본외 분석에서 기존 factor-residual 및 mean-reversion benchmark를
+상회하는 성과를 보고한다.
+
+**왜 후보인가**: 기존 후보들의 fund selection·index rebalancing보다 사용자가
+새로 밝힌 statistical arbitrage, pairs trading, machine learning, deep
+learning 관심을 한 논문에서 직접 결합한다. 고전적인 두 종목 공적분 전략이
+아니라 대규모 주식 패널에서 factor residual portfolio를 만들기 때문에,
+기존 KAIST의 distance·cointegration·clustering 기반 pairs-trading 논문과도
+방법론적으로 구분될 가능성이 높다. 최신 tier-2 논문이고 공식 코드가 공개돼
+있다는 점도 replication 후보로 유리하다.
+
+**한국 replication 아이디어**: KOSPI·KOSDAQ의 유동성 높은 보통주를 대상으로
+원 논문의 전월 말 시가총액 기준을 그대로 적용하고, Fama-French·PCA·IPCA로
+일별 residual portfolio를 구성한다. 동일한 rolling estimation, signal
+lookback, 재학습 주기와 CNN+Transformer trading policy를 사용해 gross/net
+성과를 재현한다. exact replication을 먼저 완료한 뒤에만 한국의 공매도 가능
+여부·대차비용·공매도 제한 국면·가격제한폭을 반영한 extension을 분리해 수행한다.
+
+**데이터·재현성**: **중고위험, 아직 미검증**. 최소 사양에는 장기간 일별
+수정수익률, 전월 말 시가총액, 상장·상장폐지·corporate action을 포함하는
+point-in-time security master, 일별 무위험수익률, 한국 Fama-French·momentum·
+reversal factor가 필요하다. PCA와 Fama-French residual branch는 이 자료로
+구축할 수 있지만, 논문의 IPCA branch까지 완전 재현하려면 공시일 기준 재무자료와
+과거수익률에서 계산한 월별 46개 firm characteristics가 추가로 필요하다.
+
+공개 저장소에는 factor-model residual 생성과 trading-policy 학습 코드가
+있지만, 저자들은 라이선스 때문에 원본 주식수익률과 기업특성 데이터는 공개하지
+않는다고 명시한다. 따라서 공개 코드가 raw-data gate를 제거하지는 않는다.
+원 논문은 대형주에 대해 turnover와 short exposure의 선형 cost penalty를
+사용하고 market impact는 직접 모델링하지 않는다. 한국 결과의 investability를
+설득력 있게 검증하려면 매매수수료·거래세·bid-ask spread·ADV, 종목별 공매도
+가능 여부, 대차잔고·차입비용 자료를 별도로 확보해야 한다.
+
+**원문 검토 상태와 다음 gate**: 사용자가 원문을 제공한 뒤 모든 핵심 figure와
+table, 표본기간, universe filter, factor 수, rolling window, hyperparameter,
+비용가정과 benchmark를 replication checklist로 만든다. 그 전에는 초록의
+성과주장을 확정 사실로 확대해석하지 않고, 후보 상태를 유지한다.
+
 ### 과거 학생 논문과의 직접 중복 점검
 
 `docs/other-students-works/MFE 25학번 논문 주제 현황 파악 -
@@ -548,6 +617,13 @@ paper의 replication일 수 없으므로 제외 사유로 보지 않는다.
 #8, #9는 펀드 성과평가, 기관투자자, ETF, KOSPI200 편입·편출 등 상위 주제가
 유사한 과거 논문은 있으나, 해당 key paper의 직접 replication으로 확인된
 학생 논문은 없으므로 이 점을 이유로 제외하지 않는다.
+
+#10과 관련해서는 clustering 기반 pair selection(2020·2023), 고빈도
+distance·cointegration(2022), copula 및 전통적 statistical arbitrage 등
+유사한 과거 KAIST 논문이 여러 편 있다. 그러나 목록에 기록된 제목과 방법론
+기준으로는 조건부 factor residual과 convolutional transformer를 결합한 #10의
+핵심 설계를 직접 재현한 사례는 확인되지 않았다. 원문 확보 후 해당 학생논문의
+key paper와 세부 방법론까지 대조해 최종 중복 판정을 내린다.
 
 ### 문헌 추적 결과 (references / citing papers)
 
