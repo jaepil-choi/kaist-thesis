@@ -21,7 +21,7 @@ Kimchi Factor 직접 산출의 규범은 저장소 루트
 | PCA 입력 | 252일 covariance, 60일 loading | 일별 return 존재 | gate 통과 후 pilot 가능 |
 | IPCA history | 월별 46개 특성, 240개월 window | 재무 FY 2016–2026 | 기간 부족 |
 | 재무 PIT | 당시 공시된 값과 revision vintage | 실제 공시일 없음, 복수 dump revision | 사용자 지정 3개월 lag sensitivity만 허용; exact PIT는 blocked |
-| 46개 characteristic | 수익률·투자·수익성·무형·가치·마찰 46개 | 일부 가격·재무·배당·산업 원천 | 완성 builder 없음, spread 누락 |
+| 46개 characteristic | 수익률·투자·수익성·무형·가치·마찰 46개 | 46열 builder 및 427,076 종목-월 산출; 3개월 lag와 median-rank imputation | Spread·Beta 계열·CF·NI는 문서화된 proxy, exact 아님 |
 | 거래비용 | turnover 5bp + short holding 1bp | 거래량·거래대금만 존재 | 논문 단순비용은 설정 가능, 실측 검증 불가 |
 | investability | 종목별 shortability·borrow cost·market impact | 전용 자료 없음 | 한국 extension blocked |
 
@@ -95,7 +95,7 @@ KOSPI-only breakpoint, KOSPI RM, EBITDA-이자비용 수익성 및 VW/EW·일간
 
 1. 최소 20년 이상의 survivorship-free 월별 주식 panel
 2. 실제 공시일·정정일이 있는 재무제표 vintage
-3. 논문 Table A.I의 46개 characteristic을 만드는 계정과 산식
+3. 논문 Table A.I의 46개 characteristic builder는 구현됨. 다만 exact 원천이 없는 proxy와 raw 결측 coverage를 해소해야 함
 4. 일별 bid-ask spread와 turnover 정의
 
 ### Gate D — 한국 investability extension

@@ -44,6 +44,14 @@ from guijarro_ordonez_replication.residuals import (  # noqa: E402
     project_residual_returns,
     residual_composition_matrix,
 )
+from guijarro_ordonez_replication.characteristics import (  # noqa: E402
+    build_monthly_characteristics,
+    load_ipca_annual_accounting,
+    load_ipca_price_panel,
+)
+from guijarro_ordonez_replication.ipca import (  # noqa: E402
+    estimate_daily_ipca_residuals,
+)
 
 
 def command_status() -> None:
@@ -298,6 +306,89 @@ def command_build_kimchi_factors(*, allow_non_pit_statements: bool) -> None:
     )
 
 
+def command_build_ipca_characteristics(
+    *,
+    allow_non_pit_statements: bool,
+    impute_missing_characteristics: bool,
+) -> None:
+    """Build the paper's 46-characteristic panel from Korean sources."""
+
+    if not allow_non_pit_statements:
+        raise SystemExit(
+            "The IPCA accounting inputs are latest-revision snapshots. Re-run "
+            "with --allow-non-pit-statements to execute the labeled fixed-3-month-lag "
+            "sensitivity."
+        )
+    repository = PROJECT.parent
+    config = yaml.safe_load((PROJECT / "config" / "default.yml").read_text("utf-8"))
+    data = config["data"]
+    prices = load_ipca_price_panel(repository / data["stock_daily"])
+    accounting = load_ipca_annual_accounting(
+        repository / data["statement_facts"],
+        repository / data["annual_share_counts"],
+        repository / data["dividend_items"],
+        reporting_lag_months=3,
+    )
+    result = build_monthly_characteristics(
+        prices,
+        accounting,
+        impute_missing=impute_missing_characteristics,
+    )
+    output = PROJECT / "outputs" / "ipca"
+    output.mkdir(parents=True, exist_ok=True)
+    result.raw.to_parquet(output / "monthly_characteristics_raw.parquet", index=False)
+    result.normalized.to_parquet(
+        output / "monthly_characteristics_normalized.parquet", index=False
+    )
+    (output / "characteristic_audit.json").write_text(
+        json.dumps(result.audit, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    print(
+        json.dumps(
+            {"output": str(output), **result.audit},
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
+
+
+def command_estimate_ipca(
+    *,
+    factors: int,
+    window_months: int,
+    allow_short_history: bool,
+) -> None:
+    """Estimate daily IPCA residuals from the generated monthly panel."""
+
+    repository = PROJECT.parent
+    config = yaml.safe_load((PROJECT / "config" / "default.yml").read_text("utf-8"))
+    output = PROJECT / "outputs" / "ipca"
+    monthly_path = output / "monthly_characteristics_normalized.parquet"
+    if not monthly_path.exists():
+        raise SystemExit(
+            "Build monthly characteristics first with build-ipca-characteristics."
+        )
+    monthly = pd.read_parquet(monthly_path)
+    prices = load_ipca_price_panel(repository / config["data"]["stock_daily"])[
+        ["date", "ticker", "return"]
+    ]
+    result = estimate_daily_ipca_residuals(
+        monthly,
+        prices,
+        n_factors=factors,
+        window_months=window_months,
+        reestimate_every_months=12,
+        allow_short_history=allow_short_history,
+    )
+    tag = f"k{factors}_w{window_months}"
+    result.residuals.to_parquet(output / f"daily_residuals_{tag}.parquet", index=False)
+    result.loadings.to_parquet(output / f"monthly_loadings_{tag}.parquet", index=False)
+    (output / f"ipca_audit_{tag}.json").write_text(
+        json.dumps(result.audit, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    print(json.dumps(result.audit, ensure_ascii=False, indent=2))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -307,12 +398,26 @@ def main() -> None:
             "demo-residuals",
             "build-factors-proxy",
             "build-kimchi-factors",
+            "build-ipca-characteristics",
+            "estimate-ipca",
         ),
     )
     parser.add_argument(
         "--allow-non-pit-statements",
         action="store_true",
         help="allow the labeled fixed-lag accounting sensitivity",
+    )
+    parser.add_argument(
+        "--impute-missing-characteristics",
+        action="store_true",
+        help="fill missing cross-sectional ranks with the monthly median rank 0",
+    )
+    parser.add_argument("--ipca-factors", type=int, default=5)
+    parser.add_argument("--ipca-window-months", type=int, default=240)
+    parser.add_argument(
+        "--allow-short-history-ipca",
+        action="store_true",
+        help="allow a labeled IPCA window shorter than the paper's 240 months",
     )
     args = parser.parse_args()
     if args.command == "status":
@@ -323,9 +428,20 @@ def main() -> None:
         command_build_factors_proxy(
             allow_non_pit_statements=args.allow_non_pit_statements
         )
-    else:
+    elif args.command == "build-kimchi-factors":
         command_build_kimchi_factors(
             allow_non_pit_statements=args.allow_non_pit_statements
+        )
+    elif args.command == "build-ipca-characteristics":
+        command_build_ipca_characteristics(
+            allow_non_pit_statements=args.allow_non_pit_statements,
+            impute_missing_characteristics=args.impute_missing_characteristics,
+        )
+    else:
+        command_estimate_ipca(
+            factors=args.ipca_factors,
+            window_months=args.ipca_window_months,
+            allow_short_history=args.allow_short_history_ipca,
         )
 
 

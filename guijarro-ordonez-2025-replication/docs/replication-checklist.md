@@ -28,7 +28,9 @@
 - [ ] PIT monthly universe와 0.01% market-cap filter
 - [ ] rolling Fama–French residuals
 - [ ] rolling PCA residuals
-- [ ] 46개 characteristic builder와 IPCA residuals
+- [x] 46개 characteristic builder와 IPCA ALS/residual core
+- [x] 전체 한국 패널 characteristic 산출 및 coverage audit 고정
+- [ ] 240개월 exact IPCA history 확보; 그 전 결과는 short-history sensitivity
 - [ ] OU+Threshold benchmark
 - [ ] Fourier+FFN benchmark
 - [ ] CNN+Transformer 및 Sharpe/mean-variance objective

@@ -26,6 +26,8 @@ uv run python guijarro-ordonez-2025-replication/run.py status
 uv run python guijarro-ordonez-2025-replication/run.py demo-residuals
 uv run python guijarro-ordonez-2025-replication/run.py build-kimchi-factors --allow-non-pit-statements
 uv run python guijarro-ordonez-2025-replication/run.py build-factors-proxy --allow-non-pit-statements
+uv run python guijarro-ordonez-2025-replication/run.py build-ipca-characteristics --allow-non-pit-statements --impute-missing-characteristics
+uv run python guijarro-ordonez-2025-replication/run.py estimate-ipca --ipca-factors 5 --ipca-window-months 60 --allow-short-history-ipca
 uv run pytest guijarro-ordonez-2025-replication/tests
 uv run ruff check guijarro-ordonez-2025-replication
 ```
@@ -88,6 +90,11 @@ KOSPI/KOSDAQ·FGSC·SPAC 스냅샷도 2018-01~2026-06 구간을 확보했다. �
 전제로 하고, full replication은 저자 README 기준 RAM 384GB, 저장공간 2TB,
 GPU VRAM 36GB가 필요하다. 현재 루트 환경에 PyTorch를 즉시 추가하지 않는다.
 먼저 데이터 gate와 PCA CPU pilot을 통과한 뒤 별도 GPU 실행환경을 고정한다.
+
+46개 characteristic builder와 IPCA alternating-least-squares/residual core는
+구현되어 있다. 현재 자료로 실행할 때에는 고정 3개월 lag, 일부 한국 proxy 및
+240개월보다 짧은 window를 각각 명시적인 warning/audit로 남긴다. 자세한 계약은
+`docs/ipca-methodology.md`를 따른다.
 
 공식 코드의 공개 라이선스는 상업적 사용을 금지한다. 이 프로젝트에서 코드를
 복사·수정할 때는 provenance와 라이선스 경계를 별도로 기록한다.
