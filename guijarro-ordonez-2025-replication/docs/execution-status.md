@@ -55,6 +55,7 @@ unadjusted research backtests and not deployable performance estimates.
 | PCA5 | CNN+Transformer, rolling mean-variance | 0.156 | 0.050 | 3.131 |
 | PCA5 | CNN+Transformer, friction-aware | 0.060 | 0.044 | 1.371 |
 | PCA8 | OU threshold | 0.089 | 0.049 | 1.811 |
+| PCA8 | Fourier+FFN | 0.139 | 0.035 | 3.923 |
 | PCA10 | OU threshold | 0.075 | 0.044 | 1.708 |
 | PCA15 | OU threshold | 0.046 | 0.034 | 1.338 |
 | Korean FF1 | OU threshold | 0.028 | 0.100 | 0.276 |
@@ -77,7 +78,10 @@ resumable; exact epochs and home-GPU commands are in
   The friction-aware objective uses 5 bp transaction cost and 1 bp
   short-holding cost; mean daily turnover fell from 1.214 to 0.464 while the
   Sharpe ratio fell from 4.148 to 1.371.
-- Checkpointed: PCA8/10/15 Fourier+FFN and candidate 2 of the 16-candidate
+- Completed on the home AMD GPU after the PCA5 objectives: PCA8 Fourier+FFN,
+  with annual return 0.139, volatility 0.035, Sharpe 3.923, and mean daily
+  turnover 0.846.
+- Checkpointed: PCA10/15 Fourier+FFN and candidate 2 of the 16-candidate
   validation grid.
 - Not started: 60-day lookback, five-day holding, five alternative CNN
   specifications, and K=1 short-history IPCA convergence sensitivity.

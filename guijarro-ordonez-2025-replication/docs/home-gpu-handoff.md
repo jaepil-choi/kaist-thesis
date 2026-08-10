@@ -70,7 +70,7 @@ uv run python -c "import torch; print(torch.__version__); print(torch.cuda.is_av
 | 1 | PCA5 rolling CNN Sharpe | 전체 5개 subperiod 완료 | 완료; audit 생성됨 |
 | 2 | PCA5 friction-aware CNN | 전체 5개 subperiod 완료 | 완료; audit 생성됨 |
 | 3 | PCA5 CNN mean-variance | 전체 5개 subperiod 완료 | 완료; audit 생성됨 |
-| 4 | PCA8 Fourier+FFN | subperiod 0 완료, subperiod 1 epoch 98 | subperiod 1 epoch 99 |
+| 4 | PCA8 Fourier+FFN | 전체 5개 subperiod 완료 | 완료; audit 생성됨 |
 | 5 | PCA10 Fourier+FFN | subperiod 0–1 완료, subperiod 2 epoch 13 | subperiod 2 epoch 14 |
 | 6 | PCA15 Fourier+FFN | subperiod 0 완료, subperiod 1 epoch 76 | subperiod 1 epoch 77 |
 | 7 | 16-model validation grid | candidate 1 완료, candidate 2 epoch 93 | candidate 2 epoch 94 |
@@ -97,8 +97,9 @@ CPU 전용 Torch로 교체할 수 있으므로, 위 GPU 재개 명령은 `--no-s
 0.04039, Sharpe 4.14767, mean daily turnover 1.21436이다. friction-aware CNN은
 각각 0.06017, 0.04388, 1.37118, 0.46355이며 거래비용 5 bp와 공매도 보유비용
 1 bp를 목적함수에 반영했다. mean-variance CNN은 각각 0.15557, 0.04969,
-3.13086, 1.28572이다. 세 실행 모두 한국 price-return variant이며 원문 exact
-replication으로 분류하지 않는다.
+3.13086, 1.28572이다. PCA8 Fourier+FFN은 각각 0.13898, 0.03543, 3.92328,
+0.84632이다. 모든 실행은 한국 price-return variant이며 원문 exact replication으로
+분류하지 않는다.
 
 candidate 1의 validation 결과는 annual return 0.12520, annual volatility
 0.03466, Sharpe 3.61227이며 이미 audit가 있다. validation table과 최종 audit는
