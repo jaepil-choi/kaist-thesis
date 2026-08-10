@@ -90,8 +90,9 @@ KOSPI/KOSDAQ·FGSC·SPAC 스냅샷도 2018-01~2026-06 구간을 확보했다. �
 저자 공식 코드는 저장소 루트의 `Deep_Learning_Statistical_Arbitrage_Code/`에
 참고용으로 보존되어 있다. 공식 코드는 Python 3.10/Linux, PyTorch와 GPU를
 전제로 하고, full replication은 저자 README 기준 RAM 384GB, 저장공간 2TB,
-GPU VRAM 36GB가 필요하다. 현재 루트 환경에 PyTorch를 즉시 추가하지 않는다.
-먼저 데이터 gate와 PCA CPU pilot을 통과한 뒤 별도 GPU 실행환경을 고정한다.
+GPU VRAM 36GB가 필요하다. 현재 루트 환경에는 CPU PyTorch가 고정되어 있으며,
+한국 PCA5/FF1/FF3/FF5 정책 실행과 checkpoint 재개를 지원한다. 전체 미국 패널
+재현에 필요한 고용량 GPU 환경과 혼동해서는 안 된다.
 
 46개 characteristic builder와 IPCA alternating-least-squares/residual core는
 구현되어 있다. 현재 자료로 실행할 때에는 고정 3개월 lag, 일부 한국 proxy 및
@@ -106,6 +107,27 @@ K=5 rolling PCA branch는 공개 코드의 252일 covariance·60일 loading 규�
 2020-01-02~2026-07-20의 275,711개 residual을 산출했다. 전월 raw 46개
 characteristic 완전관측 필터 때문에 2018년이 아니라 2020년부터 시작한다.
 세부 산식과 저차원 composition 저장 계약은 `docs/pca-methodology.md`에 있다.
+
+## Trading policies and Korean PCA5 results
+
+OU, Fourier+FFN, CNN+Transformer rolling policies are implemented in
+`src/guijarro_ordonez_replication/policies.py` and `trading.py`. Exact signal
+alignment, optimization settings, and Korean-data limits are documented in
+`docs/trading-methodology.md`.
+
+```powershell
+uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model ou_threshold
+uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model fourier_ffn
+uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer
+uv run python guijarro-ordonez-2025-replication/run.py estimate-fama-french --ff-factors 5
+uv run python guijarro-ordonez-2025-replication/run.py simulate-fama-french --ff-factors 5 --simulation-model ou_threshold
+uv run python guijarro-ordonez-2025-replication/run.py report-pca
+uv run python guijarro-ordonez-2025-replication/run.py build-spec-outputs
+```
+
+Defaults retain the paper's seed 0, 100 epochs, 1,000-day rolling window,
+125-day batch/stride, and rolling retraining. Fewer-epoch runs are diagnostics
+and are excluded from full-contract result tables.
 
 공식 코드의 공개 라이선스는 상업적 사용을 금지한다. 이 프로젝트에서 코드를
 복사·수정할 때는 provenance와 라이선스 경계를 별도로 기록한다.

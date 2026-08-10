@@ -14,7 +14,7 @@
 - [ ] IPCA용 최소 240개월 월별 return·46개 characteristic
 - [ ] 재무 characteristic의 실제 공시일 또는 정당화된 PIT availability rule
 - [ ] bid-ask spread, shortability, borrow fee 및 거래세
-- [ ] seed, validation period, rolling retraining과 hyperparameter 고정
+- [x] seed 0, 1000일 training, 125일 retraining/batch, 100 epochs 계약 고정
 
 ## 구현 단계
 
@@ -26,16 +26,19 @@
 - [x] 2018년 이후 Kimchi 5-factor+MOM VW/EW·일간/월간 strict builder
 - [ ] canonical stock-daily schema audit
 - [ ] PIT monthly universe와 0.01% market-cap filter
-- [ ] rolling Fama–French residuals
+- [x] rolling Korean FF1/FF3/FF5 residuals와 synthetic factor composition
 - [x] K=5 rolling PCA residuals, 252일 covariance·60일 loading, 2020-2026
 - [x] 46개 characteristic builder와 IPCA ALS/residual core
 - [x] 전체 한국 패널 characteristic 산출 및 coverage audit 고정
 - [x] IPCA `initial_months`/rolling window 분리와 ALS convergence gate
 - [ ] K=5 60개월 short-history IPCA: 현재 proxy/imputation 패널에서 비수렴
 - [ ] 240개월 exact IPCA history 확보; 그 전 결과는 short-history sensitivity
-- [ ] OU+Threshold benchmark
-- [ ] Fourier+FFN benchmark
-- [ ] CNN+Transformer 및 Sharpe/mean-variance objective
+- [x] OU+Threshold benchmark 구현 및 full Korean PCA5 실행
+- [x] Fourier+FFN benchmark 구현 및 100-epoch Korean PCA5 실행
+- [x] CNN+Transformer 및 Sharpe/mean-variance objective 구현
+- [x] 누적 residual/Fourier t-1 신호 정렬 검증
+- [x] PCA low-rank composition underlying gross exposure 정규화
+- [x] epoch/subperiod checkpoint와 중단 후 재개
 - [ ] transaction/short holding cost objective
 - [ ] output registry와 실행 manifest 연결
 

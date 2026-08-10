@@ -4,10 +4,10 @@ paper:
   expected_output_count: 45
 
 paper_outputs:
-  - {id: fig_01, section: main, kind: figure, title: "Conceptual arbitrage model", status: planned_from_spec}
-  - {id: fig_02, section: main, kind: figure, title: "Examples of local filters", status: planned_from_spec}
-  - {id: fig_03, section: main, kind: figure, title: "Convolutional network architecture", status: planned_from_spec}
-  - {id: fig_04, section: main, kind: figure, title: "Transformer network architecture", status: planned_from_spec}
+  - {id: fig_01, section: main, kind: figure, title: "Conceptual arbitrage model", status: generated_from_spec, path: outputs/paper-spec/fig_01_conceptual_arbitrage_model.png}
+  - {id: fig_02, section: main, kind: figure, title: "Examples of local filters", status: generated_from_spec, path: outputs/paper-spec/fig_02_examples_local_filters.png}
+  - {id: fig_03, section: main, kind: figure, title: "Convolutional network architecture", status: generated_from_spec, path: outputs/paper-spec/fig_03_convolutional_architecture.png}
+  - {id: fig_04, section: main, kind: figure, title: "Transformer network architecture", status: generated_from_spec, path: outputs/paper-spec/fig_04_transformer_architecture.png}
   - {id: fig_05, section: main, kind: figure, title: "Cumulative OOS returns of different arbitrage strategies", status: blocked_full_input_panel}
   - {id: fig_06, section: main, kind: figure, title: "Turnover with and without trading-friction objective", status: blocked_full_input_panel}
   - {id: fig_07, section: main, kind: figure, title: "Short allocation with and without trading-friction objective", status: blocked_full_input_panel}
@@ -32,15 +32,15 @@ paper_outputs:
   - {id: table_07, section: main, kind: table, title: "CNN+Transformer performance for constant model", status: blocked_full_input_panel}
   - {id: table_08, section: main, kind: table, title: "Alpha significance for constant model", status: blocked_full_input_panel}
   - {id: table_09, section: main, kind: table, title: "CNN+Transformer performance with trading frictions", status: blocked_full_input_panel}
-  - {id: fig_a01, section: appendix, kind: figure, title: "Feedforward network architecture", status: planned_from_spec}
+  - {id: fig_a01, section: appendix, kind: figure, title: "Feedforward network architecture", status: generated_from_spec, path: outputs/paper-spec/fig_a01_feedforward_architecture.png}
   - {id: fig_a02, section: appendix, kind: figure, title: "Allocation weights and signals for different methods", status: blocked_full_input_panel}
   - {id: fig_a03, section: appendix, kind: figure, title: "Additional allocation and signal examples", status: blocked_full_input_panel}
   - {id: fig_a04, section: appendix, kind: figure, title: "Additional attention weights for sinusoidal inputs", status: blocked_full_input_panel}
   - {id: fig_a05, section: appendix, kind: figure, title: "Industry concentration of portfolio weights", status: blocked_full_input_panel}
   - {id: fig_a06, section: appendix, kind: figure, title: "Volatility of residuals over time", status: blocked_full_input_panel}
   - {id: fig_a07, section: appendix, kind: figure, title: "Cumulative returns after trading costs", status: blocked_full_input_panel}
-  - {id: table_a01, section: appendix, kind: table, title: "Firm characteristics by category", status: planned_from_spec}
-  - {id: table_a02, section: appendix, kind: table, title: "Network hyperparameter options", status: planned_from_spec}
+  - {id: table_a01, section: appendix, kind: table, title: "Firm characteristics by category", status: generated_from_spec, path: outputs/paper-spec/table_a01_characteristics.csv}
+  - {id: table_a02, section: appendix, kind: table, title: "Network hyperparameter options", status: generated_from_spec, path: outputs/paper-spec/table_a02_hyperparameters.csv}
   - {id: table_a03, section: appendix, kind: table, title: "Candidate-model validation performance", status: blocked_full_input_panel}
   - {id: table_a04, section: appendix, kind: table, title: "Alternative best-performing models", status: blocked_full_input_panel}
   - {id: table_a05, section: appendix, kind: table, title: "Alternative models on benchmark residual datasets", status: blocked_full_input_panel}

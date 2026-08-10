@@ -59,6 +59,23 @@ from guijarro_ordonez_replication.ipca import (  # noqa: E402
 from guijarro_ordonez_replication.pca import (  # noqa: E402
     estimate_daily_pca_residuals,
 )
+from guijarro_ordonez_replication.trading import (  # noqa: E402
+    SimulationConfig,
+    load_pca_residual_panel,
+    simulate_rolling_strategy,
+)
+from guijarro_ordonez_replication.results import (  # noqa: E402
+    build_korean_pca5_report,
+)
+from guijarro_ordonez_replication.spec_outputs import (  # noqa: E402
+    build_spec_outputs,
+)
+from guijarro_ordonez_replication.fama_french_residuals import (  # noqa: E402
+    estimate_daily_fama_french_residuals,
+)
+from guijarro_ordonez_replication.trading import (  # noqa: E402
+    load_fama_french_residual_panel,
+)
 
 
 def command_status() -> None:
@@ -494,6 +511,192 @@ def command_estimate_pca(
     print(json.dumps(result.audit, ensure_ascii=False, indent=2))
 
 
+def command_simulate_pca(
+    *,
+    model_name: str,
+    objective: str,
+    lookback_days: int,
+    epochs: int,
+    transaction_cost: float,
+    short_holding_cost: float,
+    rolling_retrain: bool,
+) -> None:
+    """Run the paper's rolling trading policy on the Korean K=5 PCA branch."""
+
+    pca_output = PROJECT / "outputs" / "pca"
+    residual_path = (
+        pca_output / "daily_residuals_k5_20200102_c252_l60.parquet"
+    )
+    loading_path = (
+        pca_output / "daily_low_rank_loadings_k5_20200102_c252_l60.parquet"
+    )
+    if not residual_path.exists() or not loading_path.exists():
+        raise SystemExit(
+            "Build the full K=5 PCA branch first with estimate-pca "
+            "--pca-initial-oos-date 2020-01-02."
+        )
+    cost_tag = (
+        f"tc{transaction_cost:g}_hc{short_holding_cost:g}"
+        if transaction_cost or short_holding_cost
+        else "no-cost"
+    )
+    tag = (
+        f"pca5_{model_name}_{objective}_lb{lookback_days}_e{epochs}_"
+        f"{'rolling' if rolling_retrain else 'constant'}_{cost_tag}"
+    )
+    output = PROJECT / "outputs" / "strategies" / tag
+    output.mkdir(parents=True, exist_ok=True)
+    panel = load_pca_residual_panel(residual_path, loading_path)
+    simulation_config = SimulationConfig(
+        model_name=model_name,
+        objective=objective,
+        lookback_days=lookback_days,
+        epochs=epochs,
+        transaction_cost=transaction_cost,
+        short_holding_cost=short_holding_cost,
+        rolling_retrain=rolling_retrain,
+        checkpoint_directory=output / "checkpoints",
+    )
+
+    def report_progress(event: dict[str, object]) -> None:
+        print(json.dumps(event, ensure_ascii=False), file=sys.stderr, flush=True)
+
+    result = simulate_rolling_strategy(
+        panel,
+        simulation_config,
+        progress=report_progress,
+    )
+    result.daily.to_csv(output / "daily_performance.csv", index=False)
+    result.weights.to_parquet(output / "daily_asset_weights.parquet")
+    (output / "simulation_audit.json").write_text(
+        json.dumps(result.audit, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    print(json.dumps({"output": str(output), **result.audit}, ensure_ascii=False, indent=2))
+
+
+def command_estimate_fama_french(
+    *,
+    factors: int,
+    initial_oos_date: str,
+    loading_window_days: int,
+) -> None:
+    """Estimate Korean rolling Fama-French residuals and synthetic factor legs."""
+
+    repository = PROJECT.parent
+    config = yaml.safe_load((PROJECT / "config" / "default.yml").read_text("utf-8"))
+    monthly_path = PROJECT / "outputs" / "ipca" / "monthly_characteristics_raw.parquet"
+    if not monthly_path.exists():
+        raise SystemExit("Build raw monthly characteristics first.")
+    result = estimate_daily_fama_french_residuals(
+        pd.read_parquet(monthly_path),
+        _load_daily_excess_returns(repository, config),
+        pd.read_csv(PROJECT / "outputs" / "kimchi-exact" / "daily_factor_returns.csv"),
+        n_factors=factors,
+        initial_oos_date=initial_oos_date,
+        loading_window_days=loading_window_days,
+        progress=lambda event: print(
+            json.dumps(event, ensure_ascii=False), file=sys.stderr, flush=True
+        ),
+    )
+    output = PROJECT / "outputs" / "fama-french"
+    output.mkdir(parents=True, exist_ok=True)
+    date_tag = pd.Timestamp(initial_oos_date).strftime("%Y%m%d")
+    tag = f"ff{factors}_{date_tag}_l{loading_window_days}"
+    result.residuals.to_parquet(output / f"daily_residuals_{tag}.parquet", index=False)
+    result.factor_legs.to_parquet(output / f"daily_factor_legs_{tag}.parquet", index=False)
+    (output / f"fama_french_audit_{tag}.json").write_text(
+        json.dumps(result.audit, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    print(json.dumps({"output": str(output), **result.audit}, ensure_ascii=False, indent=2))
+
+
+def command_simulate_fama_french(
+    *,
+    factors: int,
+    model_name: str,
+    objective: str,
+    lookback_days: int,
+    epochs: int,
+    transaction_cost: float,
+    short_holding_cost: float,
+    rolling_retrain: bool,
+) -> None:
+    """Run a paper policy on Korean rolling Fama-French residuals."""
+
+    residual_root = PROJECT / "outputs" / "fama-french"
+    tag = f"ff{factors}_20200102_l60"
+    residual_path = residual_root / f"daily_residuals_{tag}.parquet"
+    leg_path = residual_root / f"daily_factor_legs_{tag}.parquet"
+    if not residual_path.exists() or not leg_path.exists():
+        raise SystemExit(f"Build {tag} residuals first with estimate-fama-french.")
+    cost_tag = (
+        f"tc{transaction_cost:g}_hc{short_holding_cost:g}"
+        if transaction_cost or short_holding_cost
+        else "no-cost"
+    )
+    run_tag = (
+        f"ff{factors}_{model_name}_{objective}_lb{lookback_days}_e{epochs}_"
+        f"{'rolling' if rolling_retrain else 'constant'}_{cost_tag}"
+    )
+    output = PROJECT / "outputs" / "strategies" / run_tag
+    output.mkdir(parents=True, exist_ok=True)
+    simulation_config = SimulationConfig(
+        model_name=model_name,
+        objective=objective,
+        lookback_days=lookback_days,
+        epochs=epochs,
+        transaction_cost=transaction_cost,
+        short_holding_cost=short_holding_cost,
+        rolling_retrain=rolling_retrain,
+        checkpoint_directory=output / "checkpoints",
+    )
+    result = simulate_rolling_strategy(
+        load_fama_french_residual_panel(residual_path, leg_path),
+        simulation_config,
+        progress=lambda event: print(
+            json.dumps(event, ensure_ascii=False), file=sys.stderr, flush=True
+        ),
+    )
+    result.daily.to_csv(output / "daily_performance.csv", index=False)
+    result.weights.to_parquet(output / "daily_asset_weights.parquet")
+    audit = {**result.audit, "factor_model": f"Korean FF{factors}"}
+    (output / "simulation_audit.json").write_text(
+        json.dumps(audit, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    print(json.dumps({"output": str(output), **audit}, ensure_ascii=False, indent=2))
+
+
+def command_report_pca() -> None:
+    """Build core Korean PCA5 tables and figures from completed exact-policy runs."""
+
+    strategy_root = PROJECT / "outputs" / "strategies"
+    directories = [
+        strategy_root / "pca5_ou_threshold_sharpe_lb30_e100_rolling_no-cost",
+        strategy_root / "pca5_fourier_ffn_sharpe_lb30_e100_rolling_no-cost",
+        strategy_root / "pca5_cnn_transformer_sharpe_lb30_e100_rolling_no-cost",
+    ]
+    available = [
+        directory
+        for directory in directories
+        if (directory / "simulation_audit.json").exists()
+    ]
+    if not available:
+        raise SystemExit("Run at least one full-contract PCA5 strategy first.")
+    audit = build_korean_pca5_report(
+        available,
+        PROJECT / "outputs" / "kimchi-exact" / "daily_factor_returns.csv",
+        PROJECT / "outputs" / "paper-korean-pca5",
+    )
+    print(json.dumps(audit, ensure_ascii=False, indent=2))
+
+
+def command_build_spec_outputs() -> None:
+    """Generate the paper outputs that depend only on the stated model spec."""
+
+    audit = build_spec_outputs(PROJECT / "outputs" / "paper-spec")
+    print(json.dumps(audit, ensure_ascii=False, indent=2))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -506,6 +709,11 @@ def main() -> None:
             "build-ipca-characteristics",
             "estimate-ipca",
             "estimate-pca",
+            "simulate-pca",
+            "report-pca",
+            "build-spec-outputs",
+            "estimate-fama-french",
+            "simulate-fama-french",
         ),
     )
     parser.add_argument(
@@ -528,6 +736,26 @@ def main() -> None:
     parser.add_argument("--pca-covariance-window-days", type=int, default=252)
     parser.add_argument("--pca-loading-window-days", type=int, default=60)
     parser.add_argument("--pca-max-oos-days", type=int)
+    parser.add_argument("--ff-factors", choices=(1, 3, 5, 8), type=int, default=5)
+    parser.add_argument("--ff-initial-oos-date", default="2020-01-02")
+    parser.add_argument("--ff-loading-window-days", type=int, default=60)
+    parser.add_argument(
+        "--simulation-model",
+        choices=("cnn_transformer", "fourier_ffn", "ou_threshold"),
+        default="cnn_transformer",
+    )
+    parser.add_argument(
+        "--simulation-objective", choices=("sharpe", "meanvar"), default="sharpe"
+    )
+    parser.add_argument("--simulation-lookback-days", type=int, default=30)
+    parser.add_argument("--simulation-epochs", type=int, default=100)
+    parser.add_argument("--simulation-transaction-cost", type=float, default=0.0)
+    parser.add_argument("--simulation-short-holding-cost", type=float, default=0.0)
+    parser.add_argument(
+        "--simulation-constant-model",
+        action="store_true",
+        help="train only the first subperiod instead of the paper's rolling retraining",
+    )
     parser.add_argument(
         "--allow-short-history-ipca",
         action="store_true",
@@ -560,7 +788,7 @@ def main() -> None:
             max_iterations=args.ipca_max_iterations,
             tolerance=args.ipca_tolerance,
         )
-    else:
+    elif args.command == "estimate-pca":
         command_estimate_pca(
             factors=args.pca_factors,
             initial_oos_date=args.pca_initial_oos_date,
@@ -568,6 +796,37 @@ def main() -> None:
             loading_window_days=args.pca_loading_window_days,
             max_oos_days=args.pca_max_oos_days,
         )
+    elif args.command == "simulate-pca":
+        command_simulate_pca(
+            model_name=args.simulation_model,
+            objective=args.simulation_objective,
+            lookback_days=args.simulation_lookback_days,
+            epochs=args.simulation_epochs,
+            transaction_cost=args.simulation_transaction_cost,
+            short_holding_cost=args.simulation_short_holding_cost,
+            rolling_retrain=not args.simulation_constant_model,
+        )
+    elif args.command == "estimate-fama-french":
+        command_estimate_fama_french(
+            factors=args.ff_factors,
+            initial_oos_date=args.ff_initial_oos_date,
+            loading_window_days=args.ff_loading_window_days,
+        )
+    elif args.command == "simulate-fama-french":
+        command_simulate_fama_french(
+            factors=args.ff_factors,
+            model_name=args.simulation_model,
+            objective=args.simulation_objective,
+            lookback_days=args.simulation_lookback_days,
+            epochs=args.simulation_epochs,
+            transaction_cost=args.simulation_transaction_cost,
+            short_holding_cost=args.simulation_short_holding_cost,
+            rolling_retrain=not args.simulation_constant_model,
+        )
+    elif args.command == "report-pca":
+        command_report_pca()
+    else:
+        command_build_spec_outputs()
 
 
 if __name__ == "__main__":
