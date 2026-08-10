@@ -27,7 +27,7 @@
 - [ ] canonical stock-daily schema audit
 - [ ] PIT monthly universe와 0.01% market-cap filter
 - [ ] rolling Fama–French residuals
-- [ ] rolling PCA residuals
+- [x] K=5 rolling PCA residuals, 252일 covariance·60일 loading, 2020-2026
 - [x] 46개 characteristic builder와 IPCA ALS/residual core
 - [x] 전체 한국 패널 characteristic 산출 및 coverage audit 고정
 - [x] IPCA `initial_months`/rolling window 분리와 ALS convergence gate

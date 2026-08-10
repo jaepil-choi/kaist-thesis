@@ -29,6 +29,7 @@ uv run python guijarro-ordonez-2025-replication/run.py build-kimchi-factors --al
 uv run python guijarro-ordonez-2025-replication/run.py build-factors-proxy --allow-non-pit-statements
 uv run python guijarro-ordonez-2025-replication/run.py build-ipca-characteristics --allow-non-pit-statements --impute-missing-characteristics
 uv run python guijarro-ordonez-2025-replication/run.py estimate-ipca --ipca-factors 5 --ipca-initial-months 60 --ipca-window-months 60 --allow-short-history-ipca
+uv run python guijarro-ordonez-2025-replication/run.py estimate-pca --pca-factors 5 --pca-initial-oos-date 2020-01-02
 uv run pytest guijarro-ordonez-2025-replication/tests
 uv run ruff check guijarro-ordonez-2025-replication
 ```
@@ -100,6 +101,11 @@ GPU VRAM 36GB가 필요하다. 현재 루트 환경에 PyTorch를 즉시 추가�
 현재 K=5·60개월 진단은 공개 코드의 1,500회/`1e-3` 기준에서 수렴하지 않아
 잔차 파일을 생성하지 않는다. 월별 characteristic을 만들 수 있다는 사실만으로
 short-history IPCA가 추정 가능하다고 간주하지 않는다.
+
+K=5 rolling PCA branch는 공개 코드의 252일 covariance·60일 loading 규칙으로
+2020-01-02~2026-07-20의 275,711개 residual을 산출했다. 전월 raw 46개
+characteristic 완전관측 필터 때문에 2018년이 아니라 2020년부터 시작한다.
+세부 산식과 저차원 composition 저장 계약은 `docs/pca-methodology.md`에 있다.
 
 공식 코드의 공개 라이선스는 상업적 사용을 금지한다. 이 프로젝트에서 코드를
 복사·수정할 때는 provenance와 라이선스 경계를 별도로 기록한다.

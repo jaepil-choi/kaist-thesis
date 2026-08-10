@@ -95,6 +95,7 @@ gates:
   all_46_characteristics_available: false
   korea_46_characteristic_builder_available: true
   ipca_short_history_sensitivity_available: false
+  korea_k5_pca_residuals_available: true
   bid_ask_available: false
   shortability_and_borrow_cost_available: false
 

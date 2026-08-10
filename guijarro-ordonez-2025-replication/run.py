@@ -39,6 +39,9 @@ from guijarro_ordonez_replication.exact_kimchi_factors import (  # noqa: E402
     load_price_panel,
     load_statement_facts as load_exact_statement_facts,
 )
+from guijarro_ordonez_replication.kimchi_methodology import (  # noqa: E402
+    annual_yield_percent_to_period_return,
+)
 from guijarro_ordonez_replication.residuals import (  # noqa: E402
     map_residual_to_asset_weights,
     project_residual_returns,
@@ -52,6 +55,9 @@ from guijarro_ordonez_replication.characteristics import (  # noqa: E402
 )
 from guijarro_ordonez_replication.ipca import (  # noqa: E402
     estimate_daily_ipca_residuals,
+)
+from guijarro_ordonez_replication.pca import (  # noqa: E402
+    estimate_daily_pca_residuals,
 )
 
 
@@ -82,6 +88,41 @@ def command_demo_residuals() -> None:
         ).round(6).tolist(),
     }
     print(json.dumps(payload, indent=2))
+
+
+def _load_daily_excess_returns(
+    repository: Path,
+    config: dict[str, object],
+) -> pd.DataFrame:
+    """Load price returns and subtract the backward-matched ECOS daily RF."""
+
+    data = config["data"]
+    if not isinstance(data, dict):
+        raise TypeError("config data section must be a mapping")
+    prices = load_ipca_daily_returns(repository / str(data["stock_daily"]))
+    _, rf_yield = load_ecos_market_and_rf(
+        repository / str(data["kospi_index_ecos_raw"]),
+        repository / str(data["risk_free_ecos_raw"]),
+    )
+    trading_dates = pd.DataFrame({"date": sorted(prices["date"].unique())})
+    daily_rf = pd.merge_asof(
+        trading_dates,
+        rf_yield.sort_values("date"),
+        on="date",
+        direction="backward",
+        tolerance=pd.Timedelta(days=7),
+    )
+    daily_rf["RF"] = annual_yield_percent_to_period_return(
+        daily_rf["annual_rf_percent"], periods_per_year=252
+    )
+    if daily_rf["RF"].isna().any():
+        first_missing = daily_rf.loc[daily_rf["RF"].isna(), "date"].iloc[0]
+        raise ValueError(f"ECOS daily RF is missing on {first_missing.date()}")
+    prices = prices.merge(
+        daily_rf[["date", "RF"]], on="date", how="left", validate="many_to_one"
+    )
+    prices["return"] = prices["return"] - prices["RF"]
+    return prices.drop(columns="RF")
 
 
 def command_build_factors_proxy(*, allow_non_pit_statements: bool) -> None:
@@ -373,38 +414,7 @@ def command_estimate_ipca(
             "Build monthly characteristics first with build-ipca-characteristics."
         )
     monthly = pd.read_parquet(monthly_path)
-    prices = load_ipca_daily_returns(repository / config["data"]["stock_daily"])
-    rf_path = PROJECT / "outputs" / "kimchi-exact" / "daily_market_rf.csv"
-    if not rf_path.exists():
-        raise SystemExit(
-            "Build exact Kimchi factors first; IPCA daily residuals require the "
-            "ECOS daily risk-free return output."
-        )
-    risk_free = pd.read_csv(rf_path, usecols=["date", "RF"])
-    risk_free["date"] = pd.to_datetime(risk_free["date"], errors="raise")
-    if risk_free["date"].duplicated().any():
-        raise ValueError("daily risk-free input has duplicate dates")
-    prices = prices.merge(risk_free, on="date", how="left", validate="many_to_one")
-    monthly_dates = pd.DatetimeIndex(
-        sorted(
-            pd.to_datetime(monthly["date"])
-            .dt.to_period("M")
-            .dt.to_timestamp("M")
-            .unique()
-        )
-    )
-    if len(monthly_dates) > initial_months:
-        first_oos_boundary = monthly_dates[initial_months - 1]
-        missing_oos_rf = prices.loc[
-            prices["date"].gt(first_oos_boundary) & prices["RF"].isna(), "date"
-        ].drop_duplicates()
-        if not missing_oos_rf.empty:
-            raise ValueError(
-                "daily RF is missing in the IPCA OOS period; first missing date is "
-                f"{missing_oos_rf.iloc[0].date()}"
-            )
-    prices["return"] = prices["return"] - prices["RF"]
-    prices = prices.drop(columns="RF")
+    prices = _load_daily_excess_returns(repository, config)
 
     def report_progress(event: dict[str, object]) -> None:
         print(json.dumps(event, ensure_ascii=False), file=sys.stderr, flush=True)
@@ -433,6 +443,57 @@ def command_estimate_ipca(
     print(json.dumps(result.audit, ensure_ascii=False, indent=2))
 
 
+def command_estimate_pca(
+    *,
+    factors: int,
+    initial_oos_date: str,
+    covariance_window_days: int,
+    loading_window_days: int,
+    max_oos_days: int | None,
+) -> None:
+    """Estimate rolling daily PCA residuals using the public-code equations."""
+
+    repository = PROJECT.parent
+    config = yaml.safe_load((PROJECT / "config" / "default.yml").read_text("utf-8"))
+    output = PROJECT / "outputs" / "pca"
+    monthly_path = (
+        PROJECT / "outputs" / "ipca" / "monthly_characteristics_raw.parquet"
+    )
+    if not monthly_path.exists():
+        raise SystemExit(
+            "Build raw monthly characteristics first with build-ipca-characteristics."
+        )
+    monthly = pd.read_parquet(monthly_path)
+    daily = _load_daily_excess_returns(repository, config)
+
+    def report_progress(event: dict[str, object]) -> None:
+        print(json.dumps(event, ensure_ascii=False), file=sys.stderr, flush=True)
+
+    result = estimate_daily_pca_residuals(
+        monthly,
+        daily,
+        n_factors=factors,
+        initial_oos_date=initial_oos_date,
+        covariance_window_days=covariance_window_days,
+        loading_window_days=loading_window_days,
+        max_oos_days=max_oos_days,
+        progress=report_progress,
+    )
+    output.mkdir(parents=True, exist_ok=True)
+    date_tag = pd.Timestamp(initial_oos_date).strftime("%Y%m%d")
+    tag = (
+        f"k{factors}_{date_tag}_c{covariance_window_days}_l{loading_window_days}"
+    )
+    if max_oos_days is not None:
+        tag += f"_d{max_oos_days}"
+    result.residuals.to_parquet(output / f"daily_residuals_{tag}.parquet", index=False)
+    result.loadings.to_parquet(output / f"daily_low_rank_loadings_{tag}.parquet", index=False)
+    (output / f"pca_audit_{tag}.json").write_text(
+        json.dumps(result.audit, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    print(json.dumps(result.audit, ensure_ascii=False, indent=2))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -444,6 +505,7 @@ def main() -> None:
             "build-kimchi-factors",
             "build-ipca-characteristics",
             "estimate-ipca",
+            "estimate-pca",
         ),
     )
     parser.add_argument(
@@ -461,6 +523,11 @@ def main() -> None:
     parser.add_argument("--ipca-window-months", type=int, default=240)
     parser.add_argument("--ipca-max-iterations", type=int, default=1500)
     parser.add_argument("--ipca-tolerance", type=float, default=1e-3)
+    parser.add_argument("--pca-factors", type=int, default=5)
+    parser.add_argument("--pca-initial-oos-date", default="2018-01-02")
+    parser.add_argument("--pca-covariance-window-days", type=int, default=252)
+    parser.add_argument("--pca-loading-window-days", type=int, default=60)
+    parser.add_argument("--pca-max-oos-days", type=int)
     parser.add_argument(
         "--allow-short-history-ipca",
         action="store_true",
@@ -484,7 +551,7 @@ def main() -> None:
             allow_non_pit_statements=args.allow_non_pit_statements,
             impute_missing_characteristics=args.impute_missing_characteristics,
         )
-    else:
+    elif args.command == "estimate-ipca":
         command_estimate_ipca(
             factors=args.ipca_factors,
             initial_months=args.ipca_initial_months,
@@ -492,6 +559,14 @@ def main() -> None:
             allow_short_history=args.allow_short_history_ipca,
             max_iterations=args.ipca_max_iterations,
             tolerance=args.ipca_tolerance,
+        )
+    else:
+        command_estimate_pca(
+            factors=args.pca_factors,
+            initial_oos_date=args.pca_initial_oos_date,
+            covariance_window_days=args.pca_covariance_window_days,
+            loading_window_days=args.pca_loading_window_days,
+            max_oos_days=args.pca_max_oos_days,
         )
 
 
