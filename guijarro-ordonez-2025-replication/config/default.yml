@@ -64,8 +64,11 @@ factor_models:
     loading_window_days: 60
   ipca:
     factors: [1, 3, 5, 8, 10, 15]
+    initial_months: 420
     characteristic_window_months: 240
     reestimate_every_months: 12
+    max_iterations: 1500
+    tolerance: 0.001
     characteristic_count: 46
     reporting_lag_months: 3
     short_history_window_months: 60
@@ -91,7 +94,7 @@ gates:
   historical_statement_announcement_times_available: false
   all_46_characteristics_available: false
   korea_46_characteristic_builder_available: true
-  ipca_short_history_sensitivity_available: true
+  ipca_short_history_sensitivity_available: false
   bid_ask_available: false
   shortability_and_borrow_cost_available: false
 

@@ -84,11 +84,23 @@ Gamma is re-estimated every 12 months.  Daily composition matrices are not
 materialized because their `T x N x N` size can reach hundreds of GB.  The
 saved loadings reproduce a day's matrix as `I - beta pinv(beta)`.
 
+The public replication code initializes monthly factors with `PCA(X.T)`,
+allows up to 1,500 ALS iterations, and stops when the maximum absolute Gamma
+change is below `1e-3`. Daily factor regressions use returns after subtracting
+the daily risk-free return. Missing daily stock returns in a selected monthly
+universe are represented as zero during the cross-sectional regression and
+remain zero residuals, matching the public array implementation.
+
+`initial_months` and the rolling `window_months` are distinct. The paper's
+public configuration uses 420 pre-OOS months but estimates Gamma on only the
+last 240 months. The estimator now rejects any ALS window that fails the
+published convergence rule instead of writing unstable residuals.
+
 ## Commands
 
 ```powershell
 uv run python guijarro-ordonez-2025-replication/run.py build-ipca-characteristics --allow-non-pit-statements --impute-missing-characteristics
-uv run python guijarro-ordonez-2025-replication/run.py estimate-ipca --ipca-factors 5 --ipca-window-months 60 --allow-short-history-ipca
+uv run python guijarro-ordonez-2025-replication/run.py estimate-ipca --ipca-factors 5 --ipca-initial-months 60 --ipca-window-months 60 --allow-short-history-ipca
 ```
 
 Omitting the short-history switch keeps the paper's 240-month gate and fails on
@@ -110,3 +122,12 @@ The normalized output is complete only when explicit median-rank imputation is
 enabled. Consequently, the short-history IPCA result is a feasibility and
 sensitivity result; it is not evidence that the 46 original U.S. variables were
 observed without substitution.
+
+The K=5, 60-month Korean sensitivity is currently **blocked by numerical
+non-convergence**. With the public `PCA(X.T)` initialization, `solve`-first
+normal equations, 1,500-iteration ceiling, and `1e-3` tolerance, the January
+2015--December 2019 window ended at `final_delta=3.71009`; shifting the window
+to January 2016--December 2020 produced `final_delta=2.42492e23`. These windows
+must not be used as residual inputs. The likely mechanism is weak numerical
+identification from a window only 60 months long combined with extensive
+median-rank imputation, especially direct `D2P` coverage of only 5.4%.

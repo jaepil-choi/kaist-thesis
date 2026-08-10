@@ -30,6 +30,8 @@
 - [ ] rolling PCA residuals
 - [x] 46개 characteristic builder와 IPCA ALS/residual core
 - [x] 전체 한국 패널 characteristic 산출 및 coverage audit 고정
+- [x] IPCA `initial_months`/rolling window 분리와 ALS convergence gate
+- [ ] K=5 60개월 short-history IPCA: 현재 proxy/imputation 패널에서 비수렴
 - [ ] 240개월 exact IPCA history 확보; 그 전 결과는 short-history sensitivity
 - [ ] OU+Threshold benchmark
 - [ ] Fourier+FFN benchmark

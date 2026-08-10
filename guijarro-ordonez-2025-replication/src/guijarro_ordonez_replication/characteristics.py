@@ -155,6 +155,34 @@ def load_ipca_price_panel(
     return frame.sort_values(["ticker", "date"]).reset_index(drop=True)
 
 
+def load_ipca_daily_returns(
+    path: str | Path,
+    *,
+    start: str | pd.Timestamp = "2015-01-01",
+) -> pd.DataFrame:
+    """Load only the three daily fields needed after characteristics exist.
+
+    The full price loader intentionally reads high, low, volume, market cap,
+    and shares for characteristic construction.  Re-reading those columns for
+    daily IPCA residual estimation wastes substantial memory on the full Korean
+    stock panel, so this narrow loader keeps the estimation path bounded.
+    """
+
+    import pyarrow.dataset as ds
+
+    dataset = ds.dataset(path, format="parquet")
+    table = dataset.to_table(
+        columns=["date", "ticker", "return"],
+        filter=ds.field("date") >= pd.Timestamp(start),
+    )
+    frame = table.to_pandas()
+    frame["date"] = pd.to_datetime(frame["date"], errors="raise")
+    frame["ticker"] = frame["ticker"].astype(str).str.upper()
+    if frame.duplicated(["date", "ticker"]).any():
+        raise ValueError("IPCA daily return panel has duplicate date-ticker keys")
+    return frame.sort_values(["date", "ticker"]).reset_index(drop=True)
+
+
 def load_ipca_annual_accounting(
     statement_path: str | Path,
     annual_share_path: str | Path,

@@ -47,6 +47,7 @@ from guijarro_ordonez_replication.residuals import (  # noqa: E402
 from guijarro_ordonez_replication.characteristics import (  # noqa: E402
     build_monthly_characteristics,
     load_ipca_annual_accounting,
+    load_ipca_daily_returns,
     load_ipca_price_panel,
 )
 from guijarro_ordonez_replication.ipca import (  # noqa: E402
@@ -355,8 +356,11 @@ def command_build_ipca_characteristics(
 def command_estimate_ipca(
     *,
     factors: int,
+    initial_months: int,
     window_months: int,
     allow_short_history: bool,
+    max_iterations: int,
+    tolerance: float,
 ) -> None:
     """Estimate daily IPCA residuals from the generated monthly panel."""
 
@@ -369,18 +373,58 @@ def command_estimate_ipca(
             "Build monthly characteristics first with build-ipca-characteristics."
         )
     monthly = pd.read_parquet(monthly_path)
-    prices = load_ipca_price_panel(repository / config["data"]["stock_daily"])[
-        ["date", "ticker", "return"]
-    ]
+    prices = load_ipca_daily_returns(repository / config["data"]["stock_daily"])
+    rf_path = PROJECT / "outputs" / "kimchi-exact" / "daily_market_rf.csv"
+    if not rf_path.exists():
+        raise SystemExit(
+            "Build exact Kimchi factors first; IPCA daily residuals require the "
+            "ECOS daily risk-free return output."
+        )
+    risk_free = pd.read_csv(rf_path, usecols=["date", "RF"])
+    risk_free["date"] = pd.to_datetime(risk_free["date"], errors="raise")
+    if risk_free["date"].duplicated().any():
+        raise ValueError("daily risk-free input has duplicate dates")
+    prices = prices.merge(risk_free, on="date", how="left", validate="many_to_one")
+    monthly_dates = pd.DatetimeIndex(
+        sorted(
+            pd.to_datetime(monthly["date"])
+            .dt.to_period("M")
+            .dt.to_timestamp("M")
+            .unique()
+        )
+    )
+    if len(monthly_dates) > initial_months:
+        first_oos_boundary = monthly_dates[initial_months - 1]
+        missing_oos_rf = prices.loc[
+            prices["date"].gt(first_oos_boundary) & prices["RF"].isna(), "date"
+        ].drop_duplicates()
+        if not missing_oos_rf.empty:
+            raise ValueError(
+                "daily RF is missing in the IPCA OOS period; first missing date is "
+                f"{missing_oos_rf.iloc[0].date()}"
+            )
+    prices["return"] = prices["return"] - prices["RF"]
+    prices = prices.drop(columns="RF")
+
+    def report_progress(event: dict[str, object]) -> None:
+        print(json.dumps(event, ensure_ascii=False), file=sys.stderr, flush=True)
+
     result = estimate_daily_ipca_residuals(
         monthly,
         prices,
         n_factors=factors,
+        initial_months=initial_months,
         window_months=window_months,
         reestimate_every_months=12,
         allow_short_history=allow_short_history,
+        max_iterations=max_iterations,
+        tolerance=tolerance,
+        progress=report_progress,
+        daily_return_definition=(
+            "cash-dividend-excluding adjusted price return minus ECOS daily RF"
+        ),
     )
-    tag = f"k{factors}_w{window_months}"
+    tag = f"k{factors}_i{initial_months}_w{window_months}"
     result.residuals.to_parquet(output / f"daily_residuals_{tag}.parquet", index=False)
     result.loadings.to_parquet(output / f"monthly_loadings_{tag}.parquet", index=False)
     (output / f"ipca_audit_{tag}.json").write_text(
@@ -413,7 +457,10 @@ def main() -> None:
         help="fill missing cross-sectional ranks with the monthly median rank 0",
     )
     parser.add_argument("--ipca-factors", type=int, default=5)
+    parser.add_argument("--ipca-initial-months", type=int, default=420)
     parser.add_argument("--ipca-window-months", type=int, default=240)
+    parser.add_argument("--ipca-max-iterations", type=int, default=1500)
+    parser.add_argument("--ipca-tolerance", type=float, default=1e-3)
     parser.add_argument(
         "--allow-short-history-ipca",
         action="store_true",
@@ -440,8 +487,11 @@ def main() -> None:
     else:
         command_estimate_ipca(
             factors=args.ipca_factors,
+            initial_months=args.ipca_initial_months,
             window_months=args.ipca_window_months,
             allow_short_history=args.allow_short_history_ipca,
+            max_iterations=args.ipca_max_iterations,
+            tolerance=args.ipca_tolerance,
         )
 
 

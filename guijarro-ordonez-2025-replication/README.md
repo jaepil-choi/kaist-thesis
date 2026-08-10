@@ -12,7 +12,8 @@
 - 데이터가 없으면 결과를 생략하거나 임의 proxy로 채우지 않고 `blocked` 상태와
   필요한 입력을 기록한다.
 - 현재 구현은 논문 식 (1)의 residual composition과 식 (3)의
-  residual-to-stock weight 변환, registry 검증, 4종목 합성 예시까지다.
+  residual-to-stock weight 변환, 46개 characteristic builder, IPCA ALS와
+  convergence gate, registry 검증, 4종목 합성 예시까지다.
 - 현재 한국 자료로 가능한 실증 범위는 2015년 이후 PCA residual pilot이다.
   이는 원 논문의 1978–2016 입력 및 1998–2016 OOS 설계를 exact replicate한
   결과가 아니다.
@@ -27,7 +28,7 @@ uv run python guijarro-ordonez-2025-replication/run.py demo-residuals
 uv run python guijarro-ordonez-2025-replication/run.py build-kimchi-factors --allow-non-pit-statements
 uv run python guijarro-ordonez-2025-replication/run.py build-factors-proxy --allow-non-pit-statements
 uv run python guijarro-ordonez-2025-replication/run.py build-ipca-characteristics --allow-non-pit-statements --impute-missing-characteristics
-uv run python guijarro-ordonez-2025-replication/run.py estimate-ipca --ipca-factors 5 --ipca-window-months 60 --allow-short-history-ipca
+uv run python guijarro-ordonez-2025-replication/run.py estimate-ipca --ipca-factors 5 --ipca-initial-months 60 --ipca-window-months 60 --allow-short-history-ipca
 uv run pytest guijarro-ordonez-2025-replication/tests
 uv run ruff check guijarro-ordonez-2025-replication
 ```
@@ -95,6 +96,10 @@ GPU VRAM 36GB가 필요하다. 현재 루트 환경에 PyTorch를 즉시 추가�
 구현되어 있다. 현재 자료로 실행할 때에는 고정 3개월 lag, 일부 한국 proxy 및
 240개월보다 짧은 window를 각각 명시적인 warning/audit로 남긴다. 자세한 계약은
 `docs/ipca-methodology.md`를 따른다.
+
+현재 K=5·60개월 진단은 공개 코드의 1,500회/`1e-3` 기준에서 수렴하지 않아
+잔차 파일을 생성하지 않는다. 월별 characteristic을 만들 수 있다는 사실만으로
+short-history IPCA가 추정 가능하다고 간주하지 않는다.
 
 공식 코드의 공개 라이선스는 상업적 사용을 금지한다. 이 프로젝트에서 코드를
 복사·수정할 때는 provenance와 라이선스 경계를 별도로 기록한다.
