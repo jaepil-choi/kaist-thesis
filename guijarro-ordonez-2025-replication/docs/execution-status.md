@@ -59,6 +59,7 @@ unadjusted research backtests and not deployable performance estimates.
 | PCA10 | OU threshold | 0.075 | 0.044 | 1.708 |
 | PCA10 | Fourier+FFN | 0.116 | 0.033 | 3.531 |
 | PCA15 | OU threshold | 0.046 | 0.034 | 1.338 |
+| PCA15 | Fourier+FFN | 0.052 | 0.028 | 1.816 |
 | Korean FF1 | OU threshold | 0.028 | 0.100 | 0.276 |
 | Korean FF3 | OU threshold | 0.046 | 0.063 | 0.732 |
 | Korean FF5 | OU threshold | 0.024 | 0.050 | 0.472 |
@@ -82,9 +83,10 @@ resumable; exact epochs and home-GPU commands are in
 - Completed on the home AMD GPU after the PCA5 objectives: PCA8 Fourier+FFN,
   with annual return 0.139, volatility 0.035, Sharpe 3.923, and mean daily
   turnover 0.846; and PCA10 Fourier+FFN, with annual return 0.116, volatility
-  0.033, Sharpe 3.531, and mean daily turnover 0.892.
-- Checkpointed: PCA15 Fourier+FFN and candidate 2 of the 16-candidate validation
-  grid.
+  0.033, Sharpe 3.531, and mean daily turnover 0.892. PCA15 Fourier+FFN then
+  produced annual return 0.052, volatility 0.028, Sharpe 1.816, and mean daily
+  turnover 0.966.
+- Checkpointed: candidate 2 of the 16-candidate validation grid.
 - Not started: 60-day lookback, five-day holding, five alternative CNN
   specifications, and K=1 short-history IPCA convergence sensitivity.
 
