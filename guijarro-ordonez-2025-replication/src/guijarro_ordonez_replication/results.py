@@ -68,7 +68,7 @@ def _load_strategy(directory: Path) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
     return daily, weights, audit
 
 
-def build_korean_pca5_report(
+def build_korean_main_report(
     strategy_directories: list[Path],
     factor_path: Path,
     output_directory: Path,
@@ -93,7 +93,10 @@ def build_korean_pca5_report(
     alpha_rows: list[dict[str, object]] = []
     for directory in strategy_directories:
         daily, weights, audit = _load_strategy(directory)
-        label = f"{audit['model']} / {audit['objective']}"
+        label = (
+            f"{audit.get('factor_model', 'PCA')} / "
+            f"{audit['model']} / {audit['objective']}"
+        )
         loaded.append((label, daily, weights, audit))
         performance_rows.append(
             {
@@ -119,18 +122,18 @@ def build_korean_pca5_report(
     output_directory.mkdir(parents=True, exist_ok=True)
     performance = pd.DataFrame(performance_rows)
     alphas = pd.DataFrame(alpha_rows)
-    performance.to_csv(output_directory / "table_01_korean_pca5_performance.csv", index=False)
-    alphas.to_csv(output_directory / "table_02_korean_pca5_factor_alpha.csv", index=False)
+    performance.to_csv(output_directory / "table_01_korean_performance.csv", index=False)
+    alphas.to_csv(output_directory / "table_02_korean_factor_alpha.csv", index=False)
 
     figure, axis = plt.subplots(figsize=(9, 5))
     for label, daily, _, _ in loaded:
         cumulative = (1 + daily.set_index("date")["return"]).cumprod() - 1
         axis.plot(cumulative.index, cumulative, label=label)
     axis.axhline(0, color="black", linewidth=0.7)
-    axis.set(title="Korean PCA5 statistical-arbitrage OOS returns", ylabel="Cumulative return")
+    axis.set(title="Korean statistical-arbitrage OOS returns", ylabel="Cumulative return")
     axis.legend()
     figure.tight_layout()
-    figure.savefig(output_directory / "fig_05_korean_pca5_cumulative_returns.png", dpi=180)
+    figure.savefig(output_directory / "fig_05_korean_cumulative_returns.png", dpi=180)
     plt.close(figure)
 
     figure, axes = plt.subplots(1, 2, figsize=(11, 4))
@@ -143,7 +146,7 @@ def build_korean_pca5_report(
     axes[1].set(title="20-day average short allocation", ylabel="Gross short share")
     axes[0].legend()
     figure.tight_layout()
-    figure.savefig(output_directory / "fig_06_07_korean_pca5_trading.png", dpi=180)
+    figure.savefig(output_directory / "fig_06_07_korean_trading.png", dpi=180)
     plt.close(figure)
 
     figure, axis = plt.subplots(figsize=(9, 5))
@@ -154,11 +157,11 @@ def build_korean_pca5_report(
     axis.set(title="Distribution of nonzero underlying asset weights", xlabel="Weight")
     axis.legend()
     figure.tight_layout()
-    figure.savefig(output_directory / "fig_08_korean_pca5_weight_distribution.png", dpi=180)
+    figure.savefig(output_directory / "fig_08_korean_weight_distribution.png", dpi=180)
     plt.close(figure)
 
     audit = {
-        "classification": "Korean PCA price-return replication variant",
+        "classification": "Korean residual-model price-return replication variants",
         "strategy_directories": [str(path) for path in strategy_directories],
         "factor_source": str(factor_path),
         "factor_regression_covariance": "OLS non-robust, matching public run_stats.py",
@@ -173,3 +176,7 @@ def build_korean_pca5_report(
         json.dumps(audit, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     return audit
+
+
+# Backward-compatible name for early PCA-only callers.
+build_korean_pca5_report = build_korean_main_report

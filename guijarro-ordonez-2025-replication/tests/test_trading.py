@@ -111,6 +111,34 @@ def test_ou_rolling_simulation_is_strictly_oos() -> None:
     assert np.isfinite(result.daily.drop(columns="date").to_numpy()).all()
 
 
-def test_config_rejects_nonimplemented_holding_period() -> None:
-    with pytest.raises(ValueError, match="one-day"):
-        SimulationConfig(holding_days=5).validate()
+def test_config_rejects_nonpositive_holding_period() -> None:
+    with pytest.raises(ValueError, match="positive"):
+        SimulationConfig(holding_days=0).validate()
+
+
+def test_multiday_holding_path_keeps_public_leading_zeros() -> None:
+    dates = pd.date_range("2020-01-01", periods=14, freq="B")
+    residuals = np.column_stack(
+        [np.sin(np.arange(14)) * 0.01 + 0.001, np.cos(np.arange(14)) * 0.01 + 0.001]
+    )
+    panel = ResidualPanel(
+        dates=dates,
+        tickers=("A", "B"),
+        residuals=residuals,
+        left=np.zeros((14, 2, 1)),
+        right=np.zeros((14, 2, 1)),
+        observed=np.ones((14, 2), dtype=bool),
+    )
+    result = simulate_rolling_strategy(
+        panel,
+        SimulationConfig(
+            model_name="ou_threshold",
+            lookback_days=3,
+            training_window_days=8,
+            stride_days=6,
+            epochs=1,
+            batch_days=2,
+            holding_days=3,
+        ),
+    )
+    np.testing.assert_allclose(result.daily["return"].iloc[:3], 0)

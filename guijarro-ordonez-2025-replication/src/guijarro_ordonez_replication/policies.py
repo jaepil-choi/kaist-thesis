@@ -108,6 +108,95 @@ class CNNTransformer(nn.Module):
         return self.linear(outputs[-1]).squeeze(-1)
 
 
+class WeightsTransformer(nn.Module):
+    """Public friction model's attention block with lagged weight input."""
+
+    def __init__(
+        self,
+        *,
+        width: int = 8,
+        attention_heads: int = 4,
+        hidden_units: int = 16,
+        dropout: float = 0.25,
+    ) -> None:
+        super().__init__()
+        self.attention = nn.MultiheadAttention(width, attention_heads)
+        self.linear1 = nn.Linear(width + 1, hidden_units)
+        self.dropout = nn.Dropout(dropout)
+        self.linear2 = nn.Linear(hidden_units, width + 1)
+        self.norm1 = nn.LayerNorm(width + 1)
+        self.norm2 = nn.LayerNorm(width + 1)
+        self.dropout1 = nn.Dropout(dropout)
+        self.dropout2 = nn.Dropout(dropout)
+        self.activation = nn.ReLU(inplace=True)
+
+    def forward(
+        self, inputs: torch.Tensor, old_weights: torch.Tensor
+    ) -> torch.Tensor:
+        attended = self.attention(inputs, inputs, inputs)[0][-1]
+        outputs = inputs[-1] + self.dropout1(attended)
+        outputs = torch.cat((outputs, old_weights.reshape(-1, 1)), dim=1)
+        outputs = self.norm1(outputs)
+        transformed = self.linear2(
+            self.dropout(self.activation(self.linear1(outputs)))
+        )
+        return self.norm2(outputs + self.dropout2(transformed))
+
+
+class CNNTransformerFrictions(nn.Module):
+    """CNN+Transformer policy conditioned on the previous residual weight."""
+
+    is_trainable = True
+    uses_previous_weight = True
+
+    def __init__(
+        self,
+        *,
+        random_seed: int = 0,
+        lookback: int = 30,
+        normalization_conv: bool = True,
+        filter_numbers: tuple[int, ...] = (1, 8),
+        attention_heads: int = 4,
+        hidden_units_factor: int = 2,
+        dropout: float = 0.25,
+        filter_size: int = 2,
+    ) -> None:
+        super().__init__()
+        torch.manual_seed(random_seed)
+        self.random_seed = random_seed
+        self.lookback = lookback
+        self.filter_numbers = filter_numbers
+        self.blocks = nn.ModuleList(
+            CNNBlock(
+                filter_numbers[index],
+                filter_numbers[index + 1],
+                normalization=normalization_conv,
+                filter_size=filter_size,
+            )
+            for index in range(len(filter_numbers) - 1)
+        )
+        width = filter_numbers[-1]
+        self.encoder = WeightsTransformer(
+            width=width,
+            attention_heads=attention_heads,
+            hidden_units=hidden_units_factor * width,
+            dropout=dropout,
+        )
+        self.linear = nn.Linear(width + 1, 1)
+
+    def forward(
+        self, inputs: torch.Tensor, old_weights: torch.Tensor
+    ) -> torch.Tensor:
+        if inputs.ndim != 2 or inputs.shape[1] != self.lookback:
+            raise ValueError(f"inputs must have shape (batch, {self.lookback})")
+        outputs = inputs.reshape(inputs.shape[0], 1, self.lookback)
+        for block in self.blocks:
+            outputs = block(outputs)
+        outputs = outputs.permute(2, 0, 1)
+        outputs = self.encoder(outputs, old_weights)
+        return self.linear(outputs).squeeze(-1)
+
+
 class FourierFFN(nn.Module):
     """Paper benchmark feedforward network for packed Fourier coefficients."""
 

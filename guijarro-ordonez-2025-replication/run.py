@@ -65,7 +65,7 @@ from guijarro_ordonez_replication.trading import (  # noqa: E402
     simulate_rolling_strategy,
 )
 from guijarro_ordonez_replication.results import (  # noqa: E402
-    build_korean_pca5_report,
+    build_korean_main_report,
 )
 from guijarro_ordonez_replication.spec_outputs import (  # noqa: E402
     build_spec_outputs,
@@ -75,6 +75,15 @@ from guijarro_ordonez_replication.fama_french_residuals import (  # noqa: E402
 )
 from guijarro_ordonez_replication.trading import (  # noqa: E402
     load_fama_french_residual_panel,
+)
+from guijarro_ordonez_replication.robustness import (  # noqa: E402
+    build_robustness_figures,
+)
+from guijarro_ordonez_replication.interpretability import (  # noqa: E402
+    build_interpretability_figures,
+)
+from guijarro_ordonez_replication.appendix_outputs import (  # noqa: E402
+    build_appendix_outputs,
 )
 
 
@@ -517,6 +526,7 @@ def command_simulate_pca(
     objective: str,
     lookback_days: int,
     epochs: int,
+    holding_days: int,
     transaction_cost: float,
     short_holding_cost: float,
     rolling_retrain: bool,
@@ -544,6 +554,8 @@ def command_simulate_pca(
         f"pca5_{model_name}_{objective}_lb{lookback_days}_e{epochs}_"
         f"{'rolling' if rolling_retrain else 'constant'}_{cost_tag}"
     )
+    if holding_days != 1:
+        tag += f"_h{holding_days}"
     output = PROJECT / "outputs" / "strategies" / tag
     output.mkdir(parents=True, exist_ok=True)
     panel = load_pca_residual_panel(residual_path, loading_path)
@@ -552,6 +564,7 @@ def command_simulate_pca(
         objective=objective,
         lookback_days=lookback_days,
         epochs=epochs,
+        holding_days=holding_days,
         transaction_cost=transaction_cost,
         short_holding_cost=short_holding_cost,
         rolling_retrain=rolling_retrain,
@@ -617,6 +630,7 @@ def command_simulate_fama_french(
     objective: str,
     lookback_days: int,
     epochs: int,
+    holding_days: int,
     transaction_cost: float,
     short_holding_cost: float,
     rolling_retrain: bool,
@@ -638,6 +652,8 @@ def command_simulate_fama_french(
         f"ff{factors}_{model_name}_{objective}_lb{lookback_days}_e{epochs}_"
         f"{'rolling' if rolling_retrain else 'constant'}_{cost_tag}"
     )
+    if holding_days != 1:
+        run_tag += f"_h{holding_days}"
     output = PROJECT / "outputs" / "strategies" / run_tag
     output.mkdir(parents=True, exist_ok=True)
     simulation_config = SimulationConfig(
@@ -645,6 +661,7 @@ def command_simulate_fama_french(
         objective=objective,
         lookback_days=lookback_days,
         epochs=epochs,
+        holding_days=holding_days,
         transaction_cost=transaction_cost,
         short_holding_cost=short_holding_cost,
         rolling_retrain=rolling_retrain,
@@ -666,15 +683,17 @@ def command_simulate_fama_french(
     print(json.dumps({"output": str(output), **audit}, ensure_ascii=False, indent=2))
 
 
-def command_report_pca() -> None:
-    """Build core Korean PCA5 tables and figures from completed exact-policy runs."""
+def command_report_strategies() -> None:
+    """Build Korean main tables and figures from completed full-contract runs."""
 
     strategy_root = PROJECT / "outputs" / "strategies"
-    directories = [
-        strategy_root / "pca5_ou_threshold_sharpe_lb30_e100_rolling_no-cost",
-        strategy_root / "pca5_fourier_ffn_sharpe_lb30_e100_rolling_no-cost",
-        strategy_root / "pca5_cnn_transformer_sharpe_lb30_e100_rolling_no-cost",
-    ]
+    directories = []
+    for residual_tag in ("pca5", "ff1", "ff3", "ff5"):
+        for model_name in ("ou_threshold", "fourier_ffn", "cnn_transformer"):
+            directories.append(
+                strategy_root
+                / f"{residual_tag}_{model_name}_sharpe_lb30_e100_rolling_no-cost"
+            )
     available = [
         directory
         for directory in directories
@@ -682,10 +701,10 @@ def command_report_pca() -> None:
     ]
     if not available:
         raise SystemExit("Run at least one full-contract PCA5 strategy first.")
-    audit = build_korean_pca5_report(
+    audit = build_korean_main_report(
         available,
         PROJECT / "outputs" / "kimchi-exact" / "daily_factor_returns.csv",
-        PROJECT / "outputs" / "paper-korean-pca5",
+        PROJECT / "outputs" / "paper-korean",
     )
     print(json.dumps(audit, ensure_ascii=False, indent=2))
 
@@ -694,6 +713,103 @@ def command_build_spec_outputs() -> None:
     """Generate the paper outputs that depend only on the stated model spec."""
 
     audit = build_spec_outputs(PROJECT / "outputs" / "paper-spec")
+    print(json.dumps(audit, ensure_ascii=False, indent=2))
+
+
+def command_build_robustness() -> None:
+    """Build Figures 9-12 Korean variants for the full CNN PCA5 benchmark."""
+
+    strategy = (
+        PROJECT
+        / "outputs"
+        / "strategies"
+        / "pca5_cnn_transformer_sharpe_lb30_e100_rolling_no-cost"
+    )
+    if not (strategy / "simulation_audit.json").exists():
+        raise SystemExit("Complete the 100-epoch rolling PCA5 CNN benchmark first.")
+    pca_root = PROJECT / "outputs" / "pca"
+    panel = load_pca_residual_panel(
+        pca_root / "daily_residuals_k5_20200102_c252_l60.parquet",
+        pca_root / "daily_low_rank_loadings_k5_20200102_c252_l60.parquet",
+    )
+    weights = pd.read_parquet(strategy / "daily_asset_weights.parquet")
+    weights.index = pd.to_datetime(weights.index, errors="raise")
+    repository = PROJECT.parent
+    config = yaml.safe_load((PROJECT / "config" / "default.yml").read_text("utf-8"))
+    daily = _load_daily_excess_returns(repository, config)
+    asset_returns = daily.pivot(index="date", columns="ticker", values="return")
+    asset_returns = asset_returns.reindex(
+        index=weights.index, columns=weights.columns
+    ).fillna(0)
+    audit = build_robustness_figures(
+        panel,
+        weights,
+        asset_returns,
+        PROJECT / "outputs" / "paper-korean" / "robustness",
+    )
+    print(json.dumps(audit, ensure_ascii=False, indent=2))
+
+
+def command_build_interpretability() -> None:
+    """Build Figures 14-19 from the first full rolling CNN checkpoint."""
+
+    strategy = (
+        PROJECT
+        / "outputs"
+        / "strategies"
+        / "pca5_cnn_transformer_sharpe_lb30_e100_rolling_no-cost"
+    )
+    checkpoint = strategy / "checkpoints" / "subperiod_00.pt"
+    if not checkpoint.exists():
+        raise SystemExit("Complete PCA5 CNN subperiod 0 before interpretation.")
+    pca_root = PROJECT / "outputs" / "pca"
+    panel = load_pca_residual_panel(
+        pca_root / "daily_residuals_k5_20200102_c252_l60.parquet",
+        pca_root / "daily_low_rank_loadings_k5_20200102_c252_l60.parquet",
+    )
+    audit = build_interpretability_figures(
+        panel,
+        checkpoint,
+        PROJECT / "outputs" / "paper-korean" / "interpretability",
+    )
+    print(json.dumps(audit, ensure_ascii=False, indent=2))
+
+
+def command_build_appendix() -> None:
+    """Build data-backed Korean variants of selected appendix outputs."""
+
+    strategy_root = PROJECT / "outputs" / "strategies"
+    candidates = [
+        directory
+        for directory in strategy_root.iterdir()
+        if directory.is_dir()
+        and "_e100_" in directory.name
+        and directory.name.endswith("_no-cost")
+        and (directory / "simulation_audit.json").exists()
+    ]
+    if not candidates:
+        raise SystemExit("Complete at least one 100-epoch no-cost strategy first.")
+    pca_root = PROJECT / "outputs" / "pca"
+    panel = load_pca_residual_panel(
+        pca_root / "daily_residuals_k5_20200102_c252_l60.parquet",
+        pca_root / "daily_low_rank_loadings_k5_20200102_c252_l60.parquet",
+    )
+    repository = PROJECT.parent
+    config = yaml.safe_load((PROJECT / "config" / "default.yml").read_text("utf-8"))
+    factors = pd.read_csv(
+        PROJECT / "outputs" / "kimchi-exact" / "daily_factor_returns.csv",
+        parse_dates=["date"],
+    )
+    industry = pd.read_parquet(
+        repository / config["data"]["sector_classification"]
+    )
+    audit = build_appendix_outputs(
+        panel,
+        sorted(candidates),
+        factors,
+        industry,
+        PROJECT / "outputs" / "paper-korean" / "appendix",
+    )
     print(json.dumps(audit, ensure_ascii=False, indent=2))
 
 
@@ -711,9 +827,13 @@ def main() -> None:
             "estimate-pca",
             "simulate-pca",
             "report-pca",
+            "report-strategies",
             "build-spec-outputs",
             "estimate-fama-french",
             "simulate-fama-french",
+            "build-robustness",
+            "build-interpretability",
+            "build-appendix",
         ),
     )
     parser.add_argument(
@@ -741,7 +861,12 @@ def main() -> None:
     parser.add_argument("--ff-loading-window-days", type=int, default=60)
     parser.add_argument(
         "--simulation-model",
-        choices=("cnn_transformer", "fourier_ffn", "ou_threshold"),
+        choices=(
+            "cnn_transformer",
+            "cnn_transformer_frictions",
+            "fourier_ffn",
+            "ou_threshold",
+        ),
         default="cnn_transformer",
     )
     parser.add_argument(
@@ -749,6 +874,7 @@ def main() -> None:
     )
     parser.add_argument("--simulation-lookback-days", type=int, default=30)
     parser.add_argument("--simulation-epochs", type=int, default=100)
+    parser.add_argument("--simulation-holding-days", type=int, default=1)
     parser.add_argument("--simulation-transaction-cost", type=float, default=0.0)
     parser.add_argument("--simulation-short-holding-cost", type=float, default=0.0)
     parser.add_argument(
@@ -802,6 +928,7 @@ def main() -> None:
             objective=args.simulation_objective,
             lookback_days=args.simulation_lookback_days,
             epochs=args.simulation_epochs,
+            holding_days=args.simulation_holding_days,
             transaction_cost=args.simulation_transaction_cost,
             short_holding_cost=args.simulation_short_holding_cost,
             rolling_retrain=not args.simulation_constant_model,
@@ -819,12 +946,19 @@ def main() -> None:
             objective=args.simulation_objective,
             lookback_days=args.simulation_lookback_days,
             epochs=args.simulation_epochs,
+            holding_days=args.simulation_holding_days,
             transaction_cost=args.simulation_transaction_cost,
             short_holding_cost=args.simulation_short_holding_cost,
             rolling_retrain=not args.simulation_constant_model,
         )
-    elif args.command == "report-pca":
-        command_report_pca()
+    elif args.command in {"report-pca", "report-strategies"}:
+        command_report_strategies()
+    elif args.command == "build-robustness":
+        command_build_robustness()
+    elif args.command == "build-interpretability":
+        command_build_interpretability()
+    elif args.command == "build-appendix":
+        command_build_appendix()
     else:
         command_build_spec_outputs()
 

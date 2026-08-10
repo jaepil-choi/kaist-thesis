@@ -12,7 +12,7 @@ import torch
 from numpy.typing import NDArray
 from torch import nn
 
-from .policies import CNNTransformer, FourierFFN, OUThreshold
+from .policies import CNNTransformer, CNNTransformerFrictions, FourierFFN, OUThreshold
 
 
 FloatArray = NDArray[np.float64]
@@ -56,7 +56,12 @@ class SimulationConfig:
     resume_checkpoints: bool = True
 
     def validate(self) -> None:
-        if self.model_name not in {"cnn_transformer", "fourier_ffn", "ou_threshold"}:
+        if self.model_name not in {
+            "cnn_transformer",
+            "cnn_transformer_frictions",
+            "fourier_ffn",
+            "ou_threshold",
+        }:
             raise ValueError(f"unsupported model_name: {self.model_name}")
         if self.objective.lower() not in {"sharpe", "meanvar"}:
             raise ValueError(f"unsupported objective: {self.objective}")
@@ -66,8 +71,8 @@ class SimulationConfig:
             raise ValueError("training window must exceed lookback")
         if min(self.stride_days, self.epochs, self.batch_days) <= 0:
             raise ValueError("stride, epochs, and batch_days must be positive")
-        if self.holding_days != 1:
-            raise ValueError("the current exact path supports one-day holding only")
+        if self.holding_days <= 0:
+            raise ValueError("holding_days must be positive")
         if min(self.transaction_cost, self.short_holding_cost) < 0:
             raise ValueError("trading costs cannot be negative")
 
@@ -295,6 +300,11 @@ def _model(config: SimulationConfig) -> nn.Module:
             random_seed=config.random_seed,
             lookback=config.lookback_days,
         )
+    if config.model_name == "cnn_transformer_frictions":
+        return CNNTransformerFrictions(
+            random_seed=config.random_seed,
+            lookback=config.lookback_days,
+        )
     if config.model_name == "fourier_ffn":
         return FourierFFN(
             random_seed=config.random_seed,
@@ -316,9 +326,27 @@ def _predict_weights(
     model: nn.Module,
     features: torch.Tensor,
     selected: torch.Tensor,
+    previous_residual_weights: torch.Tensor | None = None,
 ) -> torch.Tensor:
     weights = torch.zeros(selected.shape, device=features.device)
-    if selected.any():
+    uses_previous = bool(getattr(model, "uses_previous_weight", False))
+    if uses_previous and previous_residual_weights is None:
+        for time_index in range(len(features)):
+            valid = selected[time_index]
+            if valid.any():
+                old = (
+                    torch.zeros(selected.shape[1], device=features.device)
+                    if time_index == 0
+                    else weights[time_index - 1]
+                )
+                weights[time_index, valid] = model(
+                    features[time_index, valid], old[valid]
+                )
+    elif uses_previous and selected.any():
+        weights[selected] = model(
+            features[selected], previous_residual_weights[selected]
+        )
+    elif selected.any():
         weights[selected] = model(features[selected])
     return weights
 
@@ -331,11 +359,22 @@ def _portfolio_path(
     left: torch.Tensor,
     right: torch.Tensor,
     extra_asset_loadings: torch.Tensor | None = None,
+    previous_residual_weights: torch.Tensor | None = None,
     *,
+    holding_days: int,
     transaction_cost: float,
     short_holding_cost: float,
-) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
-    raw_weights = _predict_weights(model, features, selected)
+) -> tuple[
+    torch.Tensor,
+    torch.Tensor,
+    torch.Tensor,
+    torch.Tensor,
+    torch.Tensor,
+    torch.Tensor,
+]:
+    raw_weights = _predict_weights(
+        model, features, selected, previous_residual_weights
+    )
     if extra_asset_loadings is None:
         residual_weights, asset_weights = low_rank_asset_weights(
             raw_weights, left, right
@@ -352,12 +391,39 @@ def _portfolio_path(
         )
     )
     short_proportion = torch.clamp(asset_weights, max=0).abs().sum(dim=1)
-    net_returns = (
-        strategy_returns
-        - transaction_cost * turnover
-        - short_holding_cost * short_proportion
+    if holding_days == 1:
+        net_returns = (
+            strategy_returns
+            - transaction_cost * turnover
+            - short_holding_cost * short_proportion
+        )
+    else:
+        gross_holding = torch.zeros_like(strategy_returns)
+        net_returns = torch.zeros_like(strategy_returns)
+        for time_index in range(holding_days, len(strategy_returns)):
+            held_weights = residual_weights[
+                time_index - holding_days + 1 : time_index - holding_days + 2
+            ].expand(holding_days, -1)
+            daily_held_returns = (
+                held_weights
+                * residuals[time_index - holding_days + 1 : time_index + 1]
+            ).sum(dim=1)
+            gross = torch.cumprod(1 + daily_held_returns, dim=0)[-1] - 1
+            cost = transaction_cost * (
+                asset_weights[time_index] - asset_weights[time_index - holding_days]
+            ).abs().sum()
+            cost += short_holding_cost * asset_weights[time_index].clamp(max=0).abs().sum()
+            gross_holding[time_index] = gross / holding_days
+            net_returns[time_index] = (gross - cost) / holding_days
+        strategy_returns = gross_holding
+    return (
+        net_returns,
+        strategy_returns,
+        turnover,
+        short_proportion,
+        asset_weights,
+        residual_weights,
     )
-    return net_returns, strategy_returns, turnover, short_proportion, asset_weights
 
 
 def _train_subperiod(
@@ -380,10 +446,15 @@ def _train_subperiod(
         else config.checkpoint_directory / f"subperiod_{subperiod:02d}.pt"
     )
     initial_epoch = 0
+    previous_by_batch: dict[int, torch.Tensor] = {}
     if checkpoint_path is not None and config.resume_checkpoints and checkpoint_path.exists():
         checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
         model.load_state_dict(checkpoint["model_state_dict"])
         optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+        previous_by_batch = {
+            int(key): value.to(device)
+            for key, value in checkpoint.get("previous_weights", {}).items()
+        }
         initial_epoch = int(checkpoint["epoch"]) + 1
         if progress is not None:
             progress(
@@ -396,7 +467,9 @@ def _train_subperiod(
     signal_start = start + config.lookback_days
     signal_stop = stop
     for epoch in range(initial_epoch, config.epochs):
-        for batch_start in range(signal_start, signal_stop, config.batch_days):
+        for batch_index, batch_start in enumerate(
+            range(signal_start, signal_stop, config.batch_days)
+        ):
             batch_stop = min(batch_start + config.batch_days, signal_stop)
             feature_slice = slice(
                 batch_start - config.lookback_days,
@@ -415,7 +488,7 @@ def _train_subperiod(
             right = torch.as_tensor(
                 panel.right[batch_start:batch_stop], dtype=torch.float32, device=device
             )
-            net_returns, _, _, _, _ = _portfolio_path(
+            values = _portfolio_path(
                 model,
                 inputs,
                 valid,
@@ -431,13 +504,22 @@ def _train_subperiod(
                         device=device,
                     )
                 ),
+                (
+                    previous_by_batch.get(batch_index)
+                    if getattr(model, "uses_previous_weight", False)
+                    else None
+                ),
+                holding_days=config.holding_days,
                 transaction_cost=config.transaction_cost,
                 short_holding_cost=config.short_holding_cost,
             )
+            net_returns = values[0]
             loss = objective_loss(net_returns, config.objective)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            if getattr(model, "uses_previous_weight", False):
+                previous_by_batch[batch_index] = values[5].detach()
         if checkpoint_path is not None:
             checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
             temporary = checkpoint_path.with_suffix(".tmp")
@@ -446,6 +528,10 @@ def _train_subperiod(
                     "epoch": epoch,
                     "model_state_dict": model.state_dict(),
                     "optimizer_state_dict": optimizer.state_dict(),
+                    "previous_weights": {
+                        key: value.detach().cpu()
+                        for key, value in previous_by_batch.items()
+                    },
                 },
                 temporary,
             )
@@ -547,6 +633,7 @@ def simulate_rolling_strategy(
                         device=device,
                     )
                 ),
+                holding_days=config.holding_days,
                 transaction_cost=config.transaction_cost,
                 short_holding_cost=config.short_holding_cost,
             )
