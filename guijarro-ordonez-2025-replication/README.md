@@ -9,6 +9,8 @@
 - exact replication과 한국시장 extension을 분리한다.
 - 원 논문의 Figure 1–19, Table 1–9, Appendix Figure A.1–A.7,
   Table A.I–A.X 총 45개를 `config/output-registry.yml`에 등록한다.
+- 전체 실행의 표본 계약, 실제 성과 및 남은 data gate는
+  `docs/execution-status.md`에 기록한다.
 - 데이터가 없으면 결과를 생략하거나 임의 proxy로 채우지 않고 `blocked` 상태와
   필요한 입력을 기록한다.
 - 구현 범위는 residual composition, rolling PCA·FF residual, 46개

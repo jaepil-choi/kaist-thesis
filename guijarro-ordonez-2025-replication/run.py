@@ -608,6 +608,11 @@ def command_simulate_pca(
             "Stock returns K0" if factors == 0 else f"PCA{factors}"
         ),
         "factor_count": factors,
+        "identity_universe_reference": (
+            "PCA5 monthly universe and observed-return mask"
+            if factors == 0
+            else None
+        ),
     }
     (output / "simulation_audit.json").write_text(
         json.dumps(audit, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -840,11 +845,10 @@ def command_build_appendix() -> None:
         for directory in strategy_root.iterdir()
         if directory.is_dir()
         and "_e100_" in directory.name
-        and directory.name.endswith("_no-cost")
         and (directory / "simulation_audit.json").exists()
     ]
     if not candidates:
-        raise SystemExit("Complete at least one 100-epoch no-cost strategy first.")
+        raise SystemExit("Complete at least one 100-epoch strategy first.")
     pca_root = PROJECT / "outputs" / "pca"
     panel = load_pca_residual_panel(
         pca_root / "daily_residuals_k5_20200102_c252_l60.parquet",
@@ -1020,7 +1024,7 @@ def main() -> None:
     parser.add_argument("--ipca-max-iterations", type=int, default=1500)
     parser.add_argument("--ipca-tolerance", type=float, default=1e-3)
     parser.add_argument("--pca-factors", type=int, default=5)
-    parser.add_argument("--pca-initial-oos-date", default="2018-01-02")
+    parser.add_argument("--pca-initial-oos-date", default="2020-01-02")
     parser.add_argument("--pca-covariance-window-days", type=int, default=252)
     parser.add_argument("--pca-loading-window-days", type=int, default=60)
     parser.add_argument("--pca-max-oos-days", type=int)
