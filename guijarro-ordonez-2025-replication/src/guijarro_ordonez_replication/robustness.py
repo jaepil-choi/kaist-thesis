@@ -130,6 +130,8 @@ def build_robustness_figures(
     benchmark_weights: pd.DataFrame,
     asset_returns: pd.DataFrame,
     output_directory: Path,
+    *,
+    multiday_optimized_weights: pd.DataFrame | None = None,
 ) -> dict[str, object]:
     """Generate Korean variants of Figures 9-12 from one benchmark strategy."""
 
@@ -137,15 +139,33 @@ def build_robustness_figures(
     sparse = sparse_weight_returns(benchmark_weights, asset_returns)
     reversal = naive_reversal_returns(panel)
     holding = holding_period_returns(benchmark_weights, asset_returns)
+    optimized_holding = (
+        None
+        if multiday_optimized_weights is None
+        else holding_period_returns(multiday_optimized_weights, asset_returns)
+    )
     sparse.to_csv(output_directory / "sparse_weight_returns.csv")
     reversal.to_csv(output_directory / "naive_reversal_returns.csv")
     holding.to_csv(output_directory / "holding_period_returns.csv")
+    if optimized_holding is not None:
+        optimized_holding.to_csv(
+            output_directory / "optimized_holding_period_returns.csv"
+        )
     sparse_stats = _statistics_by_column(sparse, "percentile")
     reversal_stats = _statistics_by_column(reversal, "lag")
     holding_stats = _statistics_by_column(holding, "holding_days")
+    optimized_holding_stats = (
+        None
+        if optimized_holding is None
+        else _statistics_by_column(optimized_holding, "holding_days")
+    )
     sparse_stats.to_csv(output_directory / "sparse_weight_statistics.csv", index=False)
     reversal_stats.to_csv(output_directory / "naive_reversal_statistics.csv", index=False)
     holding_stats.to_csv(output_directory / "holding_period_statistics.csv", index=False)
+    if optimized_holding_stats is not None:
+        optimized_holding_stats.to_csv(
+            output_directory / "optimized_holding_period_statistics.csv", index=False
+        )
 
     figure, axes = plt.subplots(1, 3, figsize=(13, 4))
     x_values = np.arange(len(sparse_stats))
@@ -192,8 +212,17 @@ def build_robustness_figures(
         strict=True,
     ):
         axis.plot(holding_stats["holding_days"], holding_stats[column], marker="x")
+        if optimized_holding_stats is not None:
+            axis.plot(
+                optimized_holding_stats["holding_days"],
+                optimized_holding_stats[column],
+                marker="o",
+                label="B-day objective",
+            )
         axis.set(title=title, xlabel="Holding period B (days)")
-    figure.suptitle("One-day objective applied to longer holding periods")
+    if optimized_holding_stats is not None:
+        axes[0].legend()
+    figure.suptitle("One-day versus multi-day objective across holding periods")
     figure.tight_layout()
     figure.savefig(output_directory / "fig_12_holding_period_panel_a.png", dpi=180)
     plt.close(figure)
@@ -202,5 +231,9 @@ def build_robustness_figures(
         "sparse_percentiles": list(sparse.columns),
         "reversal_lags": list(reversal.columns),
         "holding_days": list(holding.columns),
-        "figure_12_limit": "Panel A only; B-day-optimized policies require separate training runs",
+        "figure_12_panel_b": (
+            "generated from supplied multi-day-optimized policy"
+            if optimized_holding_stats is not None
+            else "blocked until a separate B-day-optimized policy completes"
+        ),
     }

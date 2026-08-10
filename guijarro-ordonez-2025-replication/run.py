@@ -66,6 +66,7 @@ from guijarro_ordonez_replication.trading import (  # noqa: E402
 )
 from guijarro_ordonez_replication.results import (  # noqa: E402
     build_korean_main_report,
+    build_numbered_korean_report,
 )
 from guijarro_ordonez_replication.spec_outputs import (  # noqa: E402
     build_spec_outputs,
@@ -84,6 +85,16 @@ from guijarro_ordonez_replication.interpretability import (  # noqa: E402
 )
 from guijarro_ordonez_replication.appendix_outputs import (  # noqa: E402
     build_appendix_outputs,
+)
+from guijarro_ordonez_replication.risk_premium import (  # noqa: E402
+    build_risk_premium_figure,
+)
+from guijarro_ordonez_replication.appendix_signals import (  # noqa: E402
+    build_appendix_signal_figures,
+)
+from guijarro_ordonez_replication.model_selection import (  # noqa: E402
+    run_alternative_networks,
+    run_validation_grid,
 )
 
 
@@ -684,27 +695,42 @@ def command_simulate_fama_french(
 
 
 def command_report_strategies() -> None:
-    """Build Korean main tables and figures from completed full-contract runs."""
+    """Build all available numbered Korean tables and figures."""
 
     strategy_root = PROJECT / "outputs" / "strategies"
-    directories = []
-    for residual_tag in ("pca5", "ff1", "ff3", "ff5"):
-        for model_name in ("ou_threshold", "fourier_ffn", "cnn_transformer"):
-            directories.append(
-                strategy_root
-                / f"{residual_tag}_{model_name}_sharpe_lb30_e100_rolling_no-cost"
-            )
-    available = [
+    available = sorted(
         directory
-        for directory in directories
-        if (directory / "simulation_audit.json").exists()
-    ]
+        for directory in strategy_root.iterdir()
+        if directory.is_dir()
+        and (directory / "simulation_audit.json").exists()
+    )
     if not available:
-        raise SystemExit("Run at least one full-contract PCA5 strategy first.")
-    audit = build_korean_main_report(
+        raise SystemExit("Run at least one complete strategy first.")
+    output = PROJECT / "outputs" / "paper-korean"
+    # Retain the original broad main report for downstream compatibility.
+    main_available = []
+    for directory in available:
+        run_audit = json.loads((directory / "simulation_audit.json").read_text("utf-8"))
+        if (
+            run_audit.get("epochs") == 100
+            and run_audit.get("objective") == "sharpe"
+            and run_audit.get("lookback_days") == 30
+            and run_audit.get("rolling_retrain") is True
+            and run_audit.get("model")
+            in {"ou_threshold", "fourier_ffn", "cnn_transformer"}
+            and run_audit.get("transaction_cost") == 0
+            and run_audit.get("short_holding_cost") == 0
+        ):
+            main_available.append(directory)
+    build_korean_main_report(
+        main_available,
+        PROJECT / "outputs" / "kimchi-exact" / "daily_factor_returns.csv",
+        output,
+    )
+    audit = build_numbered_korean_report(
         available,
         PROJECT / "outputs" / "kimchi-exact" / "daily_factor_returns.csv",
-        PROJECT / "outputs" / "paper-korean",
+        output,
     )
     print(json.dumps(audit, ensure_ascii=False, indent=2))
 
@@ -734,6 +760,18 @@ def command_build_robustness() -> None:
     )
     weights = pd.read_parquet(strategy / "daily_asset_weights.parquet")
     weights.index = pd.to_datetime(weights.index, errors="raise")
+    multiday_strategy = (
+        PROJECT
+        / "outputs"
+        / "strategies"
+        / "pca5_cnn_transformer_sharpe_lb30_e100_rolling_no-cost_h5"
+    )
+    multiday_weights = None
+    if (multiday_strategy / "simulation_audit.json").exists():
+        multiday_weights = pd.read_parquet(
+            multiday_strategy / "daily_asset_weights.parquet"
+        )
+        multiday_weights.index = pd.to_datetime(multiday_weights.index, errors="raise")
     repository = PROJECT.parent
     config = yaml.safe_load((PROJECT / "config" / "default.yml").read_text("utf-8"))
     daily = _load_daily_excess_returns(repository, config)
@@ -746,6 +784,7 @@ def command_build_robustness() -> None:
         weights,
         asset_returns,
         PROJECT / "outputs" / "paper-korean" / "robustness",
+        multiday_optimized_weights=multiday_weights,
     )
     print(json.dumps(audit, ensure_ascii=False, indent=2))
 
@@ -813,6 +852,114 @@ def command_build_appendix() -> None:
     print(json.dumps(audit, ensure_ascii=False, indent=2))
 
 
+def command_build_risk_premium() -> None:
+    """Build the Korean FF5 analogue of the paper's IPCA Figure 13."""
+
+    strategy = (
+        PROJECT
+        / "outputs"
+        / "strategies"
+        / "ff5_fourier_ffn_sharpe_lb30_e100_rolling_no-cost"
+    )
+    if not (strategy / "simulation_audit.json").exists():
+        raise SystemExit("Complete the Korean FF5 Fourier strategy first.")
+    repository = PROJECT.parent
+    config = yaml.safe_load((PROJECT / "config" / "default.yml").read_text("utf-8"))
+    factors = pd.read_csv(
+        PROJECT / "outputs" / "kimchi-exact" / "daily_factor_returns.csv",
+        parse_dates=["date"],
+    )
+    if "weight" in factors:
+        factors = factors.loc[factors["weight"].eq("vw")].copy()
+    if "frequency" in factors:
+        factors = factors.loc[factors["frequency"].eq("daily")].copy()
+    audit = build_risk_premium_figure(
+        _load_daily_excess_returns(repository, config),
+        factors,
+        pd.read_parquet(
+            PROJECT
+            / "outputs"
+            / "fama-french"
+            / "daily_factor_legs_ff5_20200102_l60.parquet"
+        ),
+        pd.read_csv(strategy / "daily_performance.csv", parse_dates=["date"]),
+        PROJECT / "outputs" / "paper-korean" / "risk-premium",
+    )
+    print(json.dumps(audit, ensure_ascii=False, indent=2))
+
+
+def command_build_appendix_signals() -> None:
+    """Build Appendix Figures A.2-A.4 from full PCA5 checkpoints."""
+
+    strategy_root = PROJECT / "outputs" / "strategies"
+    cnn_checkpoint = (
+        strategy_root
+        / "pca5_cnn_transformer_sharpe_lb30_e100_rolling_no-cost"
+        / "checkpoints"
+        / "subperiod_00.pt"
+    )
+    fourier_checkpoint = (
+        strategy_root
+        / "pca5_fourier_ffn_sharpe_lb30_e100_rolling_no-cost"
+        / "checkpoints"
+        / "subperiod_00.pt"
+    )
+    if not cnn_checkpoint.exists() or not fourier_checkpoint.exists():
+        raise SystemExit("Complete PCA5 CNN and Fourier subperiod 0 checkpoints first.")
+    pca_root = PROJECT / "outputs" / "pca"
+    panel = load_pca_residual_panel(
+        pca_root / "daily_residuals_k5_20200102_c252_l60.parquet",
+        pca_root / "daily_low_rank_loadings_k5_20200102_c252_l60.parquet",
+    )
+    audit = build_appendix_signal_figures(
+        panel,
+        cnn_checkpoint,
+        fourier_checkpoint,
+        PROJECT / "outputs" / "paper-korean" / "appendix-signals",
+    )
+    print(json.dumps(audit, ensure_ascii=False, indent=2))
+
+
+def _load_full_pca5_panel():
+    pca_root = PROJECT / "outputs" / "pca"
+    return load_pca_residual_panel(
+        pca_root / "daily_residuals_k5_20200102_c252_l60.parquet",
+        pca_root / "daily_low_rank_loadings_k5_20200102_c252_l60.parquet",
+    )
+
+
+def command_run_model_selection(*, max_candidates: int, epochs: int) -> None:
+    """Run the Appendix Table A.III 750/250-day validation grid."""
+
+    audit = run_validation_grid(
+        _load_full_pca5_panel(),
+        PROJECT / "outputs" / "paper-korean" / "model-selection",
+        epochs=epochs,
+        max_candidates=max_candidates,
+    )
+    print(json.dumps(audit, ensure_ascii=False, indent=2))
+
+
+def command_run_alternative_networks(*, max_models: int, epochs: int) -> None:
+    """Run Appendix Table A.V on Korean PCA5 and FF5 residuals."""
+
+    residual_root = PROJECT / "outputs" / "fama-french"
+    panels = {
+        "PCA5": _load_full_pca5_panel(),
+        "Korean FF5": load_fama_french_residual_panel(
+            residual_root / "daily_residuals_ff5_20200102_l60.parquet",
+            residual_root / "daily_factor_legs_ff5_20200102_l60.parquet",
+        ),
+    }
+    audit = run_alternative_networks(
+        panels,
+        PROJECT / "outputs" / "paper-korean" / "alternative-networks",
+        epochs=epochs,
+        max_models=max_models,
+    )
+    print(json.dumps(audit, ensure_ascii=False, indent=2))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -834,6 +981,10 @@ def main() -> None:
             "build-robustness",
             "build-interpretability",
             "build-appendix",
+            "build-risk-premium",
+            "build-appendix-signals",
+            "run-model-selection",
+            "run-alternative-networks",
         ),
     )
     parser.add_argument(
@@ -865,6 +1016,8 @@ def main() -> None:
             "cnn_transformer",
             "cnn_transformer_frictions",
             "fourier_ffn",
+            "direct_ffn",
+            "ou_ffn",
             "ou_threshold",
         ),
         default="cnn_transformer",
@@ -877,6 +1030,8 @@ def main() -> None:
     parser.add_argument("--simulation-holding-days", type=int, default=1)
     parser.add_argument("--simulation-transaction-cost", type=float, default=0.0)
     parser.add_argument("--simulation-short-holding-cost", type=float, default=0.0)
+    parser.add_argument("--model-selection-max-candidates", type=int, default=16)
+    parser.add_argument("--alternative-max-models", type=int, default=5)
     parser.add_argument(
         "--simulation-constant-model",
         action="store_true",
@@ -959,6 +1114,20 @@ def main() -> None:
         command_build_interpretability()
     elif args.command == "build-appendix":
         command_build_appendix()
+    elif args.command == "build-risk-premium":
+        command_build_risk_premium()
+    elif args.command == "build-appendix-signals":
+        command_build_appendix_signals()
+    elif args.command == "run-model-selection":
+        command_run_model_selection(
+            max_candidates=args.model_selection_max_candidates,
+            epochs=args.simulation_epochs,
+        )
+    elif args.command == "run-alternative-networks":
+        command_run_alternative_networks(
+            max_models=args.alternative_max_models,
+            epochs=args.simulation_epochs,
+        )
     else:
         command_build_spec_outputs()
 

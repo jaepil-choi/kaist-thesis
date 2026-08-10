@@ -50,6 +50,11 @@ def build_appendix_outputs(
     """Build Korean variants of Appendix Figure A.5-A.7 and Table A.VI-A.VIII/A.X."""
 
     output_directory.mkdir(parents=True, exist_ok=True)
+    factors = factors.copy()
+    if "weight" in factors:
+        factors = factors.loc[factors["weight"].eq("vw")].copy()
+    if "frequency" in factors:
+        factors = factors.loc[factors["frequency"].eq("daily")].copy()
     unconditional = unconditional_average_residual_returns(panel)
     unconditional.to_csv(
         output_directory / "unconditional_average_residual_returns.csv", index=False
@@ -76,69 +81,119 @@ def build_appendix_outputs(
         output_directory / "table_a07_unconditional_alpha.csv", index=False
     )
 
-    returns: dict[str, pd.Series] = {}
-    cost_rows = []
+    cnn_returns: dict[str, pd.Series] = {}
+    friction_rows = []
+    ablation_rows = []
     benchmark_weights: pd.DataFrame | None = None
     benchmark_label = ""
+    benchmark_daily: pd.DataFrame | None = None
     for directory in strategy_directories:
         daily = pd.read_csv(directory / "daily_performance.csv", parse_dates=["date"])
         audit = json.loads((directory / "simulation_audit.json").read_text("utf-8"))
         label = f"{audit.get('factor_model', 'PCA')} / {audit['model']}"
-        returns[label] = daily.set_index("date")["return"]
-        post_cost = (
-            daily["gross_return"]
-            - 0.0005 * daily["turnover"]
-            - 0.0001 * daily["short_proportion"]
-        )
-        cost_rows.append(
-            {
-                "strategy": label,
-                **performance_statistics(post_cost.to_numpy()),
-                "transaction_cost": 0.0005,
-                "short_holding_cost": 0.0001,
-            }
-        )
+        if audit["model"] == "cnn_transformer":
+            cnn_returns[label] = daily.set_index("date")["return"]
+        if audit["model"] == "cnn_transformer_frictions":
+            friction_rows.append(
+                {
+                    "strategy": label,
+                    "objective": audit["objective"],
+                    **performance_statistics(daily["return"].to_numpy()),
+                    "transaction_cost": audit["transaction_cost"],
+                    "short_holding_cost": audit["short_holding_cost"],
+                }
+            )
+        if (
+            audit["model"] in {"direct_ffn", "ou_ffn"}
+            and audit["objective"] == "sharpe"
+            and audit["lookback_days"] == 30
+            and audit["rolling_retrain"] is True
+        ):
+            ablation_rows.append(
+                {
+                    "factor_model": audit.get("factor_model", "PCA"),
+                    "model": audit["model"],
+                    **performance_statistics(daily["return"].to_numpy()),
+                }
+            )
         if audit.get("factor_model") == "PCA" and audit["model"] == "cnn_transformer":
             benchmark_weights = pd.read_parquet(directory / "daily_asset_weights.parquet")
             benchmark_label = label
-    return_frame = pd.concat(returns, axis=1).dropna()
-    return_frame.corr().to_csv(output_directory / "table_a08_strategy_correlations.csv")
-    pd.DataFrame(cost_rows).to_csv(
-        output_directory / "table_a10_pca_and_benchmark_costs.csv", index=False
+            benchmark_daily = daily
+    if cnn_returns:
+        return_frame = pd.concat(cnn_returns, axis=1).dropna()
+        return_frame.corr().to_csv(output_directory / "table_a08_strategy_correlations.csv")
+    else:
+        pd.DataFrame().to_csv(output_directory / "table_a08_strategy_correlations.csv")
+    pd.DataFrame(friction_rows).to_csv(
+        output_directory / "table_a10_pca_cnn_friction_trained.csv", index=False
+    )
+    pd.DataFrame(ablation_rows).to_csv(
+        output_directory / "table_a09_time_series_ablation.csv", index=False
     )
 
-    volatility = pd.Series(
-        [
-            panel.residuals[day, panel.observed[day]].std(ddof=0)
-            if panel.observed[day].any()
-            else np.nan
-            for day in range(len(panel.dates))
-        ],
-        index=panel.dates,
-    )
+    residual_frame = pd.DataFrame(panel.residuals, index=panel.dates, columns=panel.tickers)
+    residual_frame = residual_frame.where(panel.observed)
+    # The paper specifies one-calendar-month smoothing but does not publish the
+    # pre-smoothing volatility estimator. We use a trailing 22-trading-day
+    # standard deviation and disclose this operational choice in the audit.
+    rolling_volatility = residual_frame.rolling(22, min_periods=15).std(ddof=0)
+    volatility_summary = pd.DataFrame(
+        {
+            "cross_sectional_mean": rolling_volatility.mean(axis=1),
+            "quantile_2_5": rolling_volatility.quantile(0.025, axis=1),
+            "quantile_97_5": rolling_volatility.quantile(0.975, axis=1),
+        }
+    ).rolling(22, min_periods=10).mean()
+    volatility_summary.index.name = "date"
+    volatility_summary.to_csv(output_directory / "figure_a06_residual_volatility.csv")
     figure, axis = plt.subplots(figsize=(9, 4))
-    axis.plot(volatility.index, volatility.rolling(20).mean())
-    axis.set(title="20-day mean cross-sectional PCA residual volatility", ylabel="Daily volatility")
+    axis.plot(
+        volatility_summary.index,
+        volatility_summary["cross_sectional_mean"],
+        label="Cross-sectional mean",
+    )
+    axis.fill_between(
+        volatility_summary.index,
+        volatility_summary["quantile_2_5"],
+        volatility_summary["quantile_97_5"],
+        alpha=0.2,
+        label="Cross-sectional 95% interval",
+    )
+    axis.set(title="PCA5 residual volatility over time", ylabel="Daily volatility")
+    axis.legend()
     figure.tight_layout()
     figure.savefig(output_directory / "fig_a06_residual_volatility.png", dpi=180)
     plt.close(figure)
 
-    figure, axis = plt.subplots(figsize=(9, 5))
-    for directory in strategy_directories:
-        daily = pd.read_csv(directory / "daily_performance.csv", parse_dates=["date"])
-        audit = json.loads((directory / "simulation_audit.json").read_text("utf-8"))
-        label = f"{audit.get('factor_model', 'PCA')} / {audit['model']}"
+    cost_figure_status = "blocked_no_completed_pca_cnn_weights"
+    if benchmark_daily is not None:
         post_cost = (
-            daily["gross_return"]
-            - 0.0005 * daily["turnover"]
-            - 0.0001 * daily["short_proportion"]
+            benchmark_daily["gross_return"]
+            - 0.0005 * benchmark_daily["turnover"]
+            - 0.0001 * benchmark_daily["short_proportion"]
         )
-        axis.plot(daily["date"], (1 + post_cost).cumprod() - 1, label=label)
-    axis.set(title="Cumulative returns after paper trading-cost constants", ylabel="Cumulative return")
-    axis.legend(fontsize=7)
-    figure.tight_layout()
-    figure.savefig(output_directory / "fig_a07_returns_after_costs.png", dpi=180)
-    plt.close(figure)
+        pd.DataFrame(
+            {
+                "date": benchmark_daily["date"],
+                "post_cost_return": post_cost,
+            }
+        ).to_csv(output_directory / "figure_a07_returns_after_costs.csv", index=False)
+        figure, axis = plt.subplots(figsize=(9, 5))
+        axis.plot(
+            benchmark_daily["date"],
+            (1 + post_cost).cumprod() - 1,
+            label=benchmark_label,
+        )
+        axis.set(
+            title="PCA5 CNN cumulative returns after paper cost constants",
+            ylabel="Cumulative return",
+        )
+        axis.legend()
+        figure.tight_layout()
+        figure.savefig(output_directory / "fig_a07_returns_after_costs.png", dpi=180)
+        plt.close(figure)
+        cost_figure_status = "generated_mechanical_paper_cost_constants"
 
     industry_status = "blocked_no_completed_pca_cnn_weights"
     if benchmark_weights is not None:
@@ -154,20 +209,60 @@ def build_appendix_outputs(
             how="left",
         )
         merged["industry"] = merged["industry_code"].astype("Int64").astype(str).str[:2]
-        concentration = (
+        portfolio_concentration = (
             merged.dropna(subset=["industry_code"])
             .assign(abs_weight=lambda frame: frame["weight"].abs())
             .groupby(["date", "industry"], as_index=False)["abs_weight"]
             .sum()
         )
-        average = concentration.groupby("industry")["abs_weight"].mean().nlargest(12)
-        figure, axis = plt.subplots(figsize=(9, 4))
-        axis.bar(average.index, average.values)
-        axis.set(
-            title=f"Average absolute industry allocation: {benchmark_label}",
-            xlabel="Two-digit Korean industry code",
-            ylabel="Gross allocation share",
+        population = classifications.copy()
+        population["industry"] = (
+            population["industry_code"].astype("Int64").astype(str).str[:2]
         )
+        population = (
+            population.dropna(subset=["industry_code"])
+            .groupby(["date", "industry"], as_index=False)["ticker"]
+            .nunique()
+            .rename(columns={"ticker": "population_count"})
+        )
+        population["population_share"] = population["population_count"].div(
+            population.groupby("date")["population_count"].transform("sum")
+        )
+        concentration = portfolio_concentration.merge(
+            population[["date", "industry", "population_share"]],
+            on=["date", "industry"],
+            how="left",
+        )
+        concentration["standardized_concentration"] = concentration["abs_weight"].div(
+            concentration["population_share"]
+        )
+        concentration = concentration.sort_values(["industry", "date"])
+        concentration["rolling_132_day_concentration"] = (
+            concentration.groupby("industry")["standardized_concentration"]
+            .transform(lambda values: values.rolling(132, min_periods=66).mean())
+        )
+        concentration.to_csv(
+            output_directory / "figure_a05_industry_concentration.csv", index=False
+        )
+        leading = (
+            portfolio_concentration.groupby("industry")["abs_weight"]
+            .mean()
+            .nlargest(10)
+            .index
+        )
+        figure, axis = plt.subplots(figsize=(9, 4))
+        for industry_code in leading:
+            sample = concentration.loc[concentration["industry"].eq(industry_code)]
+            axis.plot(
+                sample["date"],
+                sample["rolling_132_day_concentration"],
+                label=industry_code,
+            )
+        axis.set(
+            title=f"132-day standardized industry concentration: {benchmark_label}",
+            ylabel="Portfolio share / population share",
+        )
+        axis.legend(title="Industry", ncol=2, fontsize=7)
         figure.tight_layout()
         figure.savefig(output_directory / "fig_a05_industry_concentration.png", dpi=180)
         plt.close(figure)
@@ -177,8 +272,17 @@ def build_appendix_outputs(
         "classification": "Korean PCA5 appendix variants",
         "strategy_count": len(strategy_directories),
         "industry_figure_status": industry_status,
+        "cost_figure_status": cost_figure_status,
+        "cnn_correlation_strategy_count": len(cnn_returns),
+        "friction_trained_strategy_count": len(friction_rows),
+        "ablation_strategy_count": len(ablation_rows),
+        "residual_volatility_estimator": (
+            "22-day trailing stock-level residual standard deviation; cross-sectional "
+            "mean and 2.5/97.5 percentiles; 22-day smoothing"
+        ),
         "trading_cost_interpretation": (
-            "paper constants applied mechanically; not realized Korean cost validation"
+            "Figure A.7 mechanically applies paper constants; Table A.X requires "
+            "friction-aware retraining; neither validates realized Korean costs"
         ),
         "exact_ipca_outputs": "blocked by 240-month history and convergence",
     }

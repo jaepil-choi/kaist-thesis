@@ -235,6 +235,58 @@ class FourierFFN(nn.Module):
         return self.final(outputs).squeeze(-1)
 
 
+class OUFeaturesFFN(nn.Module):
+    """Paper Appendix C.5 OU four-feature signal with a sigmoid FFN allocation."""
+
+    is_trainable = True
+
+    def __init__(
+        self,
+        *,
+        random_seed: int = 0,
+        lookback: int = 30,
+        dropout: float = 0.25,
+    ) -> None:
+        super().__init__()
+        torch.manual_seed(random_seed)
+        self.lookback = lookback
+        self.layers = nn.ModuleList(
+            nn.Sequential(nn.Linear(4, 4), nn.Sigmoid(), nn.Dropout(dropout))
+            for _ in range(3)
+        )
+        self.final = nn.Linear(4, 1)
+
+    def _ou_features(self, inputs: torch.Tensor) -> torch.Tensor:
+        x_values = inputs[:, :-1].float()
+        y_values = inputs[:, 1:].float()
+        mean_x = x_values.mean(dim=1)
+        mean_y = y_values.mean(dim=1)
+        variance_x = x_values.var(dim=1) + 1e-16
+        variance_y = y_values.var(dim=1) + 1e-16
+        covariance = (
+            (x_values - mean_x[:, None]) * (y_values - mean_y[:, None])
+        ).mean(dim=1)
+        beta = covariance / variance_x
+        alpha = mean_y - beta * mean_x
+        long_run_mean = alpha / (1.0 - beta + 1e-8)
+        innovations = y_values - beta[:, None] * x_values - alpha[:, None]
+        sigma = torch.sqrt(
+            innovations.var(dim=1) / (torch.abs(1.0 - beta.square()) + 1e-8)
+        )
+        r_squared = covariance.square() / (variance_x * variance_y)
+        return torch.nan_to_num(
+            torch.stack((beta, long_run_mean, sigma, r_squared), dim=1)
+        )
+
+    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        if inputs.ndim != 2 or inputs.shape[1] != self.lookback:
+            raise ValueError(f"inputs must have shape (batch, {self.lookback})")
+        outputs = self._ou_features(inputs)
+        for layer in self.layers:
+            outputs = layer(outputs)
+        return self.final(outputs).squeeze(-1)
+
+
 class OUThreshold(nn.Module):
     """Nontrainable Ornstein-Uhlenbeck threshold benchmark from the paper."""
 

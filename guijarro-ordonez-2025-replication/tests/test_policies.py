@@ -9,6 +9,7 @@ from guijarro_ordonez_replication.policies import (
     CNNTransformer,
     CNNTransformerFrictions,
     FourierFFN,
+    OUFeaturesFFN,
     OUThreshold,
 )
 
@@ -18,6 +19,7 @@ from guijarro_ordonez_replication.policies import (
     [
         CNNTransformer(random_seed=7, lookback=30),
         FourierFFN(random_seed=7, lookback=30),
+        OUFeaturesFFN(random_seed=7, lookback=30),
         OUThreshold(lookback=30),
     ],
 )

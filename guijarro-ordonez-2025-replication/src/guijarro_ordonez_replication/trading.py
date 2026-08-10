@@ -12,7 +12,13 @@ import torch
 from numpy.typing import NDArray
 from torch import nn
 
-from .policies import CNNTransformer, CNNTransformerFrictions, FourierFFN, OUThreshold
+from .policies import (
+    CNNTransformer,
+    CNNTransformerFrictions,
+    FourierFFN,
+    OUFeaturesFFN,
+    OUThreshold,
+)
 
 
 FloatArray = NDArray[np.float64]
@@ -54,12 +60,20 @@ class SimulationConfig:
     device: str = "cpu"
     checkpoint_directory: Path | None = None
     resume_checkpoints: bool = True
+    cnn_filter_numbers: tuple[int, ...] = (1, 8)
+    cnn_attention_heads: int = 4
+    cnn_hidden_units_factor: int = 2
+    cnn_dropout: float = 0.25
+    cnn_use_convolution: bool = True
+    cnn_use_transformer: bool = True
 
     def validate(self) -> None:
         if self.model_name not in {
             "cnn_transformer",
             "cnn_transformer_frictions",
             "fourier_ffn",
+            "direct_ffn",
+            "ou_ffn",
             "ou_threshold",
         }:
             raise ValueError(f"unsupported model_name: {self.model_name}")
@@ -75,6 +89,12 @@ class SimulationConfig:
             raise ValueError("holding_days must be positive")
         if min(self.transaction_cost, self.short_holding_cost) < 0:
             raise ValueError("trading costs cannot be negative")
+        if self.cnn_filter_numbers[0] != 1:
+            raise ValueError("CNN filter numbers must begin with one input channel")
+        if min(self.cnn_attention_heads, self.cnn_hidden_units_factor) <= 0:
+            raise ValueError("CNN attention heads and hidden factor must be positive")
+        if not 0 <= self.cnn_dropout < 1:
+            raise ValueError("CNN dropout must be in [0, 1)")
 
 
 @dataclass(frozen=True)
@@ -299,17 +319,38 @@ def _model(config: SimulationConfig) -> nn.Module:
         return CNNTransformer(
             random_seed=config.random_seed,
             lookback=config.lookback_days,
+            filter_numbers=config.cnn_filter_numbers,
+            attention_heads=config.cnn_attention_heads,
+            hidden_units_factor=config.cnn_hidden_units_factor,
+            dropout=config.cnn_dropout,
+            use_convolution=config.cnn_use_convolution,
+            use_transformer=config.cnn_use_transformer,
         )
     if config.model_name == "cnn_transformer_frictions":
         return CNNTransformerFrictions(
             random_seed=config.random_seed,
             lookback=config.lookback_days,
+            filter_numbers=config.cnn_filter_numbers,
+            attention_heads=config.cnn_attention_heads,
+            hidden_units_factor=config.cnn_hidden_units_factor,
+            dropout=config.cnn_dropout,
         )
     if config.model_name == "fourier_ffn":
         return FourierFFN(
             random_seed=config.random_seed,
             lookback=config.lookback_days,
             hidden_units=(config.lookback_days, 16, 8, 4),
+        )
+    if config.model_name == "direct_ffn":
+        return FourierFFN(
+            random_seed=config.random_seed,
+            lookback=config.lookback_days,
+            hidden_units=(config.lookback_days, 16, 8, 4),
+        )
+    if config.model_name == "ou_ffn":
+        return OUFeaturesFFN(
+            random_seed=config.random_seed,
+            lookback=config.lookback_days,
         )
     return OUThreshold(lookback=config.lookback_days)
 
@@ -689,6 +730,12 @@ def simulate_rolling_strategy(
         "epochs": config.epochs,
         "batch_days": config.batch_days,
         "learning_rate": config.learning_rate,
+        "cnn_filter_numbers": list(config.cnn_filter_numbers),
+        "cnn_attention_heads": config.cnn_attention_heads,
+        "cnn_hidden_units_factor": config.cnn_hidden_units_factor,
+        "cnn_dropout": config.cnn_dropout,
+        "cnn_use_convolution": config.cnn_use_convolution,
+        "cnn_use_transformer": config.cnn_use_transformer,
         "holding_days": config.holding_days,
         "transaction_cost": config.transaction_cost,
         "short_holding_cost": config.short_holding_cost,
