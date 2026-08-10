@@ -13,8 +13,7 @@ Python 프로세스는 모두 종료했으며, 매 epoch 저장되는 체크포�
   K=0은 PCA5 기준 유니버스의 개별주식 초과수익률이다.
 - PCA·FF의 OU 전 사양, PCA K=0/1/3/5 Fourier, FF1/3/5 Fourier, PCA5
   constant CNN, direct FFN, OU-feature FFN은 full-contract 실행이 끝났다.
-- 45개 번호 산출물 가운데 현재 레지스트리는 35개를
-  `generated_*`, 1개를 `implemented_checkpointed_full_grid`, 9개를
+- 45개 번호 산출물 가운데 현재 레지스트리는 36개를 `generated_*`, 9개를
   `implemented_waiting_full_run`으로 분류한다.
 - 이 결과는 미국 표본 exact replication이 아니다. 한국
   **현금배당 제외 price-return variant**이며 재무는 사용자가 승인한 고정
@@ -73,7 +72,7 @@ uv run python -c "import torch; print(torch.__version__); print(torch.cuda.is_av
 | 4 | PCA8 Fourier+FFN | 전체 5개 subperiod 완료 | 완료; audit 생성됨 |
 | 5 | PCA10 Fourier+FFN | 전체 5개 subperiod 완료 | 완료; audit 생성됨 |
 | 6 | PCA15 Fourier+FFN | 전체 5개 subperiod 완료 | 완료; audit 생성됨 |
-| 7 | 16-model validation grid | candidate 1 완료, candidate 2 epoch 93 | candidate 2 epoch 94 |
+| 7 | 16-model validation grid | 16개 candidate 전체 완료 | 완료; Table A.3 및 audit 생성됨 |
 
 재개 명령은 다음과 같다.
 
@@ -103,9 +102,10 @@ CPU 전용 Torch로 교체할 수 있으므로, 위 GPU 재개 명령은 `--no-s
 0.96613이다. 모든 실행은 한국 price-return variant이며 원문 exact replication으로
 분류하지 않는다.
 
-candidate 1의 validation 결과는 annual return 0.12520, annual volatility
-0.03466, Sharpe 3.61227이며 이미 audit가 있다. validation table과 최종 audit는
-16개 candidate가 모두 끝난 뒤 생성된다.
+16개 candidate가 모두 완료됐다. validation Sharpe가 가장 높은 candidate 16은
+filters 16, attention heads 4, hidden-units factor 3, dropout 0.5이며 annual return
+0.17320, annual volatility 0.03725, Sharpe 4.65002다. Table A.3와 최종 audit가
+생성됐지만 exact IPCA validation은 240개월 이력 부족으로 계속 차단된다.
 
 ## 5. 아직 시작하지 않은 장시간 실행
 

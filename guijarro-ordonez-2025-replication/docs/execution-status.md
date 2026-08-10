@@ -86,7 +86,12 @@ resumable; exact epochs and home-GPU commands are in
   0.033, Sharpe 3.531, and mean daily turnover 0.892. PCA15 Fourier+FFN then
   produced annual return 0.052, volatility 0.028, Sharpe 1.816, and mean daily
   turnover 0.966.
-- Checkpointed: candidate 2 of the 16-candidate validation grid.
+- Completed on the home AMD GPU: all 16 candidates in the PCA5 validation grid.
+  Candidate 16 (`filters=16`, `attention_heads=4`, `hidden_units_factor=3`,
+  `dropout=0.5`) had the highest validation Sharpe, 4.650, with annual return
+  0.173 and annual volatility 0.037. Appendix Table A.3 and the grid audit were
+  generated. Exact IPCA validation remains blocked by the 240-month history
+  requirement.
 - Not started: 60-day lookback, five-day holding, five alternative CNN
   specifications, and K=1 short-history IPCA convergence sensitivity.
 
