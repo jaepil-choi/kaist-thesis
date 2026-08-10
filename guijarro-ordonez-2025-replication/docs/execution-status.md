@@ -61,16 +61,18 @@ unadjusted research backtests and not deployable performance estimates.
 | Korean FF3 | Fourier+FFN | 0.084 | 0.048 | 1.759 |
 | Korean FF5 | Fourier+FFN | 0.064 | 0.044 | 1.454 |
 
-## Outstanding executable runs
+## Checkpointed and outstanding executable runs
 
-The remaining executable work is checkpointed and resumable:
+Company-PC execution was intentionally stopped on 2026-08-10 because the
+machine has no GPU. The completed part of each active run is checkpointed and
+resumable; exact epochs and home-GPU commands are in
+`docs/home-gpu-handoff.md`.
 
-- rolling PCA5 CNN+Transformer benchmark;
-- PCA5 CNN mean-variance and friction-aware objectives;
-- 60-day lookback and five-day holding variants;
-- PCA8/10/15 Fourier+FFN factor-count grid;
-- 16-candidate validation grid and five alternative CNN specifications;
-- K=1 short-history IPCA convergence sensitivity.
+- Checkpointed: rolling PCA5 CNN+Transformer benchmark, PCA5 CNN
+  mean-variance and friction-aware objectives, PCA8/10/15 Fourier+FFN, and
+  candidate 2 of the 16-candidate validation grid.
+- Not started: 60-day lookback, five-day holding, five alternative CNN
+  specifications, and K=1 short-history IPCA convergence sensitivity.
 
 After each run completes, `report-strategies`, `build-robustness`, and
 `build-appendix` regenerate the numbered CSV/PNG outputs. Empty exact groups

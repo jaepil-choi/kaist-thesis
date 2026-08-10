@@ -12,12 +12,21 @@ from guijarro_ordonez_replication.trading import (
     SimulationConfig,
     annualized_statistics,
     cumulative_windows,
+    default_torch_device,
     factor_leg_asset_weights,
     identity_return_panel,
     low_rank_asset_weights,
     packed_fourier_windows,
     simulate_rolling_strategy,
 )
+
+
+def test_default_torch_device_respects_environment_override(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("DLSA_DEVICE", "cpu")
+
+    assert default_torch_device() == "cpu"
 
 
 def test_cumulative_windows_are_backward_looking() -> None:

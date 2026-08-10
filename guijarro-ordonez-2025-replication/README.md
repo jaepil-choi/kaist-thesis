@@ -11,6 +11,8 @@
   Table A.I–A.X 총 45개를 `config/output-registry.yml`에 등록한다.
 - 전체 실행의 표본 계약, 실제 성과 및 남은 data gate는
   `docs/execution-status.md`에 기록한다.
+- 회사 CPU 실행의 중단 지점과 집 GPU 재개 순서는
+  `docs/home-gpu-handoff.md`를 따른다.
 - 데이터가 없으면 결과를 생략하거나 임의 proxy로 채우지 않고 `blocked` 상태와
   필요한 입력을 기록한다.
 - 구현 범위는 residual composition, rolling PCA·FF residual, 46개

@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+import os
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
@@ -24,6 +25,14 @@ from .policies import (
 FloatArray = NDArray[np.float64]
 BoolArray = NDArray[np.bool_]
 Progress = Callable[[dict[str, object]], None]
+
+
+def default_torch_device() -> str:
+    """Use an explicit override, otherwise select CUDA when it is available."""
+
+    return os.environ.get("DLSA_DEVICE") or (
+        "cuda" if torch.cuda.is_available() else "cpu"
+    )
 
 
 @dataclass(frozen=True)
@@ -57,7 +66,7 @@ class SimulationConfig:
     transaction_cost: float = 0.0
     short_holding_cost: float = 0.0
     rolling_retrain: bool = True
-    device: str = "cpu"
+    device: str = field(default_factory=default_torch_device)
     checkpoint_directory: Path | None = None
     resume_checkpoints: bool = True
     cnn_filter_numbers: tuple[int, ...] = (1, 8)
