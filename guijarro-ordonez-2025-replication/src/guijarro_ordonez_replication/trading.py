@@ -157,6 +157,37 @@ def load_pca_residual_panel(
     return ResidualPanel(dates, tickers, residuals, left, right, observed)
 
 
+def identity_return_panel(
+    reference_panel: ResidualPanel,
+    daily_excess_returns: pd.DataFrame,
+) -> ResidualPanel:
+    """Use stock excess returns directly for the paper's K=0 factor model."""
+
+    if missing := {"date", "ticker", "return"}.difference(daily_excess_returns.columns):
+        raise ValueError(f"daily returns are missing columns: {sorted(missing)}")
+    daily = daily_excess_returns[["date", "ticker", "return"]].copy()
+    daily["date"] = pd.to_datetime(daily["date"], errors="raise")
+    daily["ticker"] = daily["ticker"].astype(str).str.upper()
+    if daily.duplicated(["date", "ticker"]).any():
+        raise ValueError("daily returns contain duplicate date-ticker keys")
+    wide = daily.pivot(index="date", columns="ticker", values="return").reindex(
+        index=reference_panel.dates,
+        columns=reference_panel.tickers,
+    )
+    observed = reference_panel.observed & wide.notna().to_numpy()
+    values = wide.fillna(0).to_numpy(dtype=float, copy=True)
+    values[~observed] = 0
+    zeros = np.zeros_like(reference_panel.left)
+    return ResidualPanel(
+        dates=reference_panel.dates,
+        tickers=reference_panel.tickers,
+        residuals=values,
+        left=zeros,
+        right=zeros.copy(),
+        observed=observed,
+    )
+
+
 def load_fama_french_residual_panel(
     residual_path: Path,
     factor_leg_path: Path,

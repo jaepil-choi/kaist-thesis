@@ -11,12 +11,13 @@
   Table A.I–A.X 총 45개를 `config/output-registry.yml`에 등록한다.
 - 데이터가 없으면 결과를 생략하거나 임의 proxy로 채우지 않고 `blocked` 상태와
   필요한 입력을 기록한다.
-- 현재 구현은 논문 식 (1)의 residual composition과 식 (3)의
-  residual-to-stock weight 변환, 46개 characteristic builder, IPCA ALS와
-  convergence gate, registry 검증, 4종목 합성 예시까지다.
-- 현재 한국 자료로 가능한 실증 범위는 2015년 이후 PCA residual pilot이다.
-  이는 원 논문의 1978–2016 입력 및 1998–2016 OOS 설계를 exact replicate한
-  결과가 아니다.
+- 구현 범위는 residual composition, rolling PCA·FF residual, 46개
+  characteristic와 IPCA ALS, OU/Fourier/CNN 정책, Sharpe·mean-variance·비용·
+  다기간 목적함수, numbered report, robustness, 해석, appendix validation 및
+  ablation runner를 포함한다.
+- 한국 실증 residual 표본은 2020-01-02~2026-07-20이고 최초 1,000일 학습 뒤
+  정책 OOS는 2024-01-19부터다. 이는 원 논문의 1978–2016 입력 및
+  1998–2016 residual/OOS 설계를 exact replicate한 결과가 아니다.
 
 ## 실행
 
@@ -30,6 +31,14 @@ uv run python guijarro-ordonez-2025-replication/run.py build-factors-proxy --all
 uv run python guijarro-ordonez-2025-replication/run.py build-ipca-characteristics --allow-non-pit-statements --impute-missing-characteristics
 uv run python guijarro-ordonez-2025-replication/run.py estimate-ipca --ipca-factors 5 --ipca-initial-months 60 --ipca-window-months 60 --allow-short-history-ipca
 uv run python guijarro-ordonez-2025-replication/run.py estimate-pca --pca-factors 5 --pca-initial-oos-date 2020-01-02
+uv run python guijarro-ordonez-2025-replication/run.py report-strategies
+uv run python guijarro-ordonez-2025-replication/run.py build-robustness
+uv run python guijarro-ordonez-2025-replication/run.py build-risk-premium
+uv run python guijarro-ordonez-2025-replication/run.py build-interpretability
+uv run python guijarro-ordonez-2025-replication/run.py build-appendix
+uv run python guijarro-ordonez-2025-replication/run.py build-appendix-signals
+uv run python guijarro-ordonez-2025-replication/run.py run-model-selection
+uv run python guijarro-ordonez-2025-replication/run.py run-alternative-networks
 uv run pytest guijarro-ordonez-2025-replication/tests
 uv run ruff check guijarro-ordonez-2025-replication
 ```
@@ -123,11 +132,18 @@ uv run python guijarro-ordonez-2025-replication/run.py estimate-fama-french --ff
 uv run python guijarro-ordonez-2025-replication/run.py simulate-fama-french --ff-factors 5 --simulation-model ou_threshold
 uv run python guijarro-ordonez-2025-replication/run.py report-pca
 uv run python guijarro-ordonez-2025-replication/run.py build-spec-outputs
+uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model direct_ffn
+uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model ou_ffn
+uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer_frictions --simulation-transaction-cost 0.0005 --simulation-short-holding-cost 0.0001
 ```
 
 Defaults retain the paper's seed 0, 100 epochs, 1,000-day rolling window,
 125-day batch/stride, and rolling retraining. Fewer-epoch runs are diagnostics
 and are excluded from full-contract result tables.
+
+`outputs/`는 재생성 가능하고 gitignore된다. 각 numbered CSV/PNG 옆 audit에는
+한국 price-return·non-PIT accounting·짧은 표본 차이가 기록된다. 결과가
+존재한다는 사실은 원문의 미국 수치가 exact replication됐다는 뜻이 아니다.
 
 공식 코드의 공개 라이선스는 상업적 사용을 금지한다. 이 프로젝트에서 코드를
 복사·수정할 때는 provenance와 라이선스 경계를 별도로 기록한다.

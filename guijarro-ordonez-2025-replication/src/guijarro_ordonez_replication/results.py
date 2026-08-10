@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -65,6 +66,11 @@ def _load_strategy(directory: Path) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
     daily = pd.read_csv(directory / "daily_performance.csv", parse_dates=["date"])
     weights = pd.read_parquet(directory / "daily_asset_weights.parquet")
     audit = json.loads((directory / "simulation_audit.json").read_text("utf-8"))
+    if audit.get("factor_model") == "PCA":
+        match = re.match(r"pca(\d+)_", directory.name)
+        if match:
+            audit["factor_count"] = int(match.group(1))
+            audit["factor_model"] = f"PCA{match.group(1)}"
     return daily, weights, audit
 
 

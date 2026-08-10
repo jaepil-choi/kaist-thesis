@@ -61,6 +61,7 @@ from guijarro_ordonez_replication.pca import (  # noqa: E402
 )
 from guijarro_ordonez_replication.trading import (  # noqa: E402
     SimulationConfig,
+    identity_return_panel,
     load_pca_residual_panel,
     simulate_rolling_strategy,
 )
@@ -533,6 +534,7 @@ def command_estimate_pca(
 
 def command_simulate_pca(
     *,
+    factors: int,
     model_name: str,
     objective: str,
     lookback_days: int,
@@ -542,19 +544,20 @@ def command_simulate_pca(
     short_holding_cost: float,
     rolling_retrain: bool,
 ) -> None:
-    """Run the paper's rolling trading policy on the Korean K=5 PCA branch."""
+    """Run a paper policy on a Korean PCA-K or identity-return branch."""
 
     pca_output = PROJECT / "outputs" / "pca"
-    residual_path = (
-        pca_output / "daily_residuals_k5_20200102_c252_l60.parquet"
+    source_factors = 5 if factors == 0 else factors
+    residual_path = pca_output / (
+        f"daily_residuals_k{source_factors}_20200102_c252_l60.parquet"
     )
-    loading_path = (
-        pca_output / "daily_low_rank_loadings_k5_20200102_c252_l60.parquet"
+    loading_path = pca_output / (
+        f"daily_low_rank_loadings_k{source_factors}_20200102_c252_l60.parquet"
     )
     if not residual_path.exists() or not loading_path.exists():
         raise SystemExit(
-            "Build the full K=5 PCA branch first with estimate-pca "
-            "--pca-initial-oos-date 2020-01-02."
+            f"Build the full K={source_factors} PCA branch first with estimate-pca "
+            f"--pca-factors {source_factors} --pca-initial-oos-date 2020-01-02."
         )
     cost_tag = (
         f"tc{transaction_cost:g}_hc{short_holding_cost:g}"
@@ -562,7 +565,7 @@ def command_simulate_pca(
         else "no-cost"
     )
     tag = (
-        f"pca5_{model_name}_{objective}_lb{lookback_days}_e{epochs}_"
+        f"pca{factors}_{model_name}_{objective}_lb{lookback_days}_e{epochs}_"
         f"{'rolling' if rolling_retrain else 'constant'}_{cost_tag}"
     )
     if holding_days != 1:
@@ -570,6 +573,13 @@ def command_simulate_pca(
     output = PROJECT / "outputs" / "strategies" / tag
     output.mkdir(parents=True, exist_ok=True)
     panel = load_pca_residual_panel(residual_path, loading_path)
+    if factors == 0:
+        repository = PROJECT.parent
+        config = yaml.safe_load((PROJECT / "config" / "default.yml").read_text("utf-8"))
+        panel = identity_return_panel(
+            panel,
+            _load_daily_excess_returns(repository, config),
+        )
     simulation_config = SimulationConfig(
         model_name=model_name,
         objective=objective,
@@ -592,10 +602,17 @@ def command_simulate_pca(
     )
     result.daily.to_csv(output / "daily_performance.csv", index=False)
     result.weights.to_parquet(output / "daily_asset_weights.parquet")
+    audit = {
+        **result.audit,
+        "factor_model": (
+            "Stock returns K0" if factors == 0 else f"PCA{factors}"
+        ),
+        "factor_count": factors,
+    }
     (output / "simulation_audit.json").write_text(
-        json.dumps(result.audit, ensure_ascii=False, indent=2), encoding="utf-8"
+        json.dumps(audit, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    print(json.dumps({"output": str(output), **result.audit}, ensure_ascii=False, indent=2))
+    print(json.dumps({"output": str(output), **audit}, ensure_ascii=False, indent=2))
 
 
 def command_estimate_fama_french(
@@ -1079,6 +1096,7 @@ def main() -> None:
         )
     elif args.command == "simulate-pca":
         command_simulate_pca(
+            factors=args.pca_factors,
             model_name=args.simulation_model,
             objective=args.simulation_objective,
             lookback_days=args.simulation_lookback_days,

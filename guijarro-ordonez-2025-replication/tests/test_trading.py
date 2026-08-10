@@ -13,6 +13,7 @@ from guijarro_ordonez_replication.trading import (
     annualized_statistics,
     cumulative_windows,
     factor_leg_asset_weights,
+    identity_return_panel,
     low_rank_asset_weights,
     packed_fourier_windows,
     simulate_rolling_strategy,
@@ -45,6 +46,30 @@ def test_fourier_packing_matches_public_layout() -> None:
     coefficients = np.fft.rfft(cumulative, axis=-1)
     np.testing.assert_allclose(packed[..., :16], coefficients.real, rtol=1e-6)
     np.testing.assert_allclose(packed[..., 16:], coefficients[..., 1:-1].imag, rtol=1e-6)
+
+
+def test_identity_return_panel_uses_reference_universe_and_zero_composition() -> None:
+    dates = pd.date_range("2020-01-01", periods=3)
+    reference = ResidualPanel(
+        dates=dates,
+        tickers=("A", "B"),
+        residuals=np.zeros((3, 2)),
+        left=np.ones((3, 2, 1)),
+        right=np.ones((3, 2, 1)),
+        observed=np.array([[True, True], [True, False], [True, True]]),
+    )
+    daily = pd.DataFrame(
+        {
+            "date": [*dates, *dates],
+            "ticker": ["A"] * 3 + ["B"] * 3,
+            "return": [0.01, 0.02, 0.03, -0.01, -0.02, -0.03],
+        }
+    )
+    panel = identity_return_panel(reference, daily)
+    np.testing.assert_allclose(panel.residuals, [[0.01, -0.01], [0.02, 0], [0.03, -0.03]])
+    assert not panel.observed[1, 1]
+    assert np.count_nonzero(panel.left) == 0
+    assert np.count_nonzero(panel.right) == 0
 
 
 def test_low_rank_mapping_matches_dense_composition() -> None:
@@ -142,3 +167,4 @@ def test_multiday_holding_path_keeps_public_leading_zeros() -> None:
         ),
     )
     np.testing.assert_allclose(result.daily["return"].iloc[:3], 0)
+    identity_return_panel,

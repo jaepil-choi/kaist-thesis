@@ -26,13 +26,17 @@ master's thesis에 부적합)이다. 아래 각 후보의 "데이터·재현성"
 DW 조사 로그는 `kwam-report-automation/temp/data-exploration/
 findings-zi-fund-data.md`에 정리되어 있다.
 
-- **신규 우선검토 — #10 Deep Learning Statistical Arbitrage** — 조건부 잠재
+- **활성 replication — #10 Deep Learning Statistical Arbitrage** — 조건부 잠재
   factor의 residual portfolio, convolutional transformer, 제약조건을 반영한
   최적 trading policy를 결합한 최신 statistical-arbitrage 연구. 사용자의
   pairs trading·machine learning·deep learning 관심과 가장 직접적으로 맞는다.
-  다만 한국 일별 수정수익률·point-in-time universe·월별 46개 기업특성·
-  공매도/거래비용 자료의 coverage가 완전하지 않으므로 현재 판정은
-  **PCA pilot 착수 가능, 완전 replication은 data gate 대기**다.
+  한국 일별 가격수익률·월말 point-in-time universe·월별 46개 기업특성으로
+  rolling PCA와 FF1/3/5 residual, OU/Fourier/CNN 정책 및 본문·부록 산출물
+  pipeline을 구현했다. 현재 판정은 **한국 price-return replication 실행 중,
+  원문 exact replication은 data gate 대기**다. 원문의 240개월 IPCA, 미국
+  CRSP/Compustat 표본, 현금배당 포함 total return, 실제 재무 공시시점,
+  상장폐지수익률 및 실현 공매도·거래비용 이력은 확보되지 않았다. 따라서
+  생성된 한국 표·그림을 원문 수치 재현으로 간주하지 않는다.
 
 1. **#5 Machine-learning the skill of mutual fund managers** — 펀드 특성으로
    미래 risk-adjusted performance를 예측하는 ML 기반 fund skill 연구.

@@ -104,6 +104,12 @@ The main-paper contract is:
 - 125-day OOS stride and rolling retraining;
 - one-day holding period.
 
+The multi-holding branch reproduces the public `get_holding_days_returns`
+contract: a day-$t$ portfolio is evaluated over $B$ days, compounded, divided
+by $B$, and the $B$-lag turnover charge is divided by $B$. The public code's
+leading $B$ zeros are preserved. Figure 12 Panel B still requires a separately
+trained multi-day policy rather than relabeling the one-day policy.
+
 The Sharpe objective minimizes negative annualized Sharpe. The mean-variance
 objective minimizes the negative of annualized mean minus annualized
 volatility. Like the public code, optimization proceeds sequentially on each
@@ -130,6 +136,18 @@ Applying these constants is a sensitivity, not validation against Korean
 realized costs. Exact Korean friction claims remain blocked until bid-ask,
 shortability, and borrow-cost histories are supplied.
 
+The friction-aware CNN consumes the previous residual allocation through the
+published weight-conditioned attention block. Training preserves the public
+epoch/batch update convention for lagged weights; inference propagates the
+previous raw allocation sequentially. A mechanically post-costed no-friction
+strategy is kept separate from a policy retrained with costs in its objective.
+
+Appendix C.5 additionally uses a direct 30-input FFN and an OU-feature FFN. The
+latter uses $(\beta,\mu_{OU},\sigma_{OU},R^2)$ as the four-dimensional signal and
+three 4-unit sigmoid layers, following the paper text. The authors did not
+release this ablation class, so the exact private preprocessing helper cannot
+be code-compared and this limitation is recorded in the appendix audit.
+
 ## Commands
 
 From the repository root:
@@ -142,6 +160,11 @@ uv run python guijarro-ordonez-2025-replication/run.py estimate-fama-french --ff
 uv run python guijarro-ordonez-2025-replication/run.py simulate-fama-french --ff-factors 5 --simulation-model ou_threshold
 uv run python guijarro-ordonez-2025-replication/run.py report-pca
 uv run python guijarro-ordonez-2025-replication/run.py build-spec-outputs
+uv run python guijarro-ordonez-2025-replication/run.py build-robustness
+uv run python guijarro-ordonez-2025-replication/run.py build-risk-premium
+uv run python guijarro-ordonez-2025-replication/run.py build-appendix
+uv run python guijarro-ordonez-2025-replication/run.py build-appendix-signals
+uv run python guijarro-ordonez-2025-replication/run.py run-model-selection
 ```
 
 `--simulation-objective meanvar`, `--simulation-lookback-days 60`, and
