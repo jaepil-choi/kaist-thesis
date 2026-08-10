@@ -17,8 +17,9 @@ master's thesis에 부적합)이다. 아래 각 후보의 "데이터·재현성"
 ### 현재 판정 및 실행 우선순위 (2026-08-09 갱신)
 
 기존 #1~#9 후보는 PDF/Markdown 원문 정독과 회사 DW Priority 1~10 중
-1~6·9·10 조사를 완료했다. #10은 2026-08-09 새로 발굴한 후보로, 현재는
-출판사 초록과 공식 공개 코드를 확인했으며 원문은 아직 확보하지 않았다.
+1~6·9·10 조사를 완료했다. #10은 2026-08-09 새로 발굴했고, 2026-08-10
+원문 PDF/Markdown과 공식 코드를 확보해 1차 정독 및 replication scaffold를
+시작했다.
 아래 기존 1~2위는 **주제 선호가 아니라 현재 확인된 데이터의 실행확실성
 순서**이고, #10은 사용자의 새 관심사에 따른 별도 우선검토 후보다.
 세부 변수·회사 DB 확인 항목은 `docs/candidate-paper-data-inventory.md`, 실제
@@ -29,9 +30,9 @@ findings-zi-fund-data.md`에 정리되어 있다.
   factor의 residual portfolio, convolutional transformer, 제약조건을 반영한
   최적 trading policy를 결합한 최신 statistical-arbitrage 연구. 사용자의
   pairs trading·machine learning·deep learning 관심과 가장 직접적으로 맞는다.
-  다만 원문 미확보 상태이고, 한국 일별 수정수익률·point-in-time universe·
-  월별 46개 기업특성·공매도/거래비용 자료의 coverage를 아직 실측하지 않았으므로
-  현재 판정은 **후보/go가 아니라 원문 정독 및 data gate 대기**다.
+  다만 한국 일별 수정수익률·point-in-time universe·월별 46개 기업특성·
+  공매도/거래비용 자료의 coverage가 완전하지 않으므로 현재 판정은
+  **PCA pilot 착수 가능, 완전 replication은 data gate 대기**다.
 
 1. **#5 Machine-learning the skill of mutual fund managers** — 펀드 특성으로
    미래 risk-adjusted performance를 예측하는 ML 기반 fund skill 연구.
@@ -537,7 +538,7 @@ flow·return·fee·volatility를 설명한다. ZI top-10은 이 정의를 충족
 
 ### 10. Deep Learning Statistical Arbitrage
 
-**상태: 신규 우선검토 후보 — 출판사 초록·공식 코드 확인, 원문 미확보.**
+**상태: 신규 우선검토 후보 — 원문·공식 코드 확보, 1차 정독 및 replication scaffold 착수.**
 
 - **저자**: Jorge Guijarro-Ordonez, Markus Pelger, Greg Zanotti
 - **저널**: Management Science (tier 2), 2025
@@ -589,10 +590,13 @@ reversal factor가 필요하다. PCA와 Fama-French residual branch는 이 자�
 설득력 있게 검증하려면 매매수수료·거래세·bid-ask spread·ADV, 종목별 공매도
 가능 여부, 대차잔고·차입비용 자료를 별도로 확보해야 한다.
 
-**원문 검토 상태와 다음 gate**: 사용자가 원문을 제공한 뒤 모든 핵심 figure와
-table, 표본기간, universe filter, factor 수, rolling window, hyperparameter,
-비용가정과 benchmark를 replication checklist로 만든다. 그 전에는 초록의
-성과주장을 확정 사실로 확대해석하지 않고, 후보 상태를 유지한다.
+**원문 검토 상태와 다음 gate**: PDF/Markdown과 공식 코드를 확보해 본문·부록
+Figure/Table 45개, 표본기간, universe filter, factor 수, rolling window,
+hyperparameter, 비용가정과 benchmark를
+`guijarro-ordonez-2025-replication/`의 checklist와 registry로 등록했다.
+다음 gate는 가격 total-return 정의, 시가총액 기준, PIT security master를
+확인한 뒤 2015년 이후 PCA residual pilot을 실행하는 것이다. 240개월 이력과
+공시일 기준 46개 characteristic이 확보되기 전에는 IPCA 완전복제로 부르지 않는다.
 
 ### 과거 학생 논문과의 직접 중복 점검
 

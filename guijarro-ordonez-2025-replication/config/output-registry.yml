@@ -1,0 +1,51 @@
+paper:
+  title: Deep Learning Statistical Arbitrage
+  citation: Guijarro-Ordonez, Pelger, and Zanotti (2025), Management Science
+  expected_output_count: 45
+
+paper_outputs:
+  - {id: fig_01, section: main, kind: figure, title: "Conceptual arbitrage model", status: planned_from_spec}
+  - {id: fig_02, section: main, kind: figure, title: "Examples of local filters", status: planned_from_spec}
+  - {id: fig_03, section: main, kind: figure, title: "Convolutional network architecture", status: planned_from_spec}
+  - {id: fig_04, section: main, kind: figure, title: "Transformer network architecture", status: planned_from_spec}
+  - {id: fig_05, section: main, kind: figure, title: "Cumulative OOS returns of different arbitrage strategies", status: blocked_full_input_panel}
+  - {id: fig_06, section: main, kind: figure, title: "Turnover with and without trading-friction objective", status: blocked_full_input_panel}
+  - {id: fig_07, section: main, kind: figure, title: "Short allocation with and without trading-friction objective", status: blocked_full_input_panel}
+  - {id: fig_08, section: main, kind: figure, title: "Distribution of portfolio weights", status: blocked_full_input_panel}
+  - {id: fig_09, section: main, kind: figure, title: "Performance of sparse portfolios", status: blocked_full_input_panel}
+  - {id: fig_10, section: main, kind: figure, title: "Cumulative returns of sparse portfolios", status: blocked_full_input_panel}
+  - {id: fig_11, section: main, kind: figure, title: "Simple reversal trading", status: blocked_full_input_panel}
+  - {id: fig_12, section: main, kind: figure, title: "Performance for longer holding periods", status: blocked_full_input_panel}
+  - {id: fig_13, section: main, kind: figure, title: "Arbitrage versus risk-premium component", status: blocked_full_input_panel}
+  - {id: fig_14, section: main, kind: figure, title: "CNN+Transformer allocation and return examples", status: blocked_full_input_panel}
+  - {id: fig_15, section: main, kind: figure, title: "Local basic patterns of benchmark model", status: blocked_full_input_panel}
+  - {id: fig_16, section: main, kind: figure, title: "Attention weights for sinusoidal inputs", status: blocked_full_input_panel}
+  - {id: fig_17, section: main, kind: figure, title: "CNN+Transformer structure for a representative residual", status: blocked_full_input_panel}
+  - {id: fig_18, section: main, kind: figure, title: "CNN+Transformer structure over time", status: blocked_full_input_panel}
+  - {id: fig_19, section: main, kind: figure, title: "Variable importance for allocation weight", status: blocked_full_input_panel}
+  - {id: table_01, section: main, kind: table, title: "OOS annualized performance under Sharpe objective", status: blocked_full_input_panel}
+  - {id: table_02, section: main, kind: table, title: "Arbitrage alpha significance under Sharpe objective", status: blocked_full_input_panel}
+  - {id: table_03, section: main, kind: table, title: "OOS annualized performance under mean-variance objective", status: blocked_full_input_panel}
+  - {id: table_04, section: main, kind: table, title: "Arbitrage alpha significance under mean-variance objective", status: blocked_full_input_panel}
+  - {id: table_05, section: main, kind: table, title: "CNN+Transformer performance with 60-day lookback", status: blocked_full_input_panel}
+  - {id: table_06, section: main, kind: table, title: "Alpha significance with 60-day lookback", status: blocked_full_input_panel}
+  - {id: table_07, section: main, kind: table, title: "CNN+Transformer performance for constant model", status: blocked_full_input_panel}
+  - {id: table_08, section: main, kind: table, title: "Alpha significance for constant model", status: blocked_full_input_panel}
+  - {id: table_09, section: main, kind: table, title: "CNN+Transformer performance with trading frictions", status: blocked_full_input_panel}
+  - {id: fig_a01, section: appendix, kind: figure, title: "Feedforward network architecture", status: planned_from_spec}
+  - {id: fig_a02, section: appendix, kind: figure, title: "Allocation weights and signals for different methods", status: blocked_full_input_panel}
+  - {id: fig_a03, section: appendix, kind: figure, title: "Additional allocation and signal examples", status: blocked_full_input_panel}
+  - {id: fig_a04, section: appendix, kind: figure, title: "Additional attention weights for sinusoidal inputs", status: blocked_full_input_panel}
+  - {id: fig_a05, section: appendix, kind: figure, title: "Industry concentration of portfolio weights", status: blocked_full_input_panel}
+  - {id: fig_a06, section: appendix, kind: figure, title: "Volatility of residuals over time", status: blocked_full_input_panel}
+  - {id: fig_a07, section: appendix, kind: figure, title: "Cumulative returns after trading costs", status: blocked_full_input_panel}
+  - {id: table_a01, section: appendix, kind: table, title: "Firm characteristics by category", status: planned_from_spec}
+  - {id: table_a02, section: appendix, kind: table, title: "Network hyperparameter options", status: planned_from_spec}
+  - {id: table_a03, section: appendix, kind: table, title: "Candidate-model validation performance", status: blocked_full_input_panel}
+  - {id: table_a04, section: appendix, kind: table, title: "Alternative best-performing models", status: blocked_full_input_panel}
+  - {id: table_a05, section: appendix, kind: table, title: "Alternative models on benchmark residual datasets", status: blocked_full_input_panel}
+  - {id: table_a06, section: appendix, kind: table, title: "Unconditional average-residual performance", status: blocked_full_input_panel}
+  - {id: table_a07, section: appendix, kind: table, title: "Unconditional average-residual alpha significance", status: blocked_full_input_panel}
+  - {id: table_a08, section: appendix, kind: table, title: "Correlations across CNN+Transformer strategies", status: blocked_full_input_panel}
+  - {id: table_a09, section: appendix, kind: table, title: "Time-series signal ablation performance", status: blocked_full_input_panel}
+  - {id: table_a10, section: appendix, kind: table, title: "PCA-residual performance with trading frictions", status: blocked_full_input_panel}
