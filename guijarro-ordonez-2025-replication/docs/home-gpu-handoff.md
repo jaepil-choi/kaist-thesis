@@ -67,8 +67,8 @@ uv run python -c "import torch; print(torch.__version__); print(torch.cuda.is_av
 
 | 우선순위 | 실행 | 저장된 마지막 지점 | 재개 시점 |
 |---:|---|---|---|
-| 1 | PCA5 rolling CNN Sharpe | subperiod 0–2 완료, subperiod 3 epoch 79 | subperiod 3 epoch 80 |
-| 2 | PCA5 friction-aware CNN | subperiod 0–1 완료 | subperiod 2 epoch 1 |
+| 1 | PCA5 rolling CNN Sharpe | 전체 5개 subperiod 완료 | 완료; audit 생성됨 |
+| 2 | PCA5 friction-aware CNN | 전체 5개 subperiod 완료 | 완료; audit 생성됨 |
 | 3 | PCA5 CNN mean-variance | subperiod 0 epoch 32 | subperiod 0 epoch 33 |
 | 4 | PCA8 Fourier+FFN | subperiod 0 완료, subperiod 1 epoch 98 | subperiod 1 epoch 99 |
 | 5 | PCA10 Fourier+FFN | subperiod 0–1 완료, subperiod 2 epoch 13 | subperiod 2 epoch 14 |
@@ -78,14 +78,26 @@ uv run python -c "import torch; print(torch.__version__); print(torch.cuda.is_av
 재개 명령은 다음과 같다.
 
 ```powershell
-uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer
-uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer_frictions --simulation-transaction-cost 0.0005 --simulation-short-holding-cost 0.0001
-uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer --simulation-objective meanvar
-uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --pca-factors 8 --simulation-model fourier_ffn
-uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --pca-factors 10 --simulation-model fourier_ffn
-uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --pca-factors 15 --simulation-model fourier_ffn
-uv run python guijarro-ordonez-2025-replication/run.py run-model-selection
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer_frictions --simulation-transaction-cost 0.0005 --simulation-short-holding-cost 0.0001
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer --simulation-objective meanvar
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py simulate-pca --pca-factors 8 --simulation-model fourier_ffn
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py simulate-pca --pca-factors 10 --simulation-model fourier_ffn
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py simulate-pca --pca-factors 15 --simulation-model fourier_ffn
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py run-model-selection
 ```
+
+집 PC에서는 ROCm 7.2.1용 `torch 2.9.1+rocm7.2.1` wheel을 저장소의 `.venv`에
+직접 설치했다. 일반 `uv run`은 `pyproject.toml`의 PyPI 해석 결과에 맞춰 이를
+CPU 전용 Torch로 교체할 수 있으므로, 위 GPU 재개 명령은 `--no-sync`를
+사용한다. 이 옵션은 가상환경을 우회하는 것이 아니라 현재 저장소 `.venv`의
+검증된 패키지 집합을 그대로 사용한다.
+
+완료 audit 기준 rolling CNN은 annual return 0.16754, annual volatility
+0.04039, Sharpe 4.14767, mean daily turnover 1.21436이다. friction-aware CNN은
+각각 0.06017, 0.04388, 1.37118, 0.46355이며 거래비용 5 bp와 공매도 보유비용
+1 bp를 목적함수에 반영했다. 둘 다 한국 price-return variant이며 원문 exact
+replication으로 분류하지 않는다.
 
 candidate 1의 validation 결과는 annual return 0.12520, annual volatility
 0.03466, Sharpe 3.61227이며 이미 audit가 있다. validation table과 최종 audit는
