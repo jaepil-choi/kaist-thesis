@@ -96,8 +96,13 @@ resumable; exact epochs and home-GPU commands are in
   robustness run, with annual return 0.140, volatility 0.040, Sharpe 3.448,
   mean daily turnover 1.166, and mean short proportion 0.501. The matching
   30-day run had Sharpe 4.148; Tables 5/6 remain pending report regeneration.
-- Not started: five-day holding, five alternative CNN specifications, and K=1
-  short-history IPCA convergence sensitivity.
+- Completed on the home AMD GPU: the five-day-holding robustness run, with
+  annual return 0.052, volatility 0.017, Sharpe 3.110, mean daily turnover
+  1.004, and mean short proportion 0.507. Figure 12 Panel B remains pending
+  report regeneration.
+- Running through the unattended orchestrator: five alternative CNN
+  specifications on PCA5 and Korean FF5 residuals. K=1 short-history IPCA
+  convergence sensitivity follows automatically.
 
 After each run completes, `report-strategies`, `build-robustness`, and
 `build-appendix` regenerate the numbered CSV/PNG outputs. Empty exact groups

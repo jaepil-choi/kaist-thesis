@@ -111,12 +111,15 @@ filters 16, attention heads 4, hidden-units factor 3, dropout 0.5이며 annual r
 
 60일 lookback CNN은 전체 5개 subperiod를 완료했다. annual return 0.13953,
 annual volatility 0.04046, Sharpe 3.44814, mean daily turnover 1.16552이며
-한국 price-return variant다. 나머지는 다음 순서로 실행한다.
+한국 price-return variant다. 5일 holding CNN도 전체 5개 subperiod를 완료했다.
+annual return 0.05150, annual volatility 0.01656, Sharpe 3.10981, mean daily
+turnover 1.00355이며 같은 한국 price-return variant다. 나머지는 다음 순서로
+실행한다.
 
 ### 무인 일괄 실행
 
-현재 실행 중인 5일 holding을 포함한 남은 실험, 산출물 재생성, 테스트와 린트를
-한 번에 이어서 실행하려면 저장소 루트에서 다음 명령을 사용한다.
+남은 실험, 산출물 재생성, 테스트와 린트를 한 번에 이어서 실행하려면 저장소
+루트에서 다음 명령을 사용한다.
 
 ```powershell
 uv run --no-sync python guijarro-ordonez-2025-replication/scripts/run_remaining_replication.py
