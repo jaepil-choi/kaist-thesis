@@ -113,6 +113,29 @@ filters 16, attention heads 4, hidden-units factor 3, dropout 0.5이며 annual r
 annual volatility 0.04046, Sharpe 3.44814, mean daily turnover 1.16552이며
 한국 price-return variant다. 나머지는 다음 순서로 실행한다.
 
+### 무인 일괄 실행
+
+현재 실행 중인 5일 holding을 포함한 남은 실험, 산출물 재생성, 테스트와 린트를
+한 번에 이어서 실행하려면 저장소 루트에서 다음 명령을 사용한다.
+
+```powershell
+uv run --no-sync python guijarro-ordonez-2025-replication/scripts/run_remaining_replication.py
+```
+
+orchestrator는 같은 5일 holding 프로세스가 이미 실행 중이면 종료를 기다리고,
+완료 audit를 확인한 뒤 중복 학습 없이 다음 단계로 넘어간다. 각 neural-network
+학습은 기존 atomic checkpoint를 그대로 재사용한다. Alternative-network 단계는
+PCA5와 Korean FF5의 2개 residual panel에 5개 network를 적용한다.
+
+각 실행의 증거는
+`outputs/orchestration/run-YYYYMMDDTHHMMSSZ/` 아래 `terminal.log`,
+`events.jsonl`, `manifest.json`, `environment.json`,
+`source_fingerprints.json`, `audit_index.json`, `artifact_inventory.json`,
+`summary.md`로 남는다. IPCA는 `IPCA ALS did not converge`만 예상된 방법론적
+실패로 분류하며, 그 밖의 오류는 manifest에 실패로 남기되 가능한 후속 빌드와
+검증은 계속 실행한다. 모든 결과는 한국 price-return variant이며 이 일괄 실행도
+미국 표본 exact replication 또는 240개월 IPCA 제약을 해소하지 않는다.
+
 ```powershell
 uv run --no-sync python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer --simulation-lookback-days 60
 uv run --no-sync python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer --simulation-holding-days 5
@@ -130,13 +153,13 @@ K=5, 60개월 실행은 공개 코드의 1,500회/1e-3 convergence gate를 통�
 모든 실행을 마친 뒤 아래를 순서대로 실행한다.
 
 ```powershell
-uv run python guijarro-ordonez-2025-replication/run.py report-strategies
-uv run python guijarro-ordonez-2025-replication/run.py build-robustness
-uv run python guijarro-ordonez-2025-replication/run.py build-interpretability
-uv run python guijarro-ordonez-2025-replication/run.py build-appendix
-uv run python guijarro-ordonez-2025-replication/run.py build-appendix-signals
-uv run python guijarro-ordonez-2025-replication/run.py build-risk-premium
-uv run python guijarro-ordonez-2025-replication/run.py status
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py report-strategies
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py build-robustness
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py build-interpretability
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py build-appendix
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py build-appendix-signals
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py build-risk-premium
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py status
 ```
 
 그 다음 `config/output-registry.yml`과 `docs/execution-status.md`를 실제
@@ -154,8 +177,8 @@ audit에 맞춰 갱신한다. 특히 다음 연결을 확인한다.
 ## 7. 최종 검증과 커밋
 
 ```powershell
-uv run pytest guijarro-ordonez-2025-replication/tests -p no:cacheprovider
-uv run ruff check guijarro-ordonez-2025-replication
+uv run --no-sync pytest guijarro-ordonez-2025-replication/tests -p no:cacheprovider
+uv run --no-sync ruff check guijarro-ordonez-2025-replication
 git status --short
 ```
 
