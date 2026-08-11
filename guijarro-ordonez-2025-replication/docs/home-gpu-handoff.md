@@ -107,15 +107,17 @@ filters 16, attention heads 4, hidden-units factor 3, dropout 0.5이며 annual r
 0.17320, annual volatility 0.03725, Sharpe 4.65002다. Table A.3와 최종 audit가
 생성됐지만 exact IPCA validation은 240개월 이력 부족으로 계속 차단된다.
 
-## 5. 아직 시작하지 않은 장시간 실행
+## 5. 추가 장시간 실행
 
-위의 중단 작업을 먼저 끝낸 뒤 다음 순서로 실행한다.
+60일 lookback CNN은 전체 5개 subperiod를 완료했다. annual return 0.13953,
+annual volatility 0.04046, Sharpe 3.44814, mean daily turnover 1.16552이며
+한국 price-return variant다. 나머지는 다음 순서로 실행한다.
 
 ```powershell
-uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer --simulation-lookback-days 60
-uv run python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer --simulation-holding-days 5
-uv run python guijarro-ordonez-2025-replication/run.py run-alternative-networks --alternative-max-models 5 --simulation-epochs 100
-uv run python guijarro-ordonez-2025-replication/run.py estimate-ipca --ipca-factors 1 --ipca-initial-months 60 --ipca-window-months 60 --allow-short-history-ipca
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer --simulation-lookback-days 60
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py simulate-pca --simulation-model cnn_transformer --simulation-holding-days 5
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py run-alternative-networks --alternative-max-models 5 --simulation-epochs 100
+uv run --no-sync python guijarro-ordonez-2025-replication/run.py estimate-ipca --ipca-factors 1 --ipca-initial-months 60 --ipca-window-months 60 --allow-short-history-ipca
 ```
 
 마지막 IPCA 명령은 exact replication이 아니라 short-history sensitivity다.

@@ -92,8 +92,12 @@ resumable; exact epochs and home-GPU commands are in
   0.173 and annual volatility 0.037. Appendix Table A.3 and the grid audit were
   generated. Exact IPCA validation remains blocked by the 240-month history
   requirement.
-- Not started: 60-day lookback, five-day holding, five alternative CNN
-  specifications, and K=1 short-history IPCA convergence sensitivity.
+- Completed on the home AMD GPU: the PCA5 CNN+Transformer 60-day-lookback
+  robustness run, with annual return 0.140, volatility 0.040, Sharpe 3.448,
+  mean daily turnover 1.166, and mean short proportion 0.501. The matching
+  30-day run had Sharpe 4.148; Tables 5/6 remain pending report regeneration.
+- Not started: five-day holding, five alternative CNN specifications, and K=1
+  short-history IPCA convergence sensitivity.
 
 After each run completes, `report-strategies`, `build-robustness`, and
 `build-appendix` regenerate the numbered CSV/PNG outputs. Empty exact groups
