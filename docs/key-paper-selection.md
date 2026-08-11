@@ -18,15 +18,16 @@ master's thesis에 부적합)이다. 아래 각 후보의 "데이터·재현성"
 
 기존 #1~#9 후보는 PDF/Markdown 원문 정독과 회사 DW Priority 1~10 중
 1~6·9·10 조사를 완료했다. #10은 2026-08-09 새로 발굴했고, 2026-08-10
-원문 PDF/Markdown과 공식 코드를 확보해 1차 정독 및 replication scaffold를
-시작했다.
-아래 기존 1~2위는 **주제 선호가 아니라 현재 확인된 데이터의 실행확실성
-순서**이고, #10은 사용자의 새 관심사에 따른 별도 우선검토 후보다.
+원문 PDF/Markdown과 공식 코드를 확보한 뒤 핵심 구현과 한국 GPU 실행을
+진행했다. 2026-08-11 현재 사용자의 연구 방향에 따라 #10을 **최우선 key paper
+후보**로 올린다. 최종 확정 전 남은 판단은 주제 선호가 아니라 total return,
+PIT universe, 240개월 IPCA 및 한국 공매도 비용 자료의 확보 가능성이다.
+아래 기존 1~2위는 DLSA가 data gate에서 탈락할 경우의 대안 순위다.
 세부 변수·회사 DB 확인 항목은 `docs/candidate-paper-data-inventory.md`, 실제
 DW 조사 로그는 `kwam-report-automation/temp/data-exploration/
 findings-zi-fund-data.md`에 정리되어 있다.
 
-- **활성 replication — #10 Deep Learning Statistical Arbitrage** — 조건부 잠재
+- **최우선 후보·활성 replication — #10 Deep Learning Statistical Arbitrage** — 조건부 잠재
   factor의 residual portfolio, convolutional transformer, 제약조건을 반영한
   최적 trading policy를 결합한 최신 statistical-arbitrage 연구. 사용자의
   pairs trading·machine learning·deep learning 관심과 가장 직접적으로 맞는다.
@@ -93,6 +94,232 @@ KRX 지수 구성·산출 table에서 일별 구성종목·비중과 정기변�
 기관별 종목 holdings는 WRDSS에 없다. 이 결과로 #8 Arnott는 데이터 기준
 2순위로 상승했고, 대차공급·borrow fee 메커니즘이 핵심인 #7 Ahn의 완전복제와
 #4 Cao는 no-go로 확정된다.
+
+### 최우선 후보 — #10 Deep Learning Statistical Arbitrage
+
+**상태: 사실상 제1후보·한국 price-return full-paper 산출물 실행 완료. 최종
+확정은 핵심 data gate 확인 후 내린다.**
+
+- **저자**: Jorge Guijarro-Ordonez, Markus Pelger, Greg Zanotti
+- **저널**: *Management Science* (tier 2)
+- **정식 온라인 공개일**: 2025-12-04 (Articles in Advance)
+- **출판 이력**: arXiv v1 2021-06-08, v2 2022-10-07; Management Science 접수
+  2022-10-07, 게재승인 2024-09-01, 정식 온라인 출판 2025-12-04
+- **DOI**: https://doi.org/10.1287/mnsc.2022.03132
+- **arXiv**: https://arxiv.org/abs/2106.04028
+- **OpenAlex ID**: W3169684115
+- **공식 코드**: 저장소의 `Deep_Learning_Statistical_Arbitrage_Code/`에 보존
+
+#### 핵심 연구질문과 기여
+
+이 논문은 pairs trading을 두 종목의 공적분 관계에 한정하지 않고, 대규모
+주식 패널에서 **유사자산의 상대가격 오차를 어떻게 만들고, 그 오차에서 어떤
+시계열 신호를 추출하며, 제약 아래 어떤 포지션을 취할 것인가**라는 세 문제로
+일반화한다. 세 단계는 다음과 같다.
+
+1. **Arbitrage portfolio construction**: 관측 factor(Fama–French), 무조건부
+   잠재 factor(PCA), 기업특성에 조건부인 잠재 factor(IPCA)로 주식수익률의
+   공통성분을 제거한다. 남은 residual은 단순한 종목별 예측대상이 아니라
+   factor-mimicking portfolio와 개별주식의 long-short 조합이다.
+2. **Signal extraction**: 직전 30일 residual을 누적경로로 바꾸고, causal CNN이
+   국소 패턴을, Transformer attention이 더 긴 구간의 비대칭 trend/reversion
+   패턴을 학습한다. 당일 수익률은 당일 신호에 들어가지 않는다.
+3. **Joint trading policy**: 다음 날 수익률을 따로 예측한 뒤 사후적으로
+   포트폴리오를 만드는 것이 아니라, residual allocation 전체를 Sharpe ratio
+   또는 mean-variance 목적함수로 직접 학습한다. residual weight를 원주식
+   weight로 다시 합성하고 L1 norm을 1로 정규화해 gross exposure를 제한한다.
+   turnover·short holding cost도 목적함수에 직접 넣을 수 있다.
+
+따라서 이 논문의 차별점은 “딥러닝으로 주가를 예측한다”가 아니다. **factor
+residual 생성, convolutional-transformer 신호, 제약된 portfolio objective를
+하나의 statistical-arbitrage pipeline으로 결합**한 것이 핵심이다. 한국
+replication도 이 세 요소 중 하나만 선택하면 원 논문의 핵심 설계를 재현한 것이
+아니다.
+
+#### 원 논문의 표본·추정 계약
+
+- **Universe**: 전월 말 시가총액이 미국 전체 시가총액의 0.01%보다 큰, 대략
+  550개의 가장 크고 유동적인 미국 주식. unbalanced panel이다.
+- **Residual 표본**: 1998-01~2016-12 일별 수익률. 거래성과 OOS 평가는 최초
+  4년을 정책 학습에 사용하므로 2002-01~2016-12다.
+- **Factor branches**: Fama–French 1/3/5/8, PCA 및 IPCA의
+  K=1/3/5/8/10/15. FF8은 FF5에 momentum, short-term reversal,
+  long-term reversal을 더한다.
+- **Rolling factor estimation**: FF loading은 직전 60거래일; PCA factor는
+  직전 252거래일 correlation과 직전 60거래일 loading; IPCA는 월별 46개
+  characteristic과 240개월 rolling history를 사용하고 매년 재추정한다.
+- **Policy input·training**: 기본 signal lookback 30일, seed 0, Adam
+  learning rate 0.001, 100 epochs, 직전 1,000거래일 학습, 125거래일마다
+  rolling 재학습 및 OOS 평가, 기본 holding period 1일.
+- **Architecture**: causal convolution residual block 뒤에 8차원 Transformer
+  encoder(4 attention heads, 16-unit feedforward, dropout 0.25)를 두고 마지막
+  시점에서 residual weight를 출력한다. 비교모형은 Fourier+FFN과
+  OU+Threshold다.
+- **비용 사양**: 거래 한쪽당 5bp와 일별 short position 1bp를 선형 penalty로
+  적용한다. 이는 보편 상수의 sensitivity이지 종목·시점별 market impact나
+  실제 borrow fee의 관측모형은 아니다.
+
+#### 원 논문의 주요 결과와 해석
+
+- 개별주식수익률(K=0)에 직접 정책을 적용하는 것보다 factor residual에 적용할
+  때 성과가 크게 좋아진다. 공통 factor를 제거해야 횡단면의 반복 관측이 약하게
+  의존하는 상대가치 신호로 바뀐다는 해석이다.
+- CNN+Transformer는 Fourier+FFN과 OU+Threshold보다 높은 Sharpe ratio를
+  보인다. FF5와 PCA5 residual에서 OOS Sharpe가 3.2를 넘고, IPCA5에서는 약
+  4.2다. PCA5의 연평균수익률은 약 14%로, 높은 Sharpe가 극단적으로 작은
+  변동성만으로 만들어진 것은 아니라는 것이 저자들의 주장이다.
+- 약 5개 factor를 제거한 뒤에는 factor 수를 더 늘려도 개선 폭이 크지 않다.
+  IPCA residual이 가장 높은 성과를 보이는 것은 기업특성에 따른 조건부 loading이
+  무조건부 PCA보다 공통성분을 더 정교하게 제거한다는 증거로 해석한다.
+- FF8에 대한 time-series alpha가 남고, momentum·reversal factor를 residual
+  생성에 포함해도 수익성이 유지된다. 따라서 결과를 단순 momentum premium으로
+  설명하기 어렵다는 것이 논문의 검정 논리다.
+- 신호는 비대칭적인 local trend와 reversion을 함께 사용한다. 대부분의
+  mispricing은 약 한 달 안에 줄지만 일부 Sharpe는 더 긴 holding horizon에도
+  남는다. 60일 lookback, 8년 training, multi-day holding, 대안 network와
+  비용 목적함수도 robustness 대상으로 제시한다.
+- 다만 높은 Sharpe는 550개 대형주 패널의 동시 횡단면 학습, 단순화된 비용,
+  survivorship·corporate-action 처리와 재학습 설계에 민감할 수 있다. 한국에서
+  비슷한 수치가 나오더라도 실제 shortability와 market impact를 반영하기 전에는
+  deployable alpha로 해석하면 안 된다.
+
+#### Full-paper replication 완료 기준
+
+본문 Figure 1–19와 Table 1–9, 부록 Figure A.1–A.7과 Table A.I–A.X의 총
+45개를 완료 단위로 삼는다. 세부 목록과 machine-readable 상태는
+`guijarro-ordonez-2025-replication/docs/replication-checklist.md`와
+`guijarro-ordonez-2025-replication/config/output-registry.yml`이 source of
+truth다. 특정 factor branch나 높은 Sharpe 한두 개만 생성하는 것은 완료가 아니다.
+
+#### 한국 replication 설계와 현재 증거 (2026-08-11 GPU 완료 증거 기준)
+
+KOSPI·KOSDAQ의 유동성 높은 보통주를 전월 말 시가총액으로 선별하고, 동일한
+rolling window와 정책 재학습 계약 아래 FF/PCA/IPCA residual을 비교한다.
+exact replication을 먼저 시도하고, 한국의 가격제한폭, 공매도 금지 국면,
+종목별 shortability, borrow fee와 거래세는 별도 extension으로 분리한다.
+
+##### 구현 상태
+
+residual composition, FF1/3/5와 PCA K=0/1/3/5/8/10/15, 46개
+characteristic builder, IPCA ALS core, OU/Fourier/CNN 정책,
+Sharpe·mean-variance·friction·multi-holding objective가 구현됐다. 16개
+validation grid, 5개 대안 CNN, checkpoint 재개와 남은 작업을 직렬 실행하는
+orchestrator, 45개 output registry 및 report builder도 코드에 들어와 있다.
+현재 checkout에서 DLSA 테스트 **67개가 모두 통과**했고 Ruff도 통과했다.
+
+한국 PCA residual 표본은 2020-01-02~2026-07-20의 1,606거래일,
+일별 127~185종목이며 정책 OOS는 최초 1,000일 학습 후
+2024-01-19~2026-07-20이다. 최신 tracked 실행 증거는 다음과 같다.
+
+| 실행 | 연수익률 | 연변동성 | Sharpe | 판정 |
+|---|---:|---:|---:|---|
+| PCA5 CNN+Transformer, rolling Sharpe | 0.168 | 0.040 | 4.148 | 5개 OOS subperiod 완료 |
+| PCA5 CNN+Transformer, mean-variance | 0.156 | 0.050 | 3.131 | 완료 |
+| PCA5 CNN+Transformer, friction-aware | 0.060 | 0.044 | 1.371 | 완료; turnover 1.214→0.464 |
+| PCA8 Fourier+FFN | 0.139 | 0.035 | 3.923 | 완료 |
+| PCA10 Fourier+FFN | 0.116 | 0.033 | 3.531 | 완료 |
+| PCA15 Fourier+FFN | 0.052 | 0.028 | 1.816 | 완료 |
+| PCA5 60일 lookback CNN | 0.140 | 0.040 | 3.448 | 완료 |
+| PCA5 5일 holding CNN | 0.052 | 0.017 | 3.110 | 완료 |
+
+16-model validation grid도 전부 완료됐다. candidate 16(`filters=16`,
+`attention_heads=4`, `hidden_units_factor=3`, `dropout=0.5`)이 validation
+Sharpe 4.650으로 가장 높았다. 이는 model-selection validation 결과이지 별도의
+최종 OOS 투자성과가 아니다.
+
+##### 45개 산출물 완료 상태
+
+현재 output registry 집계는 `generated_from_spec` 8개,
+`generated_korean_analogue` 1개, `generated_korean_partial` 23개,
+`generated_korean_variant` 13개이며, `implemented_waiting_full_run`은 0개다.
+즉 **45개 번호 산출물이 모두 spec-derived 또는 Korean
+analogue/partial/variant artifact로 생성됐다**. 이는 executable-output 완료
+판정이지 원문 미국 표본의 exact replication 완료 판정은 아니다.
+
+`run-20260811T021314Z`에서 대안 CNN 10개 사양, K=1 60개월 short-history
+IPCA sensitivity와 모든 후속 output builder가 완료됐고 실패 task는 없었다.
+5일 holding task는 기존 완료 audit가 있어 재실행을 건너뛰었다. 해당 run은
+프로젝트 status, DLSA 테스트 67개와 Ruff까지 통과했다.
+
+중요하게, `outputs/`는 Git ignore 대상이다. 이번 pull로 코드와 실행 증거 문서는
+왔지만 이 PC의 local output tree에는 최신 GPU audit 전체가 없다. 따라서 위
+수치는 커밋된 `execution-status.md`와 handoff audit 기록으로 확인한 것이며,
+이 PC에서 결과를 재생성·수치감사하려면 집 PC의 최신 `outputs/`를 별도로
+복사해야 한다.
+
+현금배당 제외 price return과 축소된 한국 표본을 쓴 모든 결과는 **한국
+variant**다. 원문 수치의 exact replication 또는 실현 가능한 투자성과 추정치로
+해석하지 않는다.
+
+#### 남은 data gate와 최종 선정 판단
+
+- **Exact U.S. branch**: CRSP/Compustat 원자료가 없어 원문 수치의 검증은 아직
+  차단되어 있다.
+- **한국 total return·PIT universe**: 현재 수정수익률은 권리·분할을 반영하지만
+  현금배당을 제외한다. 상장폐지수익률, 종목코드 변경, corporate action과 전월
+  말 상장주식수를 포함한 PIT security master도 최종 검증이 필요하다.
+- **IPCA history**: 월별 characteristic panel은 139개월뿐이라 원문의 240개월
+  rolling window를 충족하지 않는다. K=5, 60개월 sensitivity도 공개 코드의
+  1,500-iteration/1e-3 convergence gate를 통과하지 못해 residual을 만들지
+  않았다.
+- **PIT accounting**: 46개 characteristic은 계산 가능하지만 실제 공시일
+  vintage가 아니라 고정 3개월 lag proxy다. look-ahead 방지의 충분조건이 아니다.
+- **Investability**: bid-ask spread, 역사적 shortability, 종목별 borrow fee와
+  market impact가 없다. 논문의 5bp/1bp 상수를 적용한 결과는 비용 민감도일 뿐
+  한국 실현비용 검증이 아니다.
+- **Artifact 경계**: 실행과 registry 반영은 완료됐지만 최신 GPU `outputs/`는
+  Git pull에 포함되지 않는다. 이 PC에서 수치 audit를 재검증하려면 별도
+  artifact 복사가 필요하며, exact branch의 차단 항목을 proxy로 채우지 않는다.
+
+결론적으로 이 논문은 연구 관심, 저널 위상, 공식 코드, 한국 주식 패널에 대한
+명확한 extension 가능성 때문에 **가장 유력한 key paper**다. 그러나 “코드가
+있고 한국 PCA5 Sharpe가 높다”는 사실은 최종 선정의 충분조건이 아니다. 최소
+확정조건은 total-return/PIT universe 정의를 닫고, IPCA 240개월 자료의 확보
+가능 여부를 확정하며, exact와 Korean variant의 산출물 경계를 논문 목차에
+고정하는 것이다.
+
+#### 2025·2026 KAIST MFE 직접 중복 점검
+
+**점검 범위**: 2026-07-16에 저장된 `docs/other-students-works/MFE 25학번
+논문 주제 현황 파악 - 과거논문작성현황.csv`에서 2025년 25편과 2026년 32편,
+총 57편을 분리했다. 제목의 한·영문, 저자, `statistical arbitrage`, `pairs
+trading`, `deep learning`, `factor residual`, `CNN`, `Transformer`, `PCA`,
+`IPCA`를 대조하고, 공개 KOASAS 검색에서 논문명과 세 저자명 및 원 논문
+제목의 exact match도 확인했다. 별도의 `현황.csv`는 현재 학생들의 후보논문
+목록이므로 기출 석사논문과 섞지 않았으며, 그 목록에도 DLSA exact match는 없다.
+
+**시간축 주의**: 정식 Management Science 공개일만 보면 2025년 2월 학위논문은
+시간상 이 논문을 사용할 수 없다. 그러나 working paper는 2021-06-08부터
+공개됐으므로 “2025년 이전에는 불가능”하다고 단정할 수 없다. 사용자의 요청에
+따라 이번 정밀 점검은 2025·2026년으로 한정하되, 이것이 working-paper 기준의
+전 기간 exhaustive search는 아니다.
+
+**판정**: 57편 중 제목과 공개 메타데이터 기준으로 DLSA를 key paper로 삼아
+한국 주식시장에 직접 적용한 논문은 **확인되지 않았다**. 특히 2025·2026년에는
+statistical arbitrage나 pairs trading을 제목으로 명시한 논문 자체가 없다.
+제목·공개 초록상 가장 가까운 후보도 다음과 같이 핵심 설계가 다르다.
+
+- 이종원(2026) 「한국 시장 머신러닝 포트폴리오의 결측값 처리」는 missing-data
+  처리와 ML portfolio가 중심이며 residual arbitrage·CNN+Transformer 정책이
+  아니다.
+- 임우섭(2026) 「옵션 내재변동성 예측 개선…신경망 기반 잔차 보정」은 KOSPI200
+  옵션 IV 예측과 거래 검증으로, 주식 factor residual portfolio와 다르다.
+- 안현(2026) 「주파수 도메인 방법론을 통한 가격 예측 잠재력 발굴」은 Fourier
+  계열이라는 도구만 겹치며 DLSA의 factor-residual·joint policy 설계가 아니다.
+- 최선아(2026) 「모형 복잡성과 주식 수익률 예측」과 임재구(2025)
+  「머신러닝을 활용한 기술적 지표 기반 국내 주가 예측」은 방향성 return
+  prediction 연구다. 상대가치 residual portfolio를 직접 최적화하지 않는다.
+- 황성진(2025) 「한국 주식시장 내 요인 포트폴리오의 공통요인 변동성 연구」는
+  factor portfolio volatility와 SDF가 연구대상이며 arbitrage signal/policy가
+  없다.
+
+따라서 현재 증거로는 **KAIST MFE direct-replication 중복 때문에 후보를 제외할
+이유가 없다**. 다만 KOASAS는 일부 2025·2026 레코드에 원문 파일을 공개하지
+않고, 2026 레코드의 공개 색인도 완전하지 않다. 그러므로 이 결론의 강도는
+“57편의 제목·공개 초록·메타데이터에서 직접 중복 없음”이다. 모든 비공개
+참고문헌까지 확인한 절대적 부재 증명은 아니며, 최종 proposal 제출 전 학교
+내부 원문 접근으로 위 경계 후보들의 bibliography에 Guijarro-Ordonez et al.이
+있는지만 마지막으로 확인한다.
 
 ### ~~1. Estimating Stock Market Betas via Machine Learning~~
 
@@ -541,72 +768,6 @@ flow·return·fee·volatility를 설명한다. ZI top-10은 이 정의를 충족
 못하므로, 금융투자협회·운용사·별도 vendor에서 최소 8~10년의 full holdings를
 확보하기 전에는 실제 go로 전환하지 않는다.
 
-### 10. Deep Learning Statistical Arbitrage
-
-**상태: 활성 key-paper replication — 한국 price-return 실행 branch 완료, exact replication은 data gate 대기.**
-
-- **저자**: Jorge Guijarro-Ordonez, Markus Pelger, Greg Zanotti
-- **저널**: Management Science (tier 2), 2025
-- **온라인 공개일**: 2025-12-04
-- **DOI**: https://doi.org/10.1287/mnsc.2022.03132
-- **OpenAlex ID**: W3169684115
-
-**메타데이터 주의**: OpenAlex는 이 논문의 오래된 working-paper record를
-2021년 논문처럼 표시하고 피인용도 과소 집계한다. 서지정보는 INFORMS의 공식
-출판 페이지를 source of truth로 삼는다. 논문은 2025년 12월 Management
-Science Articles in Advance로 정식 공개됐다.
-
-**Abstract 요약**: 비슷한 자산 사이의 일시적 가격차를 이용하는 statistical
-arbitrage를 세 단계로 일반화한다. 먼저 조건부 잠재 asset-pricing factor로
-설명되지 않는 residual portfolio를 만들어 유사자산의 상대가격 오차를
-추출한다. 다음으로 convolutional transformer가 residual의 시계열 신호를
-학습하고, 마지막으로 거래비용·short exposure·leverage 등 제약 아래
-risk-adjusted return을 최대화하는 trading policy를 구성한다. 미국 대형주
-일별자료의 표본외 분석에서 기존 factor-residual 및 mean-reversion benchmark를
-상회하는 성과를 보고한다.
-
-**왜 후보인가**: 기존 후보들의 fund selection·index rebalancing보다 사용자가
-새로 밝힌 statistical arbitrage, pairs trading, machine learning, deep
-learning 관심을 한 논문에서 직접 결합한다. 고전적인 두 종목 공적분 전략이
-아니라 대규모 주식 패널에서 factor residual portfolio를 만들기 때문에,
-기존 KAIST의 distance·cointegration·clustering 기반 pairs-trading 논문과도
-방법론적으로 구분될 가능성이 높다. 최신 tier-2 논문이고 공식 코드가 공개돼
-있다는 점도 replication 후보로 유리하다.
-
-**한국 replication 아이디어**: KOSPI·KOSDAQ의 유동성 높은 보통주를 대상으로
-원 논문의 전월 말 시가총액 기준을 그대로 적용하고, Fama-French·PCA·IPCA로
-일별 residual portfolio를 구성한다. 동일한 rolling estimation, signal
-lookback, 재학습 주기와 CNN+Transformer trading policy를 사용해 gross/net
-성과를 재현한다. exact replication을 먼저 완료한 뒤에만 한국의 공매도 가능
-여부·대차비용·공매도 제한 국면·가격제한폭을 반영한 extension을 분리해 수행한다.
-
-**데이터·재현성**: **한국 price-return branch 검증 완료, exact branch 고위험**.
-현재 가격·시가총액·월말 universe·ECOS RF와 46개 characteristic proxy로 rolling
-PCA, FF1/3/5, CNN 정책 및 60개월 K=1 IPCA sensitivity를 실행했다. exact 최소
-사양에는 장기간 일별 수정수익률, 전월 말 시가총액, 상장·상장폐지·corporate action을 포함하는
-point-in-time security master, 일별 무위험수익률, 한국 Fama-French·momentum·
-reversal factor가 필요하다. PCA와 Fama-French residual branch는 이 자료로
-구축할 수 있지만, 논문의 IPCA branch까지 완전 재현하려면 공시일 기준 재무자료와
-과거수익률에서 계산한 월별 46개 firm characteristics가 추가로 필요하다.
-
-공개 저장소에는 factor-model residual 생성과 trading-policy 학습 코드가
-있지만, 저자들은 라이선스 때문에 원본 주식수익률과 기업특성 데이터는 공개하지
-않는다고 명시한다. 따라서 공개 코드가 raw-data gate를 제거하지는 않는다.
-원 논문은 대형주에 대해 turnover와 short exposure의 선형 cost penalty를
-사용하고 market impact는 직접 모델링하지 않는다. 한국 결과의 investability를
-설득력 있게 검증하려면 매매수수료·거래세·bid-ask spread·ADV, 종목별 공매도
-가능 여부, 대차잔고·차입비용 자료를 별도로 확보해야 한다.
-
-**원문 검토 상태와 다음 gate**: PDF/Markdown과 공식 코드를 확보해 본문·부록
-Figure/Table 45개, 표본기간, universe filter, factor 수, rolling window,
-hyperparameter, 비용가정과 benchmark를
-`guijarro-ordonez-2025-replication/`의 checklist와 registry로 등록했다.
-한국 branch는 67개 테스트와 최종 audit까지 완료됐고 45개 번호 산출물의
-`implemented_waiting_full_run` 상태는 모두 해소됐다. 다음 gate는 현금배당 포함
-total return, PIT security master, 공시일 기준 46개 characteristic, 상장폐지수익률,
-실현 거래·대차비용을 확보하는 것이다. 240개월 이력과 공시일 기준 원천이
-확보되기 전에는 IPCA 완전복제로 부르지 않는다.
-
 ### 과거 학생 논문과의 직접 중복 점검
 
 `docs/other-students-works/MFE 25학번 논문 주제 현황 파악 -
@@ -631,12 +792,10 @@ paper의 replication일 수 없으므로 제외 사유로 보지 않는다.
 유사한 과거 논문은 있으나, 해당 key paper의 직접 replication으로 확인된
 학생 논문은 없으므로 이 점을 이유로 제외하지 않는다.
 
-#10과 관련해서는 clustering 기반 pair selection(2020·2023), 고빈도
-distance·cointegration(2022), copula 및 전통적 statistical arbitrage 등
-유사한 과거 KAIST 논문이 여러 편 있다. 그러나 목록에 기록된 제목과 방법론
-기준으로는 조건부 factor residual과 convolutional transformer를 결합한 #10의
-핵심 설계를 직접 재현한 사례는 확인되지 않았다. 원문 확보 후 해당 학생논문의
-key paper와 세부 방법론까지 대조해 최종 중복 판정을 내린다.
+#10은 위의 「2025·2026 KAIST MFE 직접 중복 점검」에서 별도로 재검토했다.
+해당 57편의 제목·공개 초록·메타데이터에서는 조건부 factor residual과
+convolutional transformer를 결합한 direct replication이 확인되지 않았다.
+다만 비공개 원문의 bibliography까지 확인한 절대적 부재 증명은 아니다.
 
 ### 문헌 추적 결과 (references / citing papers)
 
