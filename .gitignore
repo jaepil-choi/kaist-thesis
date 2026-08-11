@@ -17,3 +17,7 @@ data/
 
 ## scratch pad outputs (retrieved paper data, not source)
 scratch-pad-for-ai/outputs/
+
+## scratch runtime caches (rebuildable)
+scratch-pad-for-ai/rocm-cache-*/
+scratch-pad-for-ai/uv-cache-*/

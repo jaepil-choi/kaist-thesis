@@ -14,7 +14,7 @@ journal key paper를 한국 데이터로 replicate/extend"하는 게 목표이�
 있는가, (2) 그 논문이 기존 방법론을 적용하는 설계인가(새 방법론 제안이면
 master's thesis에 부적합)이다. 아래 각 후보의 "데이터·재현성" 메모 참고.
 
-### 현재 판정 및 실행 우선순위 (2026-08-09 갱신)
+### 현재 판정 및 실행 우선순위 (2026-08-11 갱신)
 
 기존 #1~#9 후보는 PDF/Markdown 원문 정독과 회사 DW Priority 1~10 중
 1~6·9·10 조사를 완료했다. #10은 2026-08-09 새로 발굴했고, 2026-08-10
@@ -32,7 +32,8 @@ findings-zi-fund-data.md`에 정리되어 있다.
   pairs trading·machine learning·deep learning 관심과 가장 직접적으로 맞는다.
   한국 일별 가격수익률·월말 point-in-time universe·월별 46개 기업특성으로
   rolling PCA와 FF1/3/5 residual, OU/Fourier/CNN 정책 및 본문·부록 산출물
-  pipeline을 구현했다. 현재 판정은 **한국 price-return replication 실행 중,
+  pipeline을 구현하고 2026-08-11 무인 GPU batch와 45개 번호 산출물 생성을
+  완료했다. 현재 판정은 **한국 price-return replication 실행 완료,
   원문 exact replication은 data gate 대기**다. 원문의 240개월 IPCA, 미국
   CRSP/Compustat 표본, 현금배당 포함 total return, 실제 재무 공시시점,
   상장폐지수익률 및 실현 공매도·거래비용 이력은 확보되지 않았다. 따라서
@@ -542,7 +543,7 @@ flow·return·fee·volatility를 설명한다. ZI top-10은 이 정의를 충족
 
 ### 10. Deep Learning Statistical Arbitrage
 
-**상태: 신규 우선검토 후보 — 원문·공식 코드 확보, 1차 정독 및 replication scaffold 착수.**
+**상태: 활성 key-paper replication — 한국 price-return 실행 branch 완료, exact replication은 data gate 대기.**
 
 - **저자**: Jorge Guijarro-Ordonez, Markus Pelger, Greg Zanotti
 - **저널**: Management Science (tier 2), 2025
@@ -579,8 +580,10 @@ lookback, 재학습 주기와 CNN+Transformer trading policy를 사용해 gross/
 성과를 재현한다. exact replication을 먼저 완료한 뒤에만 한국의 공매도 가능
 여부·대차비용·공매도 제한 국면·가격제한폭을 반영한 extension을 분리해 수행한다.
 
-**데이터·재현성**: **중고위험, 아직 미검증**. 최소 사양에는 장기간 일별
-수정수익률, 전월 말 시가총액, 상장·상장폐지·corporate action을 포함하는
+**데이터·재현성**: **한국 price-return branch 검증 완료, exact branch 고위험**.
+현재 가격·시가총액·월말 universe·ECOS RF와 46개 characteristic proxy로 rolling
+PCA, FF1/3/5, CNN 정책 및 60개월 K=1 IPCA sensitivity를 실행했다. exact 최소
+사양에는 장기간 일별 수정수익률, 전월 말 시가총액, 상장·상장폐지·corporate action을 포함하는
 point-in-time security master, 일별 무위험수익률, 한국 Fama-French·momentum·
 reversal factor가 필요하다. PCA와 Fama-French residual branch는 이 자료로
 구축할 수 있지만, 논문의 IPCA branch까지 완전 재현하려면 공시일 기준 재무자료와
@@ -598,9 +601,11 @@ reversal factor가 필요하다. PCA와 Fama-French residual branch는 이 자�
 Figure/Table 45개, 표본기간, universe filter, factor 수, rolling window,
 hyperparameter, 비용가정과 benchmark를
 `guijarro-ordonez-2025-replication/`의 checklist와 registry로 등록했다.
-다음 gate는 가격 total-return 정의, 시가총액 기준, PIT security master를
-확인한 뒤 2015년 이후 PCA residual pilot을 실행하는 것이다. 240개월 이력과
-공시일 기준 46개 characteristic이 확보되기 전에는 IPCA 완전복제로 부르지 않는다.
+한국 branch는 67개 테스트와 최종 audit까지 완료됐고 45개 번호 산출물의
+`implemented_waiting_full_run` 상태는 모두 해소됐다. 다음 gate는 현금배당 포함
+total return, PIT security master, 공시일 기준 46개 characteristic, 상장폐지수익률,
+실현 거래·대차비용을 확보하는 것이다. 240개월 이력과 공시일 기준 원천이
+확보되기 전에는 IPCA 완전복제로 부르지 않는다.
 
 ### 과거 학생 논문과의 직접 중복 점검
 

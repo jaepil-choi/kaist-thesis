@@ -19,7 +19,26 @@ Korean IPCA branch remains history-blocked because the paper requires a
 240-month rolling window while the local monthly panel has only 139 months.
 The attempted K=5, 60-month short-history sensitivity did not meet the public
 code's 1,500-iteration, 1e-3 convergence gate and consequently produced no
-residual file.
+residual file. A separate K=1, 60-month sensitivity converged in all seven
+annual fits and generated 1,330,517 daily residual rows, but it does not remove
+the 240-month exact-replication blocker.
+
+## Final unattended run
+
+Run `run-20260811T021314Z` completed on the AMD GPU on 2026-08-11. Eleven
+tasks succeeded and the five-day-holding task was skipped only because its
+completed audit already existed; there were no failed tasks. The run completed
+all ten 100-epoch alternative-network specifications, the K=1 short-history
+IPCA sensitivity, every downstream output builder, project status, 67 tests,
+and Ruff. The captured execution commit is `0ee7b84`; the subsequent
+`a34aa72` commit changed only the five-day run documentation. Timestamped logs,
+environment, source hashes, parsed audits, and artifact hashes are preserved
+under `outputs/orchestration/run-20260811T021314Z/`.
+
+The output registry now has zero `implemented_waiting_full_run` entries. All
+45 numbered outputs exist as spec-derived, Korean analogue, Korean partial, or
+Korean variant artifacts. This is an executable-output completion statement,
+not an exact U.S. replication claim.
 
 ## Executed sample contract
 
@@ -67,12 +86,7 @@ unadjusted research backtests and not deployable performance estimates.
 | Korean FF3 | Fourier+FFN | 0.084 | 0.048 | 1.759 |
 | Korean FF5 | Fourier+FFN | 0.064 | 0.044 | 1.454 |
 
-## Checkpointed and outstanding executable runs
-
-Company-PC execution was intentionally stopped on 2026-08-10 because the
-machine has no GPU. The completed part of each active run is checkpointed and
-resumable; exact epochs and home-GPU commands are in
-`docs/home-gpu-handoff.md`.
+## Completed GPU runs and reviewed results
 
 - Completed on the home AMD GPU: rolling PCA5 CNN+Transformer Sharpe,
   mean-variance, and friction-aware objectives. Mean-variance produced annual
@@ -94,16 +108,31 @@ resumable; exact epochs and home-GPU commands are in
   requirement.
 - Completed on the home AMD GPU: the PCA5 CNN+Transformer 60-day-lookback
   robustness run, with annual return 0.140, volatility 0.040, Sharpe 3.448,
-  mean daily turnover 1.166, and mean short proportion 0.501. The matching
-  30-day run had Sharpe 4.148; Tables 5/6 remain pending report regeneration.
+  mean daily turnover 1.166, and mean short proportion 0.501. Its Korean FF5
+  annual alpha is 0.146 with t-statistic 5.540. The matching 30-day run had
+  Sharpe 4.148; Tables 5/6 were regenerated and reviewed.
 - Completed on the home AMD GPU: the five-day-holding robustness run, with
   annual return 0.052, volatility 0.017, Sharpe 3.110, mean daily turnover
-  1.004, and mean short proportion 0.507. Figure 12 Panel B remains pending
-  report regeneration.
-- Running through the unattended orchestrator: five alternative CNN
-  specifications on PCA5 and Korean FF5 residuals. K=1 short-history IPCA
-  convergence sensitivity follows automatically.
+  1.004, and mean short proportion 0.507. Figure 12 was regenerated from the
+  supplied multi-day-trained weights. Its separate cross-horizon transform at
+  B=5 has annual return -0.006, volatility 0.025, and Sharpe -0.235; that
+  mechanical Figure 12 statistic is not the standalone five-day simulation
+  audit and the two definitions must not be interchanged.
+- Figures 9/10 show that retaining only the largest 1% of asset weights raises
+  volatility to 0.504 and produces a negative Sharpe, while the full-weight
+  portfolio has Sharpe 2.158 in the robustness transformation. Figure 11's
+  simple reversal benchmarks are negative at every tested lag. These results
+  do not support a claim that greater sparsity or naive reversal improves the
+  Korean strategy.
+- All five alternative networks completed on both PCA5 and Korean FF5
+  residuals. PCA5 Network 2 has the highest Sharpe, 4.203; Korean FF5 Network
+  2 has the highest Sharpe, 2.674. Appendix Table A.5 contains all ten rows and
+  satisfies the 100-epoch network execution contract.
+- K=1 short-history IPCA converged in four or five ALS iterations in each of
+  seven annual fits. It uses 60 months rather than the paper's 240 months and
+  is classified only as a Korean short-history sensitivity.
 
-After each run completes, `report-strategies`, `build-robustness`, and
-`build-appendix` regenerate the numbered CSV/PNG outputs. Empty exact groups
-are retained as explicit blockers rather than filled with a proxy.
+Empty exact groups remain explicit blockers rather than being filled with a
+proxy. The remaining work is data acquisition for total returns, filing-vintage
+accounting data, delisting returns, and realized trading/shorting costs, not an
+unexecuted local model run.
