@@ -184,45 +184,29 @@ security master도 아직 최종 검증되지 않았다.
 
 **Table 1. OOS Annualized Performance Based on Sharpe Ratio Objective**
 
-<table>
-  <thead>
-    <tr>
-      <th rowspan="2">Model</th>
-      <th rowspan="2">K</th>
-      <th colspan="3">Fama–French</th>
-      <th colspan="3">PCA</th>
-      <th colspan="3">IPCA</th>
-    </tr>
-    <tr>
-      <th>SR</th><th>μ</th><th>σ</th>
-      <th>SR</th><th>μ</th><th>σ</th>
-      <th>SR</th><th>μ</th><th>σ</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td rowspan="7"><strong>CNN<br>+<br>Trans</strong></td><td>0</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td></tr>
-    <tr><td>1</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>3</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>5</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td><strong>4.148</strong></td><td><strong>16.8%</strong></td><td><strong>4.0%</strong></td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>8</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>10</td><td>—ᴺ</td><td>—ᴺ</td><td>—ᴺ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>15</td><td>—ᴺ</td><td>—ᴺ</td><td>—ᴺ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᵁ</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td rowspan="7"><strong>Fourier<br>+<br>FFN</strong></td><td>0</td><td>-1.006</td><td>-17.1%</td><td>17.0%</td><td>-1.006</td><td>-17.1%</td><td>17.0%</td><td>-1.006</td><td>-17.1%</td><td>17.0%</td></tr>
-    <tr><td>1</td><td>1.452</td><td>11.8%</td><td>8.1%</td><td>2.618</td><td>13.4%</td><td>5.1%</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>3</td><td>1.759</td><td>8.4%</td><td>4.8%</td><td>2.960</td><td>12.9%</td><td>4.3%</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>5</td><td>1.454</td><td>6.4%</td><td>4.4%</td><td>3.266</td><td>13.4%</td><td>4.1%</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>8</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td><td>3.923</td><td>13.9%</td><td>3.5%</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>10</td><td>—ᴺ</td><td>—ᴺ</td><td>—ᴺ</td><td>3.531</td><td>11.6%</td><td>3.3%</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>15</td><td>—ᴺ</td><td>—ᴺ</td><td>—ᴺ</td><td>1.816</td><td>5.2%</td><td>2.8%</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td rowspan="7"><strong>OU<br>+<br>Thresh</strong></td><td>0</td><td>0.352</td><td>6.0%</td><td>17.0%</td><td>0.352</td><td>6.0%</td><td>17.0%</td><td>0.352</td><td>6.0%</td><td>17.0%</td></tr>
-    <tr><td>1</td><td>0.276</td><td>2.8%</td><td>10.0%</td><td>1.435</td><td>11.7%</td><td>8.1%</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>3</td><td>0.732</td><td>4.6%</td><td>6.3%</td><td>1.138</td><td>7.1%</td><td>6.2%</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>5</td><td>0.472</td><td>2.4%</td><td>5.0%</td><td>1.471</td><td>9.1%</td><td>6.2%</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>8</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td><td>1.811</td><td>8.9%</td><td>4.9%</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>10</td><td>—ᴺ</td><td>—ᴺ</td><td>—ᴺ</td><td>1.708</td><td>7.5%</td><td>4.4%</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-    <tr><td>15</td><td>—ᴺ</td><td>—ᴺ</td><td>—ᴺ</td><td>1.338</td><td>4.6%</td><td>3.4%</td><td>—ᴰ</td><td>—ᴰ</td><td>—ᴰ</td></tr>
-  </tbody>
-</table>
+| Model | K | Fama–French SR | Fama–French μ | Fama–French σ | PCA SR | PCA μ | PCA σ | IPCA SR | IPCA μ | IPCA σ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| **CNN + Trans** | 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| **CNN + Trans** | 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| **CNN + Trans** | 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| **CNN + Trans** | 5 | —ᵁ | —ᵁ | —ᵁ | **4.148** | **16.8%** | **4.0%** | —ᴰ | —ᴰ | —ᴰ |
+| **CNN + Trans** | 8 | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| **CNN + Trans** | 10 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| **CNN + Trans** | 15 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| **Fourier + FFN** | 0 | -1.006 | -17.1% | 17.0% | -1.006 | -17.1% | 17.0% | -1.006 | -17.1% | 17.0% |
+| **Fourier + FFN** | 1 | 1.452 | 11.8% | 8.1% | 2.618 | 13.4% | 5.1% | —ᴰ | —ᴰ | —ᴰ |
+| **Fourier + FFN** | 3 | 1.759 | 8.4% | 4.8% | 2.960 | 12.9% | 4.3% | —ᴰ | —ᴰ | —ᴰ |
+| **Fourier + FFN** | 5 | 1.454 | 6.4% | 4.4% | 3.266 | 13.4% | 4.1% | —ᴰ | —ᴰ | —ᴰ |
+| **Fourier + FFN** | 8 | —ᴰ | —ᴰ | —ᴰ | 3.923 | 13.9% | 3.5% | —ᴰ | —ᴰ | —ᴰ |
+| **Fourier + FFN** | 10 | —ᴺ | —ᴺ | —ᴺ | 3.531 | 11.6% | 3.3% | —ᴰ | —ᴰ | —ᴰ |
+| **Fourier + FFN** | 15 | —ᴺ | —ᴺ | —ᴺ | 1.816 | 5.2% | 2.8% | —ᴰ | —ᴰ | —ᴰ |
+| **OU + Thresh** | 0 | 0.352 | 6.0% | 17.0% | 0.352 | 6.0% | 17.0% | 0.352 | 6.0% | 17.0% |
+| **OU + Thresh** | 1 | 0.276 | 2.8% | 10.0% | 1.435 | 11.7% | 8.1% | —ᴰ | —ᴰ | —ᴰ |
+| **OU + Thresh** | 3 | 0.732 | 4.6% | 6.3% | 1.138 | 7.1% | 6.2% | —ᴰ | —ᴰ | —ᴰ |
+| **OU + Thresh** | 5 | 0.472 | 2.4% | 5.0% | 1.471 | 9.1% | 6.2% | —ᴰ | —ᴰ | —ᴰ |
+| **OU + Thresh** | 8 | —ᴰ | —ᴰ | —ᴰ | 1.811 | 8.9% | 4.9% | —ᴰ | —ᴰ | —ᴰ |
+| **OU + Thresh** | 10 | —ᴺ | —ᴺ | —ᴺ | 1.708 | 7.5% | 4.4% | —ᴰ | —ᴰ | —ᴰ |
+| **OU + Thresh** | 15 | —ᴺ | —ᴺ | —ᴺ | 1.338 | 4.6% | 3.4% | —ᴰ | —ᴰ | —ᴰ |
 
 *주:* 원 논문과 동일하게 행은 정책과 factor 수 $K$, 열은 Fama–French·PCA·IPCA의
 SR, 연평균수익률 $\mu$, 연변동성 $\sigma$로 구성했다. $K=0$은 factor family와
@@ -245,41 +229,41 @@ PCA factor 수는 5~10 사이에서 가장 높은 성과를 보이며, 15개까�
 각 panel의 열은 원문과 동일하게 세 residual family별
 $\alpha,t_\alpha,R^2,\mu,t_\mu$ 순서다.
 
-<table>
-<thead><tr><th colspan="16">CNN+Trans model</th></tr><tr><th rowspan="2">K</th><th colspan="5">Fama-French</th><th colspan="5">PCA</th><th colspan="5">IPCA</th></tr><tr><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th></tr></thead>
-<tbody>
-<tr><td>0</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td></tr>
-<tr><td>1</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>3</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>5</td><td colspan="5">—ᵁ</td><td colspan="3">—ᵁ</td><td>16.8%</td><td>—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>8</td><td colspan="5">—ᴰ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>10</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>15</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-</tbody></table>
+*CNN+Trans model*
 
-<table>
-<thead><tr><th colspan="16">Fourier+FFN model</th></tr><tr><th rowspan="2">K</th><th colspan="5">Fama-French</th><th colspan="5">PCA</th><th colspan="5">IPCA</th></tr><tr><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th></tr></thead>
-<tbody>
-<tr><td>0</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td></tr>
-<tr><td>1</td><td>10.8%</td><td>2.07</td><td>4.6%</td><td>11.8%</td><td>2.26</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>3</td><td>7.8%</td><td>2.60</td><td>1.6%</td><td>8.4%</td><td>2.73</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>5</td><td>5.9%</td><td>2.18</td><td>0.5%</td><td>6.4%</td><td>2.25</td><td>13.3%</td><td>5.13</td><td>1.4%</td><td>13.4%</td><td>5.06</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>8</td><td colspan="5">—ᴰ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>10</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>15</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-</tbody></table>
+| K | Fama-French α | Fama-French tα | Fama-French R² | Fama-French μ | Fama-French tμ | PCA α | PCA tα | PCA R² | PCA μ | PCA tμ | IPCA α | IPCA tα | IPCA R² | IPCA μ | IPCA tμ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | 16.8% | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 
-<table>
-<thead><tr><th colspan="16">OU+Thresh model</th></tr><tr><th rowspan="2">K</th><th colspan="5">Fama-French</th><th colspan="5">PCA</th><th colspan="5">IPCA</th></tr><tr><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th></tr></thead>
-<tbody>
-<tr><td>0</td><td>7.4%</td><td>0.71</td><td>13.3%</td><td>6.0%</td><td>0.55</td><td>7.4%</td><td>0.71</td><td>13.3%</td><td>6.0%</td><td>0.55</td><td>7.4%</td><td>0.71</td><td>13.3%</td><td>6.0%</td><td>0.55</td></tr>
-<tr><td>1</td><td>0.9%</td><td>0.14</td><td>2.3%</td><td>2.8%</td><td>0.43</td><td>10.7%</td><td>2.02</td><td>4.1%</td><td>11.7%</td><td>2.23</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>3</td><td>3.7%</td><td>0.91</td><td>1.3%</td><td>4.6%</td><td>1.13</td><td>7.6%</td><td>1.82</td><td>1.7%</td><td>7.1%</td><td>1.76</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>5</td><td>1.9%</td><td>0.57</td><td>0.5%</td><td>2.4%</td><td>0.73</td><td>9.6%</td><td>2.46</td><td>2.0%</td><td>9.1%</td><td>2.28</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>8</td><td colspan="5">—ᴰ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>10</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-<tr><td>15</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-</tbody></table>
+*Fourier+FFN model*
+
+| K | Fama-French α | Fama-French tα | Fama-French R² | Fama-French μ | Fama-French tμ | PCA α | PCA tα | PCA R² | PCA μ | PCA tμ | IPCA α | IPCA tα | IPCA R² | IPCA μ | IPCA tμ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | 10.8% | 2.07 | 4.6% | 11.8% | 2.26 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | 7.8% | 2.60 | 1.6% | 8.4% | 2.73 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | 5.9% | 2.18 | 0.5% | 6.4% | 2.25 | 13.3% | 5.13 | 1.4% | 13.4% | 5.06 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+
+*OU+Thresh model*
+
+| K | Fama-French α | Fama-French tα | Fama-French R² | Fama-French μ | Fama-French tμ | PCA α | PCA tα | PCA R² | PCA μ | PCA tμ | IPCA α | IPCA tα | IPCA R² | IPCA μ | IPCA tμ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | 7.4% | 0.71 | 13.3% | 6.0% | 0.55 | 7.4% | 0.71 | 13.3% | 6.0% | 0.55 | 7.4% | 0.71 | 13.3% | 6.0% | 0.55 |
+| 1 | 0.9% | 0.14 | 2.3% | 2.8% | 0.43 | 10.7% | 2.02 | 4.1% | 11.7% | 2.23 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | 3.7% | 0.91 | 1.3% | 4.6% | 1.13 | 7.6% | 1.82 | 1.7% | 7.1% | 1.76 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | 1.9% | 0.57 | 0.5% | 2.4% | 0.73 | 9.6% | 2.46 | 2.0% | 9.1% | 2.28 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 
 *주:* 원 논문은 FF8을 alpha benchmark로 사용한다. 위 수치가 있는 cell은
 현재 가능한 한국 6-factor(FF5+MOM) analogue이며 exact FF8 검정은 아니다.
@@ -295,23 +279,55 @@ $\alpha,t_\alpha,R^2,\mu,t_\mu$ 순서다.
 
 **Table 3. OOS Annualized Performance Based on Mean-Variance Objective**
 
-<table><thead><tr><th colspan="10">CNN+Trans strategy, mean-variance objective function</th></tr><tr><th rowspan="2">K</th><th colspan="3">Fama-French</th><th colspan="3">PCA</th><th colspan="3">IPCA</th></tr><tr><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td></tr><tr><td>1</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>3</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>5</td><td colspan="3">—ᵁ</td><td>3.131</td><td>15.6%</td><td>5.0%</td><td colspan="3">—ᴰ</td></tr><tr><td>8</td><td colspan="3">—ᴰ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>10</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>15</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr>
-</tbody></table>
+*CNN+Trans strategy, mean-variance objective function*
 
-<table><thead><tr><th colspan="10">Fourier+FFN strategy, mean-variance objective function</th></tr><tr><th rowspan="2">K</th><th colspan="3">Fama-French</th><th colspan="3">PCA</th><th colspan="3">IPCA</th></tr><tr><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td></tr><tr><td>1</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>3</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>5</td><td colspan="3">—ᵁ</td><td>-0.812</td><td>-16.0%</td><td>19.7%</td><td colspan="3">—ᴰ</td></tr><tr><td>8</td><td colspan="3">—ᴰ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>10</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>15</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr>
-</tbody></table>
+| K | Fama-French SR | Fama-French μ | Fama-French σ | PCA SR | PCA μ | PCA σ | IPCA SR | IPCA μ | IPCA σ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | 3.131 | 15.6% | 5.0% | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+
+*Fourier+FFN strategy, mean-variance objective function*
+
+| K | Fama-French SR | Fama-French μ | Fama-French σ | PCA SR | PCA μ | PCA σ | IPCA SR | IPCA μ | IPCA σ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | -0.812 | -16.0% | 19.7% | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 
 **Table 4. Significance of Arbitrage Alphas Based on Mean-Variance Objective**
 
-<table><thead><tr><th colspan="16">CNN+Trans model</th></tr><tr><th rowspan="2">K</th><th colspan="5">Fama-French</th><th colspan="5">PCA</th><th colspan="5">IPCA</th></tr><tr><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td></tr><tr><td>1</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>3</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>5</td><td colspan="5">—ᵁ</td><td colspan="3">—ᵁ</td><td>15.6%</td><td>—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>8</td><td colspan="5">—ᴰ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>10</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>15</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-</tbody></table>
+*CNN+Trans model*
 
-<table><thead><tr><th colspan="16">Fourier+FFN model</th></tr><tr><th rowspan="2">K</th><th colspan="5">Fama-French</th><th colspan="5">PCA</th><th colspan="5">IPCA</th></tr><tr><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td></tr><tr><td>1</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>3</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>5</td><td colspan="5">—ᵁ</td><td>-18.4%</td><td>-1.43</td><td>0.7%</td><td>-16.0%</td><td>-1.26</td><td colspan="5">—ᴰ</td></tr><tr><td>8</td><td colspan="5">—ᴰ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>10</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>15</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-</tbody></table>
+| K | Fama-French α | Fama-French tα | Fama-French R² | Fama-French μ | Fama-French tμ | PCA α | PCA tα | PCA R² | PCA μ | PCA tμ | IPCA α | IPCA tα | IPCA R² | IPCA μ | IPCA tμ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | 15.6% | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+
+*Fourier+FFN model*
+
+| K | Fama-French α | Fama-French tα | Fama-French R² | Fama-French μ | Fama-French tμ | PCA α | PCA tα | PCA R² | PCA μ | PCA tμ | IPCA α | IPCA tα | IPCA R² | IPCA μ | IPCA tμ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | -18.4% | -1.43 | 0.7% | -16.0% | -1.26 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 
 CNN 정책은 mean-variance에서도 양의 성과를 냈지만 Fourier 정책은 실패했다.
 이는 목적함수 자체보다 비선형 allocation function과 재학습의 상호작용이 중요할
@@ -322,15 +338,29 @@ Table 4의 최종 비교는 보류한다.
 
 **Table 5. OOS Annualized Performance of CNN+Trans for 60 Days Lookback Window**
 
-<table><thead><tr><th rowspan="2">K</th><th colspan="3">Fama-French</th><th colspan="3">PCA</th><th colspan="3">IPCA</th></tr><tr><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td></tr><tr><td>1</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>3</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>5</td><td colspan="3">—ᵁ</td><td>3.448</td><td>14.0%</td><td>4.0%</td><td colspan="3">—ᴰ</td></tr><tr><td>8</td><td colspan="3">—ᴰ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>10</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>15</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr>
-</tbody></table>
+| K | Fama-French SR | Fama-French μ | Fama-French σ | PCA SR | PCA μ | PCA σ | IPCA SR | IPCA μ | IPCA σ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | 3.448 | 14.0% | 4.0% | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 
 **Table 6. Significance of Arbitrage Alphas for 60 Days Lookback Window**
 
-<table><thead><tr><th colspan="16">CNN+Trans model, Sharpe objective function, L = 60 days</th></tr><tr><th rowspan="2">K</th><th colspan="5">Fama-French</th><th colspan="5">PCA</th><th colspan="5">IPCA</th></tr><tr><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td></tr><tr><td>1</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>3</td><td colspan="5">—ᵁ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>5</td><td colspan="5">—ᵁ</td><td>14.6%</td><td>5.54</td><td>—ᵁ</td><td>14.0%</td><td>—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>8</td><td colspan="5">—ᴰ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>10</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>15</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-</tbody></table>
+*CNN+Trans model, Sharpe objective function, L = 60 days*
+
+| K | Fama-French α | Fama-French tα | Fama-French R² | Fama-French μ | Fama-French tμ | PCA α | PCA tα | PCA R² | PCA μ | PCA tμ | IPCA α | IPCA tα | IPCA R² | IPCA μ | IPCA tμ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | 14.6% | 5.54 | —ᵁ | 14.0% | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 
 30일 lookback의 Sharpe 4.148이 60일의 3.448보다 높다. 더 긴 과거정보가 자동으로
 성과를 높이지 않으며, 한국 표본에서는 최근 한 달 안의 패턴이 상대적으로 더
@@ -338,23 +368,55 @@ Table 4의 최종 비교는 보류한다.
 
 **Table 7. OOS Annualized Performance of CNN+Trans for Constant Model**
 
-<table><thead><tr><th colspan="10">Ttrain = 4 years</th></tr><tr><th rowspan="2">K</th><th colspan="3">Fama-French</th><th colspan="3">PCA</th><th colspan="3">IPCA</th></tr><tr><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td></tr><tr><td>1</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>3</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>5</td><td colspan="3">—ᵁ</td><td>4.151</td><td>16.2%</td><td>3.9%</td><td colspan="3">—ᴰ</td></tr><tr><td>8</td><td colspan="3">—ᴰ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>10</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>15</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr>
-</tbody></table>
+*Ttrain = 4 years*
 
-<table><thead><tr><th colspan="10">Ttrain = 8 years</th></tr><tr><th rowspan="2">K</th><th colspan="3">Fama-French</th><th colspan="3">PCA</th><th colspan="3">IPCA</th></tr><tr><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="9">—ᵁ</td></tr><tr><td>1</td><td colspan="6">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>3</td><td colspan="6">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>5</td><td colspan="6">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>8</td><td colspan="3">—ᴰ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>10</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>15</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr>
-</tbody></table>
+| K | Fama-French SR | Fama-French μ | Fama-French σ | PCA SR | PCA μ | PCA σ | IPCA SR | IPCA μ | IPCA σ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | 4.151 | 16.2% | 3.9% | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+
+*Ttrain = 8 years*
+
+| K | Fama-French SR | Fama-French μ | Fama-French σ | PCA SR | PCA μ | PCA σ | IPCA SR | IPCA μ | IPCA σ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 
 **Table 8. Significance of Arbitrage Alphas for Constant Model**
 
-<table><thead><tr><th colspan="16">CNN+Trans model, Ttrain = 4 years</th></tr><tr><th rowspan="2">K</th><th colspan="5">Fama-French</th><th colspan="5">PCA</th><th colspan="5">IPCA</th></tr><tr><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="15">—ᵁ</td></tr><tr><td>1</td><td colspan="10">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>3</td><td colspan="10">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>5</td><td colspan="5">—ᵁ</td><td>16.2%</td><td>6.35</td><td>0.7%</td><td>16.2%</td><td>6.44</td><td colspan="5">—ᴰ</td></tr><tr><td>8</td><td colspan="5">—ᴰ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>10</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>15</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-</tbody></table>
+*CNN+Trans model, Ttrain = 4 years*
 
-<table><thead><tr><th colspan="16">CNN+Trans model, Ttrain = 8 years</th></tr><tr><th rowspan="2">K</th><th colspan="5">Fama-French</th><th colspan="5">PCA</th><th colspan="5">IPCA</th></tr><tr><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="15">—ᵁ</td></tr><tr><td>1</td><td colspan="10">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>3</td><td colspan="10">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>5</td><td colspan="10">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>8</td><td colspan="5">—ᴰ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>10</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>15</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-</tbody></table>
+| K | Fama-French α | Fama-French tα | Fama-French R² | Fama-French μ | Fama-French tμ | PCA α | PCA tα | PCA R² | PCA μ | PCA tμ | IPCA α | IPCA tα | IPCA R² | IPCA μ | IPCA tμ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | 16.2% | 6.35 | 0.7% | 16.2% | 6.44 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+
+*CNN+Trans model, Ttrain = 8 years*
+
+| K | Fama-French α | Fama-French tα | Fama-French R² | Fama-French μ | Fama-French tμ | PCA α | PCA tα | PCA R² | PCA μ | PCA tμ | IPCA α | IPCA tα | IPCA R² | IPCA μ | IPCA tμ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 
 고정모형과 rolling 모형의 Sharpe가 거의 같다. 다만 표본이 606일에 불과하므로
 이를 구조적 안정성의 증거로 확대해석할 수 없다. 원 논문의 8년 학습 사양도 한국
@@ -364,9 +426,16 @@ Table 4의 최종 비교는 보류한다.
 
 **Table 9. OOS Performance of CNN+Trans with Trading Frictions**
 
-<table><thead><tr><th colspan="7">IPCA factor model</th></tr><tr><th rowspan="2">K</th><th colspan="3">Sharpe ratio</th><th colspan="3">Mean-variance</th></tr><tr><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="6">—ᵁ</td></tr><tr><td>1</td><td colspan="6">—ᴰ</td></tr><tr><td>3</td><td colspan="6">—ᴰ</td></tr><tr><td>5</td><td colspan="6">—ᴰ</td></tr><tr><td>10</td><td colspan="6">—ᴰ</td></tr><tr><td>15</td><td colspan="6">—ᴰ</td></tr>
-</tbody></table>
+*IPCA factor model*
+
+| K | Sharpe ratio SR | Sharpe ratio μ | Sharpe ratio σ | Mean-variance SR | Mean-variance μ | Mean-variance σ |
+| --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 
 *주:* 원문 Table 9는 **IPCA 잔차 전용**이다. 한국 friction-aware PCA5 결과는
 Table 9에 넣지 않고, 원문과 동일하게 PCA 전용 Table A.X에 보고한다.
@@ -515,37 +584,37 @@ Fama, E. F., & French, K. R. (2015). A Five-Factor Asset Pricing Model.
 
 **Table A.I. Firm Characteristics by Category**
 
-<table><thead><tr><th>No.</th><th>Characteristic</th><th>Definition</th><th>No.</th><th>Characteristic</th><th>Definition</th></tr></thead><tbody>
-<tr><th colspan="3">Past Returns</th><th colspan="3">Value</th></tr>
-<tr><td>1</td><td>r2_1</td><td>Short-term momentum</td><td>26</td><td>A2ME</td><td>Assets to market cap</td></tr>
-<tr><td>2</td><td>r12_2</td><td>Momentum</td><td>27</td><td>BEME</td><td>Book to Market Ratio</td></tr>
-<tr><td>3</td><td>r12_7</td><td>Intermediate momentum</td><td>28</td><td>C</td><td>Ratio of cash and short-term investments to total assets</td></tr>
-<tr><td>4</td><td>r36_13</td><td>Long-term momentum</td><td>29</td><td>CF</td><td>Free Cash Flow to Book Value</td></tr>
-<tr><td>5</td><td>ST_Rev</td><td>Short-term reversal</td><td>30</td><td>CF2P</td><td>Cashflow to price</td></tr>
-<tr><td>6</td><td>LT_Rev</td><td>Long-term reversal</td><td>31</td><td>D2P</td><td>Dividend Yield</td></tr>
-<tr><th colspan="3">Investment</th><td>32</td><td>E2P</td><td>Earnings to price</td></tr>
-<tr><td>7</td><td>Investment</td><td>Investment</td><td>33</td><td>Q</td><td>Tobin's Q</td></tr>
-<tr><td>8</td><td>NOA</td><td>Net operating assets</td><td>34</td><td>S2P</td><td>Sales to price</td></tr>
-<tr><td>9</td><td>DPI2A</td><td>Change in property, plants, and equipment</td><td>35</td><td>Lev</td><td>Leverage</td></tr>
-<tr><td>10</td><td>NI</td><td>Net Share Issues</td><th colspan="3">Trading Frictions</th></tr>
-<tr><th colspan="3">Profitability</th><td>36</td><td>AT</td><td>Total Assets</td></tr>
-<tr><td>11</td><td>PROF</td><td>Profitability</td><td>37</td><td>Beta</td><td>CAPM Beta</td></tr>
-<tr><td>12</td><td>ATO</td><td>Net sales over lagged net operating assets</td><td>38</td><td>IdioVol</td><td>Idiosyncratic volatility</td></tr>
-<tr><td>13</td><td>CTO</td><td>Capital turnover</td><td>39</td><td>LME</td><td>Size</td></tr>
-<tr><td>14</td><td>FC2Y</td><td>Fixed costs to sales</td><td>40</td><td>LTurnover</td><td>Turnover</td></tr>
-<tr><td>15</td><td>OP</td><td>Operating profitability</td><td>41</td><td>MktBeta</td><td>Market Beta</td></tr>
-<tr><td>16</td><td>PM</td><td>Profit margin</td><td>42</td><td>Rel2High</td><td>Closeness to past year high</td></tr>
-<tr><td>17</td><td>RNA</td><td>Return on net operating assets</td><td>43</td><td>Resid_Var</td><td>Residual Variance</td></tr>
-<tr><td>18</td><td>ROA</td><td>Return on assets</td><td>44</td><td>Spread</td><td>Bid-ask spread</td></tr>
-<tr><td>19</td><td>ROE</td><td>Return on equity</td><td>45</td><td>SUV</td><td>Standard unexplained volume</td></tr>
-<tr><td>20</td><td>SGA2S</td><td>Selling, general and administrative expenses to sales</td><td>46</td><td>Variance</td><td>Variance</td></tr>
-<tr><td>21</td><td>D2A</td><td>Capital intensity</td><td></td><td></td><td></td></tr>
-<tr><th colspan="3">Intangibles</th><td></td><td></td><td></td></tr>
-<tr><td>22</td><td>AC</td><td>Accrual</td><td></td><td></td><td></td></tr>
-<tr><td>23</td><td>OA</td><td>Operating accruals</td><td></td><td></td><td></td></tr>
-<tr><td>24</td><td>OL</td><td>Operating leverage</td><td></td><td></td><td></td></tr>
-<tr><td>25</td><td>PCM</td><td>Price to cost margin</td><td></td><td></td><td></td></tr>
-</tbody></table>
+| No. | Characteristic | Definition | No. | Characteristic | Definition |
+| --- | --- | --- | --- | --- | --- |
+| **Past Returns** |  |  | **Value** |  |  |
+| 1 | r2_1 | Short-term momentum | 26 | A2ME | Assets to market cap |
+| 2 | r12_2 | Momentum | 27 | BEME | Book to Market Ratio |
+| 3 | r12_7 | Intermediate momentum | 28 | C | Ratio of cash and short-term investments to total assets |
+| 4 | r36_13 | Long-term momentum | 29 | CF | Free Cash Flow to Book Value |
+| 5 | ST_Rev | Short-term reversal | 30 | CF2P | Cashflow to price |
+| 6 | LT_Rev | Long-term reversal | 31 | D2P | Dividend Yield |
+| **Investment** |  |  | 32 | E2P | Earnings to price |
+| 7 | Investment | Investment | 33 | Q | Tobin's Q |
+| 8 | NOA | Net operating assets | 34 | S2P | Sales to price |
+| 9 | DPI2A | Change in property, plants, and equipment | 35 | Lev | Leverage |
+| 10 | NI | Net Share Issues | **Trading Frictions** |  |  |
+| **Profitability** |  |  | 36 | AT | Total Assets |
+| 11 | PROF | Profitability | 37 | Beta | CAPM Beta |
+| 12 | ATO | Net sales over lagged net operating assets | 38 | IdioVol | Idiosyncratic volatility |
+| 13 | CTO | Capital turnover | 39 | LME | Size |
+| 14 | FC2Y | Fixed costs to sales | 40 | LTurnover | Turnover |
+| 15 | OP | Operating profitability | 41 | MktBeta | Market Beta |
+| 16 | PM | Profit margin | 42 | Rel2High | Closeness to past year high |
+| 17 | RNA | Return on net operating assets | 43 | Resid_Var | Residual Variance |
+| 18 | ROA | Return on assets | 44 | Spread | Bid-ask spread |
+| 19 | ROE | Return on equity | 45 | SUV | Standard unexplained volume |
+| 20 | SGA2S | Selling, general and administrative expenses to sales | 46 | Variance | Variance |
+| 21 | D2A | Capital intensity |  |  |  |
+| **Intangibles** |  |  |  |  |  |
+| 22 | AC | Accrual |  |  |  |
+| 23 | OA | Operating accruals |  |  |  |
+| 24 | OL | Operating leverage |  |  |  |
+| 25 | PCM | Price to cost margin |  |  |  |
 
 *주:* 46개 characteristic의 원 정의를 유지했지만 한국 회계자료는 실제 공시일
 vintage가 아니라 3개월 lag를 사용했다. 139개월만 존재하므로 원 논문의 240개월
@@ -617,13 +686,13 @@ rolling IPCA는 실행할 수 없다.
 
 **Table A.V. Performance of the Alternative Models on Our Benchmark Residual Datasets, 2002-2016**
 
-<table><thead><tr><th rowspan="2">Model</th><th colspan="3">Fama-French 5</th><th colspan="3">PCA 5</th><th colspan="3">IPCA 5</th></tr><tr><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th></tr></thead><tbody>
-<tr><td>Network 1</td><td colspan="3">—ᴬ</td><td colspan="3">—ᴬ</td><td colspan="3">—ᴰ</td></tr>
-<tr><td>Network 2</td><td>2.674</td><td>—ᴬ</td><td>—ᴬ</td><td>4.203</td><td>—ᴬ</td><td>—ᴬ</td><td colspan="3">—ᴰ</td></tr>
-<tr><td>Network 3</td><td colspan="3">—ᴬ</td><td colspan="3">—ᴬ</td><td colspan="3">—ᴰ</td></tr>
-<tr><td>Network 4</td><td colspan="3">—ᴬ</td><td colspan="3">—ᴬ</td><td colspan="3">—ᴰ</td></tr>
-<tr><td>Network 5</td><td colspan="3">—ᴬ</td><td colspan="3">—ᴬ</td><td colspan="3">—ᴰ</td></tr>
-</tbody></table>
+| Model | Fama-French 5 SR | Fama-French 5 μ | Fama-French 5 σ | PCA 5 SR | PCA 5 μ | PCA 5 σ | IPCA 5 SR | IPCA 5 μ | IPCA 5 σ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Network 1 | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴰ | —ᴰ | —ᴰ |
+| Network 2 | 2.674 | —ᴬ | —ᴬ | 4.203 | —ᴬ | —ᴬ | —ᴰ | —ᴰ | —ᴰ |
+| Network 3 | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴰ | —ᴰ | —ᴰ |
+| Network 4 | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴰ | —ᴰ | —ᴰ |
+| Network 5 | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴰ | —ᴰ | —ᴰ |
 
 *주:* 10개 전체 행의 최종 파일 경로는
 `outputs/paper-korean/alternative-networks/table_a05_alternative_network_performance.csv`다.
@@ -651,15 +720,31 @@ rolling IPCA는 실행할 수 없다.
 
 **Table A.VI. OOS Annualized Performance of Unconditional Average Residuals**
 
-<table><thead><tr><th colspan="10">Equally Weighted Residuals</th></tr><tr><th rowspan="2">K</th><th colspan="3">Fama-French</th><th colspan="3">PCA</th><th colspan="3">IPCA</th></tr><tr><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td></tr><tr><td>1</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>3</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>5</td><td colspan="3">—ᵁ</td><td>2.287</td><td>10.1%</td><td>4.4%</td><td colspan="3">—ᴰ</td></tr><tr><td>8</td><td colspan="3">—ᴰ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>10</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>15</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr>
-</tbody></table>
+*Equally Weighted Residuals*
+
+| K | Fama-French SR | Fama-French μ | Fama-French σ | PCA SR | PCA μ | PCA σ | IPCA SR | IPCA μ | IPCA σ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | 2.287 | 10.1% | 4.4% | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 
 **Table A.VII. Significance of Alphas Based on Unconditional Average Residuals**
 
-<table><thead><tr><th colspan="16">Equally Weighted Residuals</th></tr><tr><th rowspan="2">K</th><th colspan="5">Fama-French</th><th colspan="5">PCA</th><th colspan="5">IPCA</th></tr><tr><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th><th>α</th><th>tα</th><th>R²</th><th>μ</th><th>tμ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="15">—ᵁ</td></tr><tr><td>1</td><td colspan="10">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>3</td><td colspan="10">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>5</td><td colspan="5">—ᵁ</td><td>9.2%</td><td>3.23</td><td>4.6%</td><td>10.1%</td><td>3.54</td><td colspan="5">—ᴰ</td></tr><tr><td>8</td><td colspan="5">—ᴰ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>10</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr><tr><td>15</td><td colspan="5">—ᴺ</td><td colspan="5">—ᵁ</td><td colspan="5">—ᴰ</td></tr>
-</tbody></table>
+*Equally Weighted Residuals*
+
+| K | Fama-French α | Fama-French tα | Fama-French R² | Fama-French μ | Fama-French tμ | PCA α | PCA tα | PCA R² | PCA μ | PCA tμ | IPCA α | IPCA tα | IPCA R² | IPCA μ | IPCA tμ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | 9.2% | 3.23 | 4.6% | 10.1% | 3.54 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 
 무조건부 평균잔차도 양의 성과를 내므로 모든 수익성이 복잡한 시계열 신호에서만
 나오는 것은 아니다. 그러나 CNN의 Sharpe 4.148보다 낮아 allocation timing이
@@ -688,10 +773,22 @@ artifact가 필요하다.
 
 **Table A.IX. OOS Annualized Performance Based on Sharpe Ratio Objective**
 
-<table><thead><tr><th rowspan="2">Model</th><th rowspan="2">K</th><th colspan="3">Fama-French</th><th colspan="3">PCA</th><th colspan="3">IPCA</th></tr><tr><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th></tr></thead><tbody>
-<tr><td rowspan="7">OU+FFN</td><td>0</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td></tr><tr><td>1</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>3</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>5</td><td colspan="3">—ᵁ</td><td>1.878</td><td>8.3%</td><td>4.4%</td><td colspan="3">—ᴰ</td></tr><tr><td>8</td><td colspan="3">—ᴰ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>10</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>15</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr>
-<tr><td rowspan="7">FFN</td><td>0</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td></tr><tr><td>1</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>3</td><td colspan="3">—ᵁ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>5</td><td colspan="3">—ᵁ</td><td>2.188</td><td>8.1%</td><td>3.7%</td><td colspan="3">—ᴰ</td></tr><tr><td>8</td><td colspan="3">—ᴰ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>10</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr><tr><td>15</td><td colspan="3">—ᴺ</td><td colspan="3">—ᵁ</td><td colspan="3">—ᴰ</td></tr>
-</tbody></table>
+| Model | K | Fama-French SR | Fama-French μ | Fama-French σ | PCA SR | PCA μ | PCA σ | IPCA SR | IPCA μ | IPCA σ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| OU+FFN | 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| OU+FFN | 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| OU+FFN | 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| OU+FFN | 5 | —ᵁ | —ᵁ | —ᵁ | 1.878 | 8.3% | 4.4% | —ᴰ | —ᴰ | —ᴰ |
+| OU+FFN | 8 | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| OU+FFN | 10 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| OU+FFN | 15 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| FFN | 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| FFN | 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| FFN | 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| FFN | 5 | —ᵁ | —ᵁ | —ᵁ | 2.188 | 8.1% | 3.7% | —ᴰ | —ᴰ | —ᴰ |
+| FFN | 8 | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| FFN | 10 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
+| FFN | 15 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 
 CNN+Transformer의 높은 성과는 횡단면 allocation만이 아니라 잔차경로에서
 학습한 시계열 representation과 관련된다.
@@ -700,9 +797,16 @@ CNN+Transformer의 높은 성과는 횡단면 allocation만이 아니라 잔차�
 
 **Table A.X. OOS Performance of CNN+Trans with Trading Frictions**
 
-<table><thead><tr><th colspan="7">PCA factor model</th></tr><tr><th rowspan="2">K</th><th colspan="3">Sharpe ratio</th><th colspan="3">Mean-variance</th></tr><tr><th>SR</th><th>μ</th><th>σ</th><th>SR</th><th>μ</th><th>σ</th></tr></thead><tbody>
-<tr><td>0</td><td colspan="6">—ᵁ</td></tr><tr><td>1</td><td colspan="6">—ᵁ</td></tr><tr><td>3</td><td colspan="6">—ᵁ</td></tr><tr><td>5</td><td>1.371</td><td>6.0%</td><td>4.4%</td><td colspan="3">—ᵁ</td></tr><tr><td>10</td><td colspan="6">—ᵁ</td></tr><tr><td>15</td><td colspan="6">—ᵁ</td></tr>
-</tbody></table>
+*PCA factor model*
+
+| K | Sharpe ratio SR | Sharpe ratio μ | Sharpe ratio σ | Mean-variance SR | Mean-variance μ | Mean-variance σ |
+| --- | --- | --- | --- | --- | --- | --- |
+| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 5 | 1.371 | 6.0% | 4.4% | —ᵁ | —ᵁ | —ᵁ |
+| 10 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
+| 15 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
 
 ### C.7. 산업집중도
 
