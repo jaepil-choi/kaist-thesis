@@ -13,6 +13,21 @@ from .results import factor_alpha, performance_statistics
 from .trading import ResidualPanel
 
 
+def _is_benchmark_cnn(audit: dict[str, object]) -> bool:
+    """Select the paper-comparable baseline CNN specification only."""
+
+    return (
+        audit.get("model") == "cnn_transformer"
+        and audit.get("objective") == "sharpe"
+        and audit.get("lookback_days") == 30
+        and audit.get("training_window_days") == 1000
+        and audit.get("rolling_retrain") is True
+        and audit.get("holding_days", 1) == 1
+        and audit.get("transaction_cost", 0.0) == 0.0
+        and audit.get("short_holding_cost", 0.0) == 0.0
+    )
+
+
 def unconditional_average_residual_returns(
     panel: ResidualPanel,
     *,
@@ -91,7 +106,7 @@ def build_appendix_outputs(
         daily = pd.read_csv(directory / "daily_performance.csv", parse_dates=["date"])
         audit = json.loads((directory / "simulation_audit.json").read_text("utf-8"))
         label = f"{audit.get('factor_model', 'PCA')} / {audit['model']}"
-        if audit["model"] == "cnn_transformer":
+        if _is_benchmark_cnn(audit):
             cnn_returns[label] = daily.set_index("date")["return"]
         if audit["model"] == "cnn_transformer_frictions":
             friction_rows.append(
@@ -116,7 +131,10 @@ def build_appendix_outputs(
                     **performance_statistics(daily["return"].to_numpy()),
                 }
             )
-        if audit.get("factor_model") == "PCA" and audit["model"] == "cnn_transformer":
+        if (
+            audit.get("factor_model") in {"PCA", "PCA5"}
+            and _is_benchmark_cnn(audit)
+        ):
             benchmark_weights = pd.read_parquet(directory / "daily_asset_weights.parquet")
             benchmark_label = label
             benchmark_daily = daily

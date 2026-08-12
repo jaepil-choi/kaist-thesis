@@ -1,0 +1,2 @@
+strategy,annual_return,annual_volatility,sharpe,mean_t_statistic,mean_p_value
+PCA5 average residual,0.10132044834472463,0.044305604142785886,2.2868540065088414,3.5433647214971544,0.0004255160537336005

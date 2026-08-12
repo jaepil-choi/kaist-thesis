@@ -1,0 +1,2 @@
+strategy,objective,annual_return,annual_volatility,sharpe,mean_t_statistic,mean_p_value,transaction_cost,short_holding_cost
+PCA5 / cnn_transformer_frictions,sharpe,0.060172521613974184,0.043847456373074516,1.3723149890839377,2.1263327283953477,0.03387976404516499,0.0005,0.0001

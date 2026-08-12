@@ -1,0 +1,3 @@
+strategy,factor_model,model,objective,lookback_days,rolling_retrain,training_window_days,transaction_cost,short_holding_cost,annual_return,annual_volatility,sharpe,mean_t_statistic,mean_p_value,mean_daily_turnover,mean_short_proportion
+PCA5 / cnn_transformer / meanvar,PCA5,cnn_transformer,meanvar,30,True,1000,0.0,0.0,0.15556517348504656,0.04964672463009877,3.133442833220337,4.855111327815367,1.5335593121550056e-06,1.2857208097531851,0.5004728284015907
+PCA5 / fourier_ffn / meanvar,PCA5,fourier_ffn,meanvar,30,True,1000,0.0,0.0,-0.15971515301325648,0.19662322789005376,-0.8122903622687181,-1.2586028688683548,0.20865926525118184,1.1670116306138116,0.46254366791189305

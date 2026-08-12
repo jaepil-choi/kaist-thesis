@@ -1,0 +1,13 @@
+notation,hyperparameter,candidates,chosen
+D,CNN filters,"8, 16",8
+ATT,Attention heads,"2, 4",4
+HDN,Transformer hidden units,"2D, 3D",2D
+DRP,Transformer dropout,"0.25, 0.5",0.25
+Dsize,Convolution filter size,2,2
+LKB,Residual lookback days,30,30
+WDW,Rolling training days,1000,1000
+RTFQ,Retraining frequency days,125,125
+BTCH,Batch size days,125,125
+LR,Learning rate,0.001,0.001
+EPCH,Optimization epochs,100,100
+OPT,Optimizer,Adam,Adam

@@ -1,0 +1,2 @@
+strategy,factor_model,model,objective,lookback_days,rolling_retrain,training_window_days,transaction_cost,short_holding_cost,annual_return,annual_volatility,sharpe,mean_t_statistic,mean_p_value,mean_daily_turnover,mean_short_proportion
+PCA5 / cnn_transformer / sharpe,PCA5,cnn_transformer,sharpe,30,False,1000,0.0,0.0,0.16186186963390015,0.03895850927808296,4.154724414082224,6.437535528941066,2.47388899795367e-10,1.1791192139729414,0.49833882199262236

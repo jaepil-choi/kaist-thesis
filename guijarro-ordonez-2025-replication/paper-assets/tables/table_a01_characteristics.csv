@@ -1,0 +1,47 @@
+number,characteristic,category
+1,r2_1,Past returns
+2,r12_2,Past returns
+3,r12_7,Past returns
+4,r36_13,Past returns
+5,ST_Rev,Past returns
+6,LT_Rev,Past returns
+7,Investment,Investment
+8,NOA,Investment
+9,DPI2A,Investment
+10,NI,Investment
+11,PROF,Profitability
+12,ATO,Profitability
+13,CTO,Profitability
+14,FC2Y,Profitability
+15,OP,Profitability
+16,PM,Profitability
+17,RNA,Profitability
+18,ROA,Profitability
+19,ROE,Profitability
+20,SGA2S,Profitability
+21,D2A,Profitability
+22,AC,Intangibles
+23,OA,Intangibles
+24,OL,Intangibles
+25,PCM,Intangibles
+26,A2ME,Value
+27,BEME,Value
+28,C,Value
+29,CF,Value
+30,CF2P,Value
+31,D2P,Value
+32,E2P,Value
+33,Q,Value
+34,S2P,Value
+35,Lev,Value
+36,AT,Trading frictions
+37,Beta,Trading frictions
+38,IdioVol,Trading frictions
+39,LME,Trading frictions
+40,LTurnover,Trading frictions
+41,MktBeta,Trading frictions
+42,Rel2High,Trading frictions
+43,Resid_Var,Trading frictions
+44,Spread,Trading frictions
+45,SUV,Trading frictions
+46,Variance,Trading frictions

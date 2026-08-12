@@ -10,15 +10,14 @@
 > variant**다. 원 논문의 240개월 IPCA, 미국 표본, 현금배당 포함 total return,
 > 상장폐지수익률 및 실현 공매도·거래비용 자료는 아직 확보되지 않았다.
 
-> **산출물 동기화 주의.** 원 논문과 동일한 번호의 본문 Figure 1–19·Table
-> 1–9, 부록 Figure A.1–A.7·Table A.I–A.X를 모두 본문에 배치했다. 다만 이
-> PC에는 최신 GPU 실행의 Figure 9–12, Table A.III, Table A.V 파일이 복사되지
-> 않았다. 해당 위치는 registry의 최종 상대경로를 그대로 사용했으며, 표에는
-> tracked execution status로 확인되는 값만 기록했다. 이 여섯 산출물을 포함한
-> 최신 `outputs/` 전체를 복사한 뒤 최종본으로 판정해야 한다. 또한 파일 존재와
-> scientific replication completeness는 다르다. 특히 Table 1의 CNN+Transformer
-> 전체 FF/PCA grid는 실행되지 않았고 IPCA는 data-blocked이므로, 번호가 붙은
-> artifact가 있다는 사실만으로 원 논문 Table 1을 재현했다고 판정하지 않는다.
+> **산출물 동기화 상태.** `run-20260811T021314Z`의 최신 GPU 산출물을 이 PC에서
+> 확인하고 2026년 8월 12일 모든 보고서 builder를 다시 실행했다. 원 논문과 같은
+> 번호의 본문 Figure 1–19·Table 1–9, 부록 Figure A.1–A.7·Table A.I–A.X를
+> `paper-assets/`에 Git-tracked snapshot으로 고정했으며, `manifest.json`에 원천
+> 경로와 SHA-256을 기록했다. 파일 존재와 scientific replication completeness는
+> 다르다. Table 1의 CNN+Transformer 전체 FF/PCA grid는 실행되지 않았고 미국
+> 원표본·FF8·240개월 IPCA는 data-blocked이므로, 해당 칸은 결과값 대신 상태기호를
+> 유지한다.
 
 ## 초록
 
@@ -32,10 +31,10 @@ OU+Threshold, Fourier+FFN, CNN+Transformer 정책을 동일한 1,000거래일 �
 20일까지 1,606거래일이며, 정책의 표본외 평가는 2024년 1월 19일부터 606거래일이다.
 
 한국 PCA5 잔차에 대한 rolling CNN+Transformer는 연수익률 16.8%, 연변동성
-4.0%, Sharpe ratio 4.148을 기록했다. 동일 표본에서 Fourier+FFN은 Sharpe
-3.266, OU+Threshold는 1.471이었다. 5bp 거래비용과 일별 1bp 공매도 보유비용을
+4.0%, Sharpe ratio 4.151을 기록했다. 동일 표본에서 Fourier+FFN은 Sharpe
+3.269, OU+Threshold는 1.472였다. 5bp 거래비용과 일별 1bp 공매도 보유비용을
 목적함수에 포함하면 평균 일별 turnover는 1.214에서 0.464로 감소하지만 Sharpe
-ratio도 1.371로 하락한다. 이 결과는 요인 제거와 비선형 시계열 정책이 한국
+ratio도 1.372로 하락한다. 이 결과는 요인 제거와 비선형 시계열 정책이 한국
 가격자료에서도 유효할 가능성을 보여주지만, 높은 Sharpe ratio를 투자 가능한
 성과로 해석해서는 안 된다. 현금배당, 상장폐지수익률, point-in-time universe,
 종목별 shortability, borrow fee 및 market impact가 빠져 있기 때문이다. 따라서
@@ -94,7 +93,7 @@ long-short portfolio의 수익률이다. 본 연구는 한국 FF1/FF3/FF5와 rol
 PCA의 $K=0,1,3,5,8,10,15$를 구축했다. FF loading은 직전 60거래일, PCA
 요인은 직전 252거래일 상관행렬, PCA loading은 직전 60거래일로 추정했다.
 
-![Figure 1. 차익거래 모형의 개념도](outputs/paper-spec/fig_01_conceptual_arbitrage_model.png)
+![Figure 1. 차익거래 모형의 개념도](paper-assets/figures/fig_01_conceptual_arbitrage_model.png)
 
 **Figure 1. Conceptual Arbitrage Model.** 원주식 수익률에서 공통요인을 제거해
 잔차 포트폴리오를 구성하고, 신호모형과 allocation function을 거쳐 다시 원주식
@@ -107,17 +106,17 @@ PCA의 $K=0,1,3,5,8,10,15$를 구축했다. FF loading은 직전 60거래일, PC
 CNN은 짧은 구간의 상승·하락·굴곡 패턴을 추출하고 Transformer self-attention은
 최근 30일 안에서 서로 떨어진 시점 간의 의존성을 결합한다.
 
-![Figure 2. 국소 필터의 예](outputs/paper-spec/fig_02_examples_local_filters.png)
+![Figure 2. 국소 필터의 예](paper-assets/figures/fig_02_examples_local_filters.png)
 
 **Figure 2. Examples of Local Filters.** 작은 convolution filter가 잔차경로의
 국소 변화에 반응하는 방식을 보여준다.
 
-![Figure 3. 합성곱 네트워크 구조](outputs/paper-spec/fig_03_convolutional_architecture.png)
+![Figure 3. 합성곱 네트워크 구조](paper-assets/figures/fig_03_convolutional_architecture.png)
 
 **Figure 3. Convolutional Network Architecture.** causal convolution과 residual
 block을 이용하므로 미래 정보가 현재 신호로 누출되지 않는다.
 
-![Figure 4. Transformer 구조](outputs/paper-spec/fig_04_transformer_architecture.png)
+![Figure 4. Transformer 구조](paper-assets/figures/fig_04_transformer_architecture.png)
 
 **Figure 4. Transformer Network Architecture.** CNN feature에 4-head attention과
 feedforward block을 적용하고 마지막 시점의 representation을 allocation으로
@@ -175,8 +174,14 @@ security master도 아직 최종 검증되지 않았다.
 - 최근 1,000거래일 학습, 125거래일마다 재학습
 - 기본 signal lookback 30일, holding period 1일
 - OOS 2024-01-19~2026-07-20, 606거래일
-- 성과는 $252$일 기준 연율화
+- 성과는 공개 `run_stats.py`와 같이 $\mu=252\bar r$,
+  $\sigma=\sqrt{252}\,\mathrm{std}_{ddof=0}(r)$로 연율화
 - alpha regression은 공개 코드와 동일한 OLS non-robust covariance
+
+GPU `simulation_audit.json`은 학습 코드의 표본표준편차(`ddof=1`)를 기록하므로
+PCA5 benchmark Sharpe가 4.148이다. 본문 표는 원문 보고 규약인 `ddof=0`으로
+재계산한 4.151을 사용한다. 이는 동일한 606개 일별수익률의 분모 convention
+차이이며 별도 실행결과가 아니다.
 
 ### 3.3. 주요 결과
 
@@ -189,37 +194,36 @@ security master도 아직 최종 검증되지 않았다.
 | **CNN + Trans** | 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
 | **CNN + Trans** | 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 | **CNN + Trans** | 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
-| **CNN + Trans** | 5 | —ᵁ | —ᵁ | —ᵁ | **4.148** | **16.8%** | **4.0%** | —ᴰ | —ᴰ | —ᴰ |
+| **CNN + Trans** | 5 | —ᵁ | —ᵁ | —ᵁ | **4.151** | **16.8%** | **4.0%** | —ᴰ | —ᴰ | —ᴰ |
 | **CNN + Trans** | 8 | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 | **CNN + Trans** | 10 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 | **CNN + Trans** | 15 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
-| **Fourier + FFN** | 0 | -1.006 | -17.1% | 17.0% | -1.006 | -17.1% | 17.0% | -1.006 | -17.1% | 17.0% |
-| **Fourier + FFN** | 1 | 1.452 | 11.8% | 8.1% | 2.618 | 13.4% | 5.1% | —ᴰ | —ᴰ | —ᴰ |
-| **Fourier + FFN** | 3 | 1.759 | 8.4% | 4.8% | 2.960 | 12.9% | 4.3% | —ᴰ | —ᴰ | —ᴰ |
-| **Fourier + FFN** | 5 | 1.454 | 6.4% | 4.4% | 3.266 | 13.4% | 4.1% | —ᴰ | —ᴰ | —ᴰ |
-| **Fourier + FFN** | 8 | —ᴰ | —ᴰ | —ᴰ | 3.923 | 13.9% | 3.5% | —ᴰ | —ᴰ | —ᴰ |
-| **Fourier + FFN** | 10 | —ᴺ | —ᴺ | —ᴺ | 3.531 | 11.6% | 3.3% | —ᴰ | —ᴰ | —ᴰ |
-| **Fourier + FFN** | 15 | —ᴺ | —ᴺ | —ᴺ | 1.816 | 5.2% | 2.8% | —ᴰ | —ᴰ | —ᴰ |
+| **Fourier + FFN** | 0 | -1.007 | -17.1% | 17.0% | -1.007 | -17.1% | 17.0% | -1.007 | -17.1% | 17.0% |
+| **Fourier + FFN** | 1 | 1.455 | 11.8% | 8.1% | 2.621 | 13.4% | 5.1% | —ᴰ | —ᴰ | —ᴰ |
+| **Fourier + FFN** | 3 | 1.761 | 8.1% | 4.6% | 2.963 | 12.9% | 4.3% | —ᴰ | —ᴰ | —ᴰ |
+| **Fourier + FFN** | 5 | 1.455 | 5.9% | 4.1% | 3.269 | 12.9% | 4.0% | —ᴰ | —ᴰ | —ᴰ |
+| **Fourier + FFN** | 8 | —ᴰ | —ᴰ | —ᴰ | 3.927 | 13.9% | 3.5% | —ᴰ | —ᴰ | —ᴰ |
+| **Fourier + FFN** | 10 | —ᴺ | —ᴺ | —ᴺ | 3.534 | 11.6% | 3.3% | —ᴰ | —ᴰ | —ᴰ |
+| **Fourier + FFN** | 15 | —ᴺ | —ᴺ | —ᴺ | 1.817 | 5.2% | 2.8% | —ᴰ | —ᴰ | —ᴰ |
 | **OU + Thresh** | 0 | 0.352 | 6.0% | 17.0% | 0.352 | 6.0% | 17.0% | 0.352 | 6.0% | 17.0% |
-| **OU + Thresh** | 1 | 0.276 | 2.8% | 10.0% | 1.435 | 11.7% | 8.1% | —ᴰ | —ᴰ | —ᴰ |
-| **OU + Thresh** | 3 | 0.732 | 4.6% | 6.3% | 1.138 | 7.1% | 6.2% | —ᴰ | —ᴰ | —ᴰ |
-| **OU + Thresh** | 5 | 0.472 | 2.4% | 5.0% | 1.471 | 9.1% | 6.2% | —ᴰ | —ᴰ | —ᴰ |
-| **OU + Thresh** | 8 | —ᴰ | —ᴰ | —ᴰ | 1.811 | 8.9% | 4.9% | —ᴰ | —ᴰ | —ᴰ |
-| **OU + Thresh** | 10 | —ᴺ | —ᴺ | —ᴺ | 1.708 | 7.5% | 4.4% | —ᴰ | —ᴰ | —ᴰ |
-| **OU + Thresh** | 15 | —ᴺ | —ᴺ | —ᴺ | 1.338 | 4.6% | 3.4% | —ᴰ | —ᴰ | —ᴰ |
+| **OU + Thresh** | 1 | 0.277 | 2.7% | 9.7% | 1.437 | 11.8% | 8.2% | —ᴰ | —ᴰ | —ᴰ |
+| **OU + Thresh** | 3 | 0.732 | 4.6% | 6.2% | 1.139 | 7.3% | 6.4% | —ᴰ | —ᴰ | —ᴰ |
+| **OU + Thresh** | 5 | 0.473 | 2.4% | 5.0% | 1.472 | 8.9% | 6.0% | —ᴰ | —ᴰ | —ᴰ |
+| **OU + Thresh** | 8 | —ᴰ | —ᴰ | —ᴰ | 1.813 | 8.9% | 4.9% | —ᴰ | —ᴰ | —ᴰ |
+| **OU + Thresh** | 10 | —ᴺ | —ᴺ | —ᴺ | 1.710 | 7.5% | 4.4% | —ᴰ | —ᴰ | —ᴰ |
+| **OU + Thresh** | 15 | —ᴺ | —ᴺ | —ᴺ | 1.339 | 4.6% | 3.4% | —ᴰ | —ᴰ | —ᴰ |
 
 *주:* 원 논문과 동일하게 행은 정책과 factor 수 $K$, 열은 Fama–French·PCA·IPCA의
 SR, 연평균수익률 $\mu$, 연변동성 $\sigma$로 구성했다. $K=0$은 factor family와
 무관한 동일 주식수익률이므로 완료된 Fourier와 OU 값을 세 열에 반복했다.
 `—ᵁ`는 필요한 residual 입력은 있으나 해당 100-epoch rolling 정책을 **실행하지
-않음**, `—ᴬ`는 실행 완료 기록은 있으나 세부 artifact가 이 PC에 **미동기화**,
-`—ᴰ`는 입력자료 부족으로 **data-blocked**, `—ᴺ`는 Fama–French 사양상
+않음**, `—ᴰ`는 입력자료 부족으로 **data-blocked**, `—ᴺ`는 Fama–French 사양상
 **비해당**을 뜻한다. FF8은 exact STREV·LTREV가 없어 차단됐고, IPCA는 240개월
 이력이 없어 전부 차단됐다. CNN+Transformer의 완결된 Table 1 사양은 현재
 PCA5 한 cell뿐이다. 이 표는 빈 cell을 한국 proxy나 다른 정책 결과로 채우지 않는다.
 
 요인 제거 전 $K=0$보다 PCA 잔차에서 성과가 높다. 또한 같은 PCA5에서
-CNN+Transformer의 Sharpe 4.148은 Fourier+FFN 3.266과 OU 1.471보다 높다.
+CNN+Transformer의 Sharpe 4.151은 Fourier+FFN 3.269와 OU 1.472보다 높다.
 PCA factor 수는 5~10 사이에서 가장 높은 성과를 보이며, 15개까지 늘리면
 성과가 하락한다. 이는 무조건 요인을 많이 제거하는 것이 좋은 것이 아니라,
 신호와 함께 제거되는 고유수익률 변동이 증가할 수 있음을 시사한다.
@@ -236,7 +240,7 @@ $\alpha,t_\alpha,R^2,\mu,t_\mu$ 순서다.
 | 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
 | 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 | 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
-| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | 16.8% | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | **16.7%** | **6.31** | **0.9%** | **16.8%** | **6.43** | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 | 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 | 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 | 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
@@ -245,31 +249,31 @@ $\alpha,t_\alpha,R^2,\mu,t_\mu$ 순서다.
 
 | K | Fama-French α | Fama-French tα | Fama-French R² | Fama-French μ | Fama-French tμ | PCA α | PCA tα | PCA R² | PCA μ | PCA tμ | IPCA α | IPCA tα | IPCA R² | IPCA μ | IPCA tμ |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
-| 1 | 10.8% | 2.07 | 4.6% | 11.8% | 2.26 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
-| 3 | 7.8% | 2.60 | 1.6% | 8.4% | 2.73 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
-| 5 | 5.9% | 2.18 | 0.5% | 6.4% | 2.25 | 13.3% | 5.13 | 1.4% | 13.4% | 5.06 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
-| 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
-| 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
-| 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 0 | -18.6% | -1.92 | 25.0% | -17.1% | -1.56 | -18.6% | -1.92 | 25.0% | -17.1% | -1.56 | -18.6% | -1.92 | 25.0% | -17.1% | -1.56 |
+| 1 | 10.8% | 2.07 | 4.6% | 11.8% | 2.26 | 14.8% | 4.45 | 2.5% | 13.4% | 4.06 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | 7.8% | 2.60 | 1.6% | 8.1% | 2.73 | 13.0% | 4.58 | 1.5% | 12.9% | 4.59 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | 5.9% | 2.18 | 0.5% | 5.9% | 2.25 | 13.3% | 5.13 | 1.4% | 12.9% | 5.06 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | 14.3% | 6.14 | 0.7% | 13.9% | 6.08 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | 11.6% | 5.39 | 0.5% | 11.6% | 5.48 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | 6.0% | 3.21 | 1.9% | 5.2% | 2.82 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 
 *OU+Thresh model*
 
 | K | Fama-French α | Fama-French tα | Fama-French R² | Fama-French μ | Fama-French tμ | PCA α | PCA tα | PCA R² | PCA μ | PCA tμ | IPCA α | IPCA tα | IPCA R² | IPCA μ | IPCA tμ |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 0 | 7.4% | 0.71 | 13.3% | 6.0% | 0.55 | 7.4% | 0.71 | 13.3% | 6.0% | 0.55 | 7.4% | 0.71 | 13.3% | 6.0% | 0.55 |
-| 1 | 0.9% | 0.14 | 2.3% | 2.8% | 0.43 | 10.7% | 2.02 | 4.1% | 11.7% | 2.23 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
-| 3 | 3.7% | 0.91 | 1.3% | 4.6% | 1.13 | 7.6% | 1.82 | 1.7% | 7.1% | 1.76 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
-| 5 | 1.9% | 0.57 | 0.5% | 2.4% | 0.73 | 9.6% | 2.46 | 2.0% | 9.1% | 2.28 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
-| 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
-| 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
-| 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 1 | 0.9% | 0.14 | 2.3% | 2.7% | 0.43 | 10.7% | 2.02 | 4.1% | 11.8% | 2.23 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 3 | 3.7% | 0.91 | 1.3% | 4.6% | 1.13 | 7.6% | 1.82 | 1.7% | 7.3% | 1.76 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | 1.9% | 0.57 | 0.5% | 2.4% | 0.73 | 9.6% | 2.46 | 2.0% | 8.9% | 2.28 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | 9.2% | 2.90 | 3.0% | 8.9% | 2.81 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | 7.9% | 2.73 | 1.8% | 7.5% | 2.65 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | 5.1% | 2.29 | 1.7% | 4.6% | 2.08 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 
 *주:* 원 논문은 FF8을 alpha benchmark로 사용한다. 위 수치가 있는 cell은
 현재 가능한 한국 6-factor(FF5+MOM) analogue이며 exact FF8 검정은 아니다.
 따라서 별표 유의수준을 옮기지 않았다. 상태기호는 Table 1과 같다.
 
-![Figure 5. 차익거래 전략의 누적 OOS 수익률](outputs/paper-korean/fig_05_korean_cumulative_returns.png)
+![Figure 5. 차익거래 전략의 누적 OOS 수익률](paper-assets/figures/fig_05_korean_cumulative_returns.png)
 
 **Figure 5. Cumulative OOS Returns of Different Arbitrage Strategies.** 한국
 잔차모형별 정책의 누적성과다. 누적곡선의 우상향만으로 거래가능성을 결론내릴 수
@@ -286,7 +290,7 @@ $\alpha,t_\alpha,R^2,\mu,t_\mu$ 순서다.
 | 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
 | 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 | 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
-| 5 | —ᵁ | —ᵁ | —ᵁ | 3.131 | 15.6% | 5.0% | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | 3.133 | 15.6% | 5.0% | —ᴰ | —ᴰ | —ᴰ |
 | 8 | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 | 10 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 | 15 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
@@ -312,7 +316,7 @@ $\alpha,t_\alpha,R^2,\mu,t_\mu$ 순서다.
 | 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
 | 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 | 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
-| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | 15.6% | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | **15.4%** | **4.74** | **1.0%** | **15.6%** | **4.86** | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 | 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 | 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 | 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
@@ -343,7 +347,7 @@ Table 4의 최종 비교는 보류한다.
 | 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
 | 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 | 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
-| 5 | —ᵁ | —ᵁ | —ᵁ | 3.448 | 14.0% | 4.0% | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | 3.451 | 14.0% | 4.0% | —ᴰ | —ᴰ | —ᴰ |
 | 8 | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 | 10 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 | 15 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
@@ -357,12 +361,12 @@ Table 4의 최종 비교는 보류한다.
 | 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
 | 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 | 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
-| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | 14.6% | 5.54 | —ᵁ | 14.0% | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | **14.6%** | **5.54** | **2.4%** | **14.0%** | **5.35** | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 | 8 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 | 10 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 | 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 
-30일 lookback의 Sharpe 4.148이 60일의 3.448보다 높다. 더 긴 과거정보가 자동으로
+30일 lookback의 Sharpe 4.151이 60일의 3.451보다 높다. 더 긴 과거정보가 자동으로
 성과를 높이지 않으며, 한국 표본에서는 최근 한 달 안의 패턴이 상대적으로 더
 유용했다.
 
@@ -375,7 +379,7 @@ Table 4의 최종 비교는 보류한다.
 | 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
 | 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 | 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
-| 5 | —ᵁ | —ᵁ | —ᵁ | 4.151 | 16.2% | 3.9% | —ᴰ | —ᴰ | —ᴰ |
+| 5 | —ᵁ | —ᵁ | —ᵁ | 4.155 | 16.2% | 3.9% | —ᴰ | —ᴰ | —ᴰ |
 | 8 | —ᴰ | —ᴰ | —ᴰ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 | 10 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
 | 15 | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ |
@@ -445,25 +449,25 @@ Table 9에 넣지 않고, 원문과 동일하게 PCA 전용 Table A.X에 보고�
 sensitivity다. 따라서 비용 반영 후에도 양의 Sharpe가 남았다는 사실은 실제
 투자 가능성의 충분조건이 아니다.
 
-![Figure 6. 거래마찰 목적함수 전후 turnover](outputs/paper-korean/fig_06_korean_turnover.png)
+![Figure 6. 거래마찰 목적함수 전후 turnover](paper-assets/figures/fig_06_korean_turnover.png)
 
 **Figure 6. Turnover with and without Trading-Friction Objective.** 비용을
 내생적으로 학습한 정책의 turnover가 낮아지는지를 비교한다.
 
-![Figure 7. 거래마찰 목적함수 전후 short allocation](outputs/paper-korean/fig_07_korean_short_proportion.png)
+![Figure 7. 거래마찰 목적함수 전후 short allocation](paper-assets/figures/fig_07_korean_short_proportion.png)
 
 **Figure 7. Short Allocation with and without Trading-Friction Objective.** 한국
 공매도 가능 종목을 point-in-time으로 제한한 결과가 아니므로 short allocation은
 가상 포트폴리오 비중이다.
 
-![Figure 8. 포트폴리오 weight 분포](outputs/paper-korean/fig_08_korean_weight_distribution.png)
+![Figure 8. 포트폴리오 weight 분포](paper-assets/figures/fig_08_korean_weight_distribution.png)
 
 **Figure 8. Distribution of Portfolio Weights.** weight 분포를 통해 소수 종목
 집중 여부를 점검한다.
 
 ### 3.4. 포트폴리오 집중과 단순 반전
 
-![Figure 9. sparse 포트폴리오 성과](outputs/paper-korean/robustness/fig_09_sparse_performance.png)
+![Figure 9. sparse 포트폴리오 성과](paper-assets/figures/fig_09_sparse_performance.png)
 
 **Figure 9. Performance of Sparse Portfolios.** 절대 weight가 큰 일부 종목만
 남겼을 때 Sharpe, 수익률, 변동성이 어떻게 변하는지를 보여준다. 최신 audit에서
@@ -471,13 +475,13 @@ sensitivity다. 따라서 비용 반영 후에도 양의 Sharpe가 남았다는 
 weight 변환의 Sharpe는 2.158이었다. **현재 PC에 PNG가 없어 최신 outputs 동기화가
 필요하다.**
 
-![Figure 10. sparse 포트폴리오 누적수익률](outputs/paper-korean/robustness/fig_10_sparse_cumulative_returns.png)
+![Figure 10. sparse 포트폴리오 누적수익률](paper-assets/figures/fig_10_sparse_cumulative_returns.png)
 
 **Figure 10. Cumulative Returns of Sparse Portfolios.** Figure 9의 각 sparsity
 수준에 대한 누적수익률이다. **현재 PC에 PNG가 없어 최신 outputs 동기화가
 필요하다.**
 
-![Figure 11. 단순 반전전략 성과](outputs/paper-korean/robustness/fig_11_naive_reversal.png)
+![Figure 11. 단순 반전전략 성과](paper-assets/figures/fig_11_naive_reversal.png)
 
 **Figure 11. Simple Reversal Trading.** 여러 lag의 단순 반전전략은 시험한 모든
 lag에서 음의 성과를 냈다. 따라서 CNN 성과를 단순한 1차원 평균회귀 규칙으로
@@ -485,7 +489,7 @@ lag에서 음의 성과를 냈다. 따라서 CNN 성과를 단순한 1차원 평
 
 ### 3.5. 차익거래의 지속성
 
-![Figure 12. 보유기간별 성과](outputs/paper-korean/robustness/fig_12_holding_period_panel_a.png)
+![Figure 12. 보유기간별 성과](paper-assets/figures/fig_12_holding_period_panel_a.png)
 
 **Figure 12. Performance for Longer Holding Periods.** 5일 보유목적함수로 별도
 학습한 CNN은 연수익률 0.052, 연변동성 0.017, Sharpe 3.110을 기록했다. 반면
@@ -495,9 +499,9 @@ lag에서 음의 성과를 냈다. 따라서 CNN 성과를 단순한 1차원 평
 
 ### 3.6. 차익거래와 위험프리미엄
 
-![Figure 13(a). 주식수익률의 factor component](outputs/paper-korean/risk-premium/fig_13a_stock_factor_components.png)
+![Figure 13(a). 주식수익률의 factor component](paper-assets/figures/fig_13a_stock_factor_components.png)
 
-![Figure 13(b). 통계적 차익거래 factor portfolio](outputs/paper-korean/risk-premium/fig_13b_statarb_factor_portfolio.png)
+![Figure 13(b). 통계적 차익거래 factor portfolio](paper-assets/figures/fig_13b_statarb_factor_portfolio.png)
 
 **Figure 13. Arbitrage versus Risk-Premium Component.** 원 논문은 IPCA5로
 위험프리미엄 성분과 차익거래 성분을 분해한다. 한국 exact IPCA5는 240개월
@@ -507,32 +511,32 @@ lag에서 음의 성과를 냈다. 따라서 CNN 성과를 단순한 1차원 평
 
 ### 3.7. 추정된 네트워크 구조
 
-![Figure 14. allocation과 수익률 사례](outputs/paper-korean/interpretability/fig_14_allocation_return_examples.png)
+![Figure 14. allocation과 수익률 사례](paper-assets/figures/fig_14_allocation_return_examples.png)
 
 **Figure 14. Examples of Allocation and Returns of CNN+Transformer Strategy.**
 대표 잔차경로와 이에 대한 allocation 및 실현수익률을 함께 나타낸다.
 
-![Figure 15. benchmark model의 국소 패턴](outputs/paper-korean/interpretability/fig_15_local_basic_patterns.png)
+![Figure 15. benchmark model의 국소 패턴](paper-assets/figures/fig_15_local_basic_patterns.png)
 
 **Figure 15. Local Basic Patterns of Benchmark Model.** CNN filter가 추출한 국소
 패턴을 시각화한다.
 
-![Figure 16. sinusoidal input의 attention](outputs/paper-korean/interpretability/fig_16_sinusoidal_attention.png)
+![Figure 16. sinusoidal input의 attention](paper-assets/figures/fig_16_sinusoidal_attention.png)
 
 **Figure 16. Example Attention Weights for Sinusoidal Residual Inputs.** 주기와
 위상이 다른 합성 입력에 대한 attention 반응을 보여준다.
 
-![Figure 17. 대표 잔차의 CNN+Transformer 구조](outputs/paper-korean/interpretability/fig_17_representative_structure.png)
+![Figure 17. 대표 잔차의 CNN+Transformer 구조](paper-assets/figures/fig_17_representative_structure.png)
 
 **Figure 17. CNN+Transformer Model Structure for a Representative Residual.**
 한 시점에서 convolution feature, attention 및 최종 weight의 연결을 나타낸다.
 
-![Figure 18. 시간에 따른 모델 구조](outputs/paper-korean/interpretability/fig_18_structure_over_time.png)
+![Figure 18. 시간에 따른 모델 구조](paper-assets/figures/fig_18_structure_over_time.png)
 
 **Figure 18. CNN+Transformer Model Structure over Time.** 한 snapshot의 설명을
 여러 시점으로 확장한다.
 
-![Figure 19. allocation weight의 변수중요도](outputs/paper-korean/interpretability/fig_19_variable_importance.png)
+![Figure 19. allocation weight의 변수중요도](paper-assets/figures/fig_19_variable_importance.png)
 
 **Figure 19. Variable Importance for Allocation Weight.** 입력 lag별 gradient
 중요도를 보여준다. gradient importance는 causal effect가 아니라 현재 학습된
@@ -622,7 +626,7 @@ rolling IPCA는 실행할 수 없다.
 
 ## B. 대안 모형의 구현
 
-![Figure A.1. Feedforward network 구조](outputs/paper-spec/fig_a01_feedforward_architecture.png)
+![Figure A.1. Feedforward network 구조](paper-assets/figures/fig_a01_feedforward_architecture.png)
 
 **Figure A.1. Feedforward Network Architecture.** Fourier 또는 OU feature를
 입력으로 받는 비교모형의 구조다.
@@ -652,27 +656,26 @@ rolling IPCA는 실행할 수 없다.
 
 | D | ATT | HDN | DRP | SR | μ | σ |
 |---:|---:|---:|---:|---:|---:|---:|
-| 8 | 2 | 2 | 0.25 | —ᴬ | —ᴬ | —ᴬ |
-| 8 | 2 | 2 | 0.50 | —ᴬ | —ᴬ | —ᴬ |
-| 8 | 2 | 3 | 0.25 | —ᴬ | —ᴬ | —ᴬ |
-| 8 | 2 | 3 | 0.50 | —ᴬ | —ᴬ | —ᴬ |
-| 8 | 4 | 2 | 0.25 | —ᴬ | —ᴬ | —ᴬ |
-| 8 | 4 | 2 | 0.50 | —ᴬ | —ᴬ | —ᴬ |
-| 8 | 4 | 3 | 0.25 | —ᴬ | —ᴬ | —ᴬ |
-| 8 | 4 | 3 | 0.50 | —ᴬ | —ᴬ | —ᴬ |
-| 16 | 2 | 2 | 0.25 | —ᴬ | —ᴬ | —ᴬ |
-| 16 | 2 | 2 | 0.50 | —ᴬ | —ᴬ | —ᴬ |
-| 16 | 2 | 3 | 0.25 | —ᴬ | —ᴬ | —ᴬ |
-| 16 | 2 | 3 | 0.50 | —ᴬ | —ᴬ | —ᴬ |
-| 16 | 4 | 2 | 0.25 | —ᴬ | —ᴬ | —ᴬ |
-| 16 | 4 | 2 | 0.50 | —ᴬ | —ᴬ | —ᴬ |
-| 16 | 4 | 3 | 0.25 | —ᴬ | —ᴬ | —ᴬ |
+| 8 | 2 | 2 | 0.25 | 3.620 | 12.5% | 3.5% |
+| 8 | 2 | 2 | 0.50 | 2.933 | 10.8% | 3.7% |
+| 8 | 2 | 3 | 0.25 | 4.258 | 14.6% | 3.4% |
+| 8 | 2 | 3 | 0.50 | 4.358 | 16.5% | 3.8% |
+| 8 | 4 | 2 | 0.25 | 2.977 | 11.3% | 3.8% |
+| 8 | 4 | 2 | 0.50 | 3.705 | 13.9% | 3.7% |
+| 8 | 4 | 3 | 0.25 | 3.983 | 14.7% | 3.7% |
+| 8 | 4 | 3 | 0.50 | 4.505 | 17.3% | 3.8% |
+| 16 | 2 | 2 | 0.25 | 2.553 | 10.1% | 3.9% |
+| 16 | 2 | 2 | 0.50 | 3.688 | 13.7% | 3.7% |
+| 16 | 2 | 3 | 0.25 | 3.386 | 14.8% | 4.4% |
+| 16 | 2 | 3 | 0.50 | 3.988 | 16.2% | 4.1% |
+| 16 | 4 | 2 | 0.25 | 3.021 | 12.2% | 4.0% |
+| 16 | 4 | 2 | 0.50 | 3.834 | 15.2% | 4.0% |
+| 16 | 4 | 3 | 0.25 | 2.542 | 10.2% | 4.0% |
 | 16 | 4 | 3 | 0.50 | **4.650** | **17.3%** | **3.7%** |
 
 *주:* candidate 16은 validation sample에서 가장 높았을 뿐 별도의 최종 OOS
-성과가 아니다. 16개 전체 행의 최종 파일 경로는
-`outputs/paper-korean/model-selection/table_a03_candidate_validation_performance.csv`다.
-현재 PC에는 candidate 1의 부분 checkpoint만 있어 전체 표를 복원하지 않았다.
+성과가 아니다. 16개 행은
+`paper-assets/tables/table_a03_candidate_validation_performance.csv`에서 반올림했다.
 
 **Table A.IV. Alternative Best Performing Models on the Data from 2002-2016**
 
@@ -688,30 +691,29 @@ rolling IPCA는 실행할 수 없다.
 
 | Model | Fama-French 5 SR | Fama-French 5 μ | Fama-French 5 σ | PCA 5 SR | PCA 5 μ | PCA 5 σ | IPCA 5 SR | IPCA 5 μ | IPCA 5 σ |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Network 1 | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴰ | —ᴰ | —ᴰ |
-| Network 2 | 2.674 | —ᴬ | —ᴬ | 4.203 | —ᴬ | —ᴬ | —ᴰ | —ᴰ | —ᴰ |
-| Network 3 | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴰ | —ᴰ | —ᴰ |
-| Network 4 | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴰ | —ᴰ | —ᴰ |
-| Network 5 | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴬ | —ᴰ | —ᴰ | —ᴰ |
+| Network 1 | 2.298 | 7.4% | 3.2% | 3.990 | 16.3% | 4.1% | —ᴰ | —ᴰ | —ᴰ |
+| Network 2 | 2.674 | 9.3% | 3.5% | 4.203 | 17.1% | 4.1% | —ᴰ | —ᴰ | —ᴰ |
+| Network 3 | 2.521 | 8.7% | 3.5% | 3.883 | 16.0% | 4.1% | —ᴰ | —ᴰ | —ᴰ |
+| Network 4 | 2.066 | 7.7% | 3.7% | 4.087 | 17.3% | 4.2% | —ᴰ | —ᴰ | —ᴰ |
+| Network 5 | 2.526 | 8.5% | 3.4% | 3.987 | 15.8% | 4.0% | —ᴰ | —ᴰ | —ᴰ |
 
-*주:* 10개 전체 행의 최종 파일 경로는
-`outputs/paper-korean/alternative-networks/table_a05_alternative_network_performance.csv`다.
-현재 PC에는 해당 ignored GPU artifact가 없어 확인되지 않은 8개 수치를
-추정하거나 채우지 않았다.
+*주:* 10개 실행행은
+`paper-assets/tables/table_a05_alternative_network_performance.csv`에서 반올림했다.
+IPCA5 열은 240개월 이력 부족으로 data-blocked다.
 
 ### C.2. 해석
 
-![Figure A.2. 정책별 allocation과 signal](outputs/paper-korean/appendix-signals/fig_a02_policy_signals.png)
+![Figure A.2. 정책별 allocation과 signal](paper-assets/figures/fig_a02_policy_signals.png)
 
 **Figure A.2. Allocation Weights and Signals for Different Methods.** 동일한
 잔차경로에 대한 OU, Fourier, CNN 정책의 반응을 비교한다.
 
-![Figure A.3. 추가 allocation과 signal 사례](outputs/paper-korean/appendix-signals/fig_a03_policy_signals.png)
+![Figure A.3. 추가 allocation과 signal 사례](paper-assets/figures/fig_a03_policy_signals.png)
 
 **Figure A.3. Additional Allocation and Signal Examples.** Figure A.2의 추가
 사례다.
 
-![Figure A.4. 추가 sinusoidal attention](outputs/paper-korean/appendix-signals/fig_a04_additional_sinusoidal_attention.png)
+![Figure A.4. 추가 sinusoidal attention](paper-assets/figures/fig_a04_additional_sinusoidal_attention.png)
 
 **Figure A.4. Additional Attention Weights for Sinusoidal Inputs.** 합성 신호의
 주기와 위상 변화에 대한 attention 반응을 추가로 보여준다.
@@ -747,7 +749,7 @@ rolling IPCA는 실행할 수 없다.
 | 15 | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᴺ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 
 무조건부 평균잔차도 양의 성과를 내므로 모든 수익성이 복잡한 시계열 신호에서만
-나오는 것은 아니다. 그러나 CNN의 Sharpe 4.148보다 낮아 allocation timing이
+나오는 것은 아니다. 그러나 CNN의 Sharpe 4.151보다 낮아 allocation timing이
 추가 정보를 제공한다.
 
 ### C.4. 전략 간 의존성
@@ -765,9 +767,10 @@ rolling IPCA는 실행할 수 없다.
 | PCA 10 | —ᵁ | —ᵁ | —ᴰ | —ᵁ | —ᵁ | —ᴰ | —ᵁ | —ᴰ |
 | IPCA 10 | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ | —ᴰ |
 
-*주:* 현재 PC에는 rolling CNN 전략 하나만 동기화되어 상관행렬이 1×1이다.
-원 논문과 같은 factor-model 간 dependency 결론을 내리려면 최신 전체 전략
-artifact가 필요하다.
+*주:* benchmark 계약(Sharpe 목적함수, 30일 lookback, 1,000일 rolling 학습,
+1일 보유, 무비용)을 충족한 CNN 전략은 PCA5 하나뿐이므로 상관행렬은 1×1이다.
+다른 CNN robustness 사양을 같은 표에 섞지 않았다. 원 논문과 같은 residual-model
+간 dependency 결론을 내리려면 FF3·PCA3·FF5·PCA10 CNN 정책과 IPCA 입력이 필요하다.
 
 ### C.5. 시계열 신호 ablation
 
@@ -804,13 +807,13 @@ CNN+Transformer의 높은 성과는 횡단면 allocation만이 아니라 잔차�
 | 0 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
 | 1 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
 | 3 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
-| 5 | 1.371 | 6.0% | 4.4% | —ᵁ | —ᵁ | —ᵁ |
+| 5 | 1.372 | 6.0% | 4.4% | —ᵁ | —ᵁ | —ᵁ |
 | 10 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
 | 15 | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ | —ᵁ |
 
 ### C.7. 산업집중도
 
-![Figure A.5. 포트폴리오 산업집중도](outputs/paper-korean/appendix/fig_a05_industry_concentration.png)
+![Figure A.5. 포트폴리오 산업집중도](paper-assets/figures/fig_a05_industry_concentration.png)
 
 **Figure A.5. Industry Concentration of Portfolio Weights.** 한국 산업분류에
 따른 weight 집중도를 보여준다. 원 논문의 SIC 분류와 완전히 동일하지 않은
@@ -818,12 +821,12 @@ CNN+Transformer의 높은 성과는 횡단면 allocation만이 아니라 잔차�
 
 ### C.8. 시간에 따른 시장효율성과 비용후 성과
 
-![Figure A.6. 시간에 따른 잔차 변동성](outputs/paper-korean/appendix/fig_a06_residual_volatility.png)
+![Figure A.6. 시간에 따른 잔차 변동성](paper-assets/figures/fig_a06_residual_volatility.png)
 
 **Figure A.6. Volatility of Residuals over Time.** 일별 횡단면 잔차변동성의 평균과
 분위를 통해 차익거래 기회의 시간변화를 점검한다.
 
-![Figure A.7. 거래비용 차감 후 누적수익률](outputs/paper-korean/appendix/fig_a07_returns_after_costs.png)
+![Figure A.7. 거래비용 차감 후 누적수익률](paper-assets/figures/fig_a07_returns_after_costs.png)
 
 **Figure A.7. Cumulative Returns after Trading Costs.** 고정 거래비용을 차감한
 누적수익률이다. 실제 한국 종목별 비용이 아니라 sensitivity라는 점에 유의한다.
@@ -832,18 +835,15 @@ CNN+Transformer의 높은 성과는 횡단면 allocation만이 아니라 잔차�
 
 | 구분 | 원 논문 번호 | 이 초안 배치 | 현재 파일 상태 |
 |---|---|---:|---|
-| 본문 Figure | 1–19 | 19/19 | 15개 확인, Figure 9–12 동기화 필요 |
-| 본문 Table | 1–9 | 9/9 | Table 1 CNN grid 미실행·IPCA/FF8 차단; 일부 GPU 세부행 동기화 필요 |
-| 부록 Figure | A.1–A.7 | 7/7 | 7개 확인 |
-| 부록 Table | A.I–A.X | 10/10 | 번호·구조 배치, A.III·A.V 전체행 동기화 필요 |
-| **합계** | **45개** | **45/45** | **번호 배치는 완료했으나 full scientific replication은 미완료** |
+| 본문 Figure | 1–19 | 19/19 | 19개 번호와 Figure 13 companion을 tracked snapshot으로 확인 |
+| 본문 Table | 1–9 | 9/9 | 실행값 동기화 완료; CNN 미실행 cell과 IPCA/FF8 data gate는 상태기호 유지 |
+| 부록 Figure | A.1–A.7 | 7/7 | 7개 tracked snapshot 확인 |
+| 부록 Table | A.I–A.X | 10/10 | A.III 16행, A.V 10행을 포함한 실행값 동기화 완료 |
+| **합계** | **45개** | **45/45** | **46개 파일(45개 번호+Figure 13 companion) 고정; full scientific replication은 미완료** |
 
-최종 제출 전 검증 순서는 다음과 같다.
-
-1. 최신 GPU PC의 `guijarro-ordonez-2025-replication/outputs/` 전체를 이 PC의
-   같은 경로로 복사한다.
-2. `config/output-registry.yml`의 45개 `path`가 모두 실제 파일인지 검사한다.
-3. Table 3–6, 9, A.III, A.V, A.VIII, A.X를 최신 CSV에서 다시 렌더링한다.
-4. 수치·그림 설명과 `docs/execution-status.md`의 audit metric을 대조한다.
-5. Typst 학위논문 source로 옮긴 뒤 PDF를 compile하고 표·그림 넘침과 인용을
-   시각적으로 검수한다.
+2026년 8월 12일 동기화에서 output registry의 모든 경로를 검사하고, 보고서
+builder를 재실행한 뒤 46개 파일의 SHA-256 manifest를 생성했다. 표의 숫자는
+tracked CSV snapshot에서 반올림했으며, 채울 수 없는 칸은 미실행(`—ᵁ`),
+data-blocked(`—ᴰ`), 비해당(`—ᴺ`)으로 구분했다. 최종 제출 단계에는 이 Markdown을
+KAIST Typst 학위논문 source로 옮겨 PDF의 표·그림 넘침, 인용 및 bibliography를
+시각적으로 검수해야 한다.

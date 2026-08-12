@@ -1,0 +1,6 @@
+model,filter_numbers,filter_size,attention_heads,hidden_units,dropout,lookback_days,training_window_days
+Network 1,"[1, 8]",2,4,16,0.25,30,1000
+Network 2,"[1, 16]",2,4,32,0.5,30,1000
+Network 3,"[1, 8]",2,2,16,0.25,30,1000
+Network 4,"[1, 8]",2,4,16,0.25,30,1250
+Network 5,"[1, 8]",2,4,16,0.25,30,750

@@ -1,0 +1,472 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-12T02:51:12.358371+00:00",
+  "source_run_id": "run-20260811T021314Z",
+  "source_run_manifest": "outputs/orchestration/run-20260811T021314Z/manifest.json",
+  "source_run_manifest_sha256": "a667c918d8b50784a2f7db1bacb69565e185c9f0bff1c29102684265597677ea",
+  "classification": "Korean price-return replication variants and specification-derived assets; not exact U.S. replication",
+  "registry": "config/output-registry.yml",
+  "artifact_count": 46,
+  "artifacts": [
+    {
+      "id": "fig_01",
+      "kind": "figure",
+      "status": "generated_from_spec",
+      "source_field": "path",
+      "source_path": "outputs/paper-spec/fig_01_conceptual_arbitrage_model.png",
+      "exported_path": "paper-assets/figures/fig_01_conceptual_arbitrage_model.png",
+      "sha256": "a9775898f1dcd06819e3185b25c01b10c0e347f4154b0a9f51de1a342682158a",
+      "bytes": 34242
+    },
+    {
+      "id": "fig_02",
+      "kind": "figure",
+      "status": "generated_from_spec",
+      "source_field": "path",
+      "source_path": "outputs/paper-spec/fig_02_examples_local_filters.png",
+      "exported_path": "paper-assets/figures/fig_02_examples_local_filters.png",
+      "sha256": "fb5c7383e4e085005b4a7b5052400e88f16bcf5456bf2211d308720efa4f2785",
+      "bytes": 91892
+    },
+    {
+      "id": "fig_03",
+      "kind": "figure",
+      "status": "generated_from_spec",
+      "source_field": "path",
+      "source_path": "outputs/paper-spec/fig_03_convolutional_architecture.png",
+      "exported_path": "paper-assets/figures/fig_03_convolutional_architecture.png",
+      "sha256": "4e06fd70cf92b8118132a5bbc7e10f760e06df823a5b042b94eced1cd885b3d9",
+      "bytes": 63848
+    },
+    {
+      "id": "fig_04",
+      "kind": "figure",
+      "status": "generated_from_spec",
+      "source_field": "path",
+      "source_path": "outputs/paper-spec/fig_04_transformer_architecture.png",
+      "exported_path": "paper-assets/figures/fig_04_transformer_architecture.png",
+      "sha256": "26b3290eaf7e15336f6721a16baac9d4f83b235200eee4a11de2664bdfd0a90a",
+      "bytes": 39073
+    },
+    {
+      "id": "fig_05",
+      "kind": "figure",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/fig_05_korean_cumulative_returns.png",
+      "exported_path": "paper-assets/figures/fig_05_korean_cumulative_returns.png",
+      "sha256": "c5943e4737e1b9ac9d1e05a9ed567fae961d84a3602d38101213ef725e3ebc56",
+      "bytes": 418555
+    },
+    {
+      "id": "fig_06",
+      "kind": "figure",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/fig_06_korean_turnover.png",
+      "exported_path": "paper-assets/figures/fig_06_korean_turnover.png",
+      "sha256": "72f1cad85a7b0eb8961f15dd569751ab5723403ce2eeaa480a9d5c6253d567a6",
+      "bytes": 97813
+    },
+    {
+      "id": "fig_07",
+      "kind": "figure",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/fig_07_korean_short_proportion.png",
+      "exported_path": "paper-assets/figures/fig_07_korean_short_proportion.png",
+      "sha256": "302fa8e024ed302117b7172ba70d26806582852fdc26a8143097f7195f570dcb",
+      "bytes": 140046
+    },
+    {
+      "id": "fig_08",
+      "kind": "figure",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/fig_08_korean_weight_distribution.png",
+      "exported_path": "paper-assets/figures/fig_08_korean_weight_distribution.png",
+      "sha256": "9aa53f024d442e072c01a6767739e9c739115991b7850f69fae094db475f67c8",
+      "bytes": 135472
+    },
+    {
+      "id": "fig_09",
+      "kind": "figure",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/robustness/fig_09_sparse_performance.png",
+      "exported_path": "paper-assets/figures/fig_09_sparse_performance.png",
+      "sha256": "0616d5b33e52bb413a32924a005705cc4f10206f5a6d01d47c37b4fd6a565455",
+      "bytes": 94972
+    },
+    {
+      "id": "fig_10",
+      "kind": "figure",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/robustness/fig_10_sparse_cumulative_returns.png",
+      "exported_path": "paper-assets/figures/fig_10_sparse_cumulative_returns.png",
+      "sha256": "f940d16ff03e1dee9b9c5e32221d71599d3b21e5561cd0e5b448c2694a87888b",
+      "bytes": 218658
+    },
+    {
+      "id": "fig_11",
+      "kind": "figure",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/robustness/fig_11_naive_reversal.png",
+      "exported_path": "paper-assets/figures/fig_11_naive_reversal.png",
+      "sha256": "ca23976c28db152b26726de0d42d9014944f0de6d54cf53617267cec5c8a0405",
+      "bytes": 126047
+    },
+    {
+      "id": "fig_12",
+      "kind": "figure",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/robustness/fig_12_holding_period_panel_a.png",
+      "exported_path": "paper-assets/figures/fig_12_holding_period_panel_a.png",
+      "sha256": "45c9f7df59ccce08d9a2601a9c50ed931442efa512436871c3a9ce8445297387",
+      "bytes": 131340
+    },
+    {
+      "id": "fig_13",
+      "kind": "figure",
+      "status": "generated_korean_analogue",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/risk-premium/fig_13b_statarb_factor_portfolio.png",
+      "exported_path": "paper-assets/figures/fig_13b_statarb_factor_portfolio.png",
+      "sha256": "9ef646b61faad461dd78250da6a21bc1f6ef0e63dfde7f62dba8ae906bd4937e",
+      "bytes": 114440
+    },
+    {
+      "id": "fig_13",
+      "kind": "figure",
+      "status": "generated_korean_analogue",
+      "source_field": "companion_path",
+      "source_path": "outputs/paper-korean/risk-premium/fig_13a_stock_factor_components.png",
+      "exported_path": "paper-assets/figures/fig_13a_stock_factor_components.png",
+      "sha256": "e6f9e8772944ffe28cb32803d8215f7009c878fc4dc6e4935fba5bb2762a19ba",
+      "bytes": 319901
+    },
+    {
+      "id": "fig_14",
+      "kind": "figure",
+      "status": "generated_korean_variant",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/interpretability/fig_14_allocation_return_examples.png",
+      "exported_path": "paper-assets/figures/fig_14_allocation_return_examples.png",
+      "sha256": "1fc506e42dd1563440ddd9d6d3efaf501366fb1ca92718e802916c96cbf66b70",
+      "bytes": 205893
+    },
+    {
+      "id": "fig_15",
+      "kind": "figure",
+      "status": "generated_korean_variant",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/interpretability/fig_15_local_basic_patterns.png",
+      "exported_path": "paper-assets/figures/fig_15_local_basic_patterns.png",
+      "sha256": "b3085857fd0c3792b05d771f6846532d37bbe3959c99b0c214c744bca383582a",
+      "bytes": 126210
+    },
+    {
+      "id": "fig_16",
+      "kind": "figure",
+      "status": "generated_korean_variant",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/interpretability/fig_16_sinusoidal_attention.png",
+      "exported_path": "paper-assets/figures/fig_16_sinusoidal_attention.png",
+      "sha256": "91f8d13950607f575cd890e2b4e5056fa7fd89531fcd4672848ca8df7c696bd2",
+      "bytes": 593488
+    },
+    {
+      "id": "fig_17",
+      "kind": "figure",
+      "status": "generated_korean_variant",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/interpretability/fig_17_representative_structure.png",
+      "exported_path": "paper-assets/figures/fig_17_representative_structure.png",
+      "sha256": "01ca064f9953def884ab1cd7a2e8b5c34b3010dc75765c3a7533b986f7ac3c71",
+      "bytes": 322567
+    },
+    {
+      "id": "fig_18",
+      "kind": "figure",
+      "status": "generated_korean_variant",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/interpretability/fig_18_structure_over_time.png",
+      "exported_path": "paper-assets/figures/fig_18_structure_over_time.png",
+      "sha256": "53f07d115b3dc3f4b052ced8ad415c77682f15823d5fbab9ddb35aa213647030",
+      "bytes": 242266
+    },
+    {
+      "id": "fig_19",
+      "kind": "figure",
+      "status": "generated_korean_variant",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/interpretability/fig_19_variable_importance.png",
+      "exported_path": "paper-assets/figures/fig_19_variable_importance.png",
+      "sha256": "708f9261427798dd8cd529a1b8f4282615f99b28585fc3ff5a1d71f9879e7452",
+      "bytes": 34925
+    },
+    {
+      "id": "table_01",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/table_01_korean_performance.csv",
+      "exported_path": "paper-assets/tables/table_01_korean_performance.csv",
+      "sha256": "51f4f14aba0df0020292d06b1438b14c7c3e6dd8cc7651fa32c2019c2d6d42ef",
+      "bytes": 5207
+    },
+    {
+      "id": "table_02",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/table_02_korean_factor_alpha.csv",
+      "exported_path": "paper-assets/tables/table_02_korean_factor_alpha.csv",
+      "sha256": "d099cb6a436a1e3b460d973187bda15218d7c913e0cec2535bf4b28351bec033",
+      "bytes": 13761
+    },
+    {
+      "id": "table_03",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/table_03_korean_performance.csv",
+      "exported_path": "paper-assets/tables/table_03_korean_performance.csv",
+      "sha256": "24bd23bbb15136239a4e14564dc87f61d9e586a43817a4bdf06b335bc6c53307",
+      "bytes": 674
+    },
+    {
+      "id": "table_04",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/table_04_korean_factor_alpha.csv",
+      "exported_path": "paper-assets/tables/table_04_korean_factor_alpha.csv",
+      "sha256": "e90ae4440eeaef80bc3347780111dcd5fd2ffab065b7720de0f7f72fbc6c9fd3",
+      "bytes": 1315
+    },
+    {
+      "id": "table_05",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/table_05_korean_performance.csv",
+      "exported_path": "paper-assets/tables/table_05_korean_performance.csv",
+      "sha256": "c692c22c9348fffbe2da9783e53015e5de3472c2e4c484a9dc0d9dc80672814d",
+      "bytes": 457
+    },
+    {
+      "id": "table_06",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/table_06_korean_factor_alpha.csv",
+      "exported_path": "paper-assets/tables/table_06_korean_factor_alpha.csv",
+      "sha256": "6fcb87792e53abce938919a8a727fbf72fe3780b0e98c4b53d403e1f5daca35f",
+      "bytes": 704
+    },
+    {
+      "id": "table_07",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/table_07_korean_performance.csv",
+      "exported_path": "paper-assets/tables/table_07_korean_performance.csv",
+      "sha256": "40af15002d4895fa09493c076f72f59684f11520b32271b79580b93087d0a8d8",
+      "bytes": 456
+    },
+    {
+      "id": "table_08",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/table_08_korean_factor_alpha.csv",
+      "exported_path": "paper-assets/tables/table_08_korean_factor_alpha.csv",
+      "sha256": "848245d07fded141f467823baf3eb5224660579cb983d79957975f341c8a4e76",
+      "bytes": 722
+    },
+    {
+      "id": "table_09",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/table_09_korean_performance.csv",
+      "exported_path": "paper-assets/tables/table_09_korean_performance.csv",
+      "sha256": "5d754dbe0a7e280c53e6ef4505fe385c43bc365e7e2815cdbdd05c5536e77f9a",
+      "bytes": 483
+    },
+    {
+      "id": "fig_a01",
+      "kind": "figure",
+      "status": "generated_from_spec",
+      "source_field": "path",
+      "source_path": "outputs/paper-spec/fig_a01_feedforward_architecture.png",
+      "exported_path": "paper-assets/figures/fig_a01_feedforward_architecture.png",
+      "sha256": "5960acb299c0f207fcc51e360b1a753728ce1029e47cb0e6f8ba1f50b70ae239",
+      "bytes": 39007
+    },
+    {
+      "id": "fig_a02",
+      "kind": "figure",
+      "status": "generated_korean_variant",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/appendix-signals/fig_a02_policy_signals.png",
+      "exported_path": "paper-assets/figures/fig_a02_policy_signals.png",
+      "sha256": "ee93b1e6efd63727b32e13e9f0853352364121f3ad5bd7697d731ac728c22929",
+      "bytes": 325369
+    },
+    {
+      "id": "fig_a03",
+      "kind": "figure",
+      "status": "generated_korean_variant",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/appendix-signals/fig_a03_policy_signals.png",
+      "exported_path": "paper-assets/figures/fig_a03_policy_signals.png",
+      "sha256": "8421998519d400febdde4d5f261775e17f140be17109980c6af4b15619388f5c",
+      "bytes": 344469
+    },
+    {
+      "id": "fig_a04",
+      "kind": "figure",
+      "status": "generated_korean_variant",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/appendix-signals/fig_a04_additional_sinusoidal_attention.png",
+      "exported_path": "paper-assets/figures/fig_a04_additional_sinusoidal_attention.png",
+      "sha256": "de6132da66f1e8969039a93aefed756cec2361e641818e01dd549654acdc8ea0",
+      "bytes": 427056
+    },
+    {
+      "id": "fig_a05",
+      "kind": "figure",
+      "status": "generated_korean_variant",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/appendix/fig_a05_industry_concentration.png",
+      "exported_path": "paper-assets/figures/fig_a05_industry_concentration.png",
+      "sha256": "be54828618e849a47d5b426b189e5adae86a880e649c57361cb466464b2c5160",
+      "bytes": 48434
+    },
+    {
+      "id": "fig_a06",
+      "kind": "figure",
+      "status": "generated_korean_variant",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/appendix/fig_a06_residual_volatility.png",
+      "exported_path": "paper-assets/figures/fig_a06_residual_volatility.png",
+      "sha256": "8fc535b97cec1e9892a3a558133888da6857c44cd3e6e867da2a967a088f615c",
+      "bytes": 90666
+    },
+    {
+      "id": "fig_a07",
+      "kind": "figure",
+      "status": "generated_korean_variant",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/appendix/fig_a07_returns_after_costs.png",
+      "exported_path": "paper-assets/figures/fig_a07_returns_after_costs.png",
+      "sha256": "bdc98b19bf21185aa08e3ba41d50a71b3c31ca217bd922a8de0ee11908dc8426",
+      "bytes": 131523
+    },
+    {
+      "id": "table_a01",
+      "kind": "table",
+      "status": "generated_from_spec",
+      "source_field": "path",
+      "source_path": "outputs/paper-spec/table_a01_characteristics.csv",
+      "exported_path": "paper-assets/tables/table_a01_characteristics.csv",
+      "sha256": "8313bbd9209f641c9b64bfd1dcfb7dab7c34cefecb823b8fc01ad6d9e6d4cebe",
+      "bytes": 1025
+    },
+    {
+      "id": "table_a02",
+      "kind": "table",
+      "status": "generated_from_spec",
+      "source_field": "path",
+      "source_path": "outputs/paper-spec/table_a02_hyperparameters.csv",
+      "exported_path": "paper-assets/tables/table_a02_hyperparameters.csv",
+      "sha256": "3a48065eb89ad61bbbd63033f456a38f02fc379e8c09dab53b20ac8b90274388",
+      "bytes": 447
+    },
+    {
+      "id": "table_a03",
+      "kind": "table",
+      "status": "generated_korean_variant",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/model-selection/table_a03_candidate_validation_performance.csv",
+      "exported_path": "paper-assets/tables/table_a03_candidate_validation_performance.csv",
+      "sha256": "a1fdae42712dcd9793fdbeef27aa3c5b2f7a70fd05bc1dc3c403d6fd9c55e14a",
+      "bytes": 1938
+    },
+    {
+      "id": "table_a04",
+      "kind": "table",
+      "status": "generated_from_spec",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/model-selection/table_a04_alternative_network_specification.csv",
+      "exported_path": "paper-assets/tables/table_a04_alternative_network_specification.csv",
+      "sha256": "8762ef608d88a278ec061ea292bce186854fdfe74e93cd61c0105e9e8cd98b9a",
+      "bytes": 305
+    },
+    {
+      "id": "table_a05",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/alternative-networks/table_a05_alternative_network_performance.csv",
+      "exported_path": "paper-assets/tables/table_a05_alternative_network_performance.csv",
+      "sha256": "394cf20df4d8629f6db8ea1d6ab6f9685ea8a647851d5628e2038c7198071ad2",
+      "bytes": 1271
+    },
+    {
+      "id": "table_a06",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/appendix/table_a06_unconditional_performance.csv",
+      "exported_path": "paper-assets/tables/table_a06_unconditional_performance.csv",
+      "sha256": "5d8bbb517745b78149e2d5311d2a63d9b36951acfdd999705593a7e68087b001",
+      "bytes": 203
+    },
+    {
+      "id": "table_a07",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/appendix/table_a07_unconditional_alpha.csv",
+      "exported_path": "paper-assets/tables/table_a07_unconditional_alpha.csv",
+      "sha256": "595d7fefa51c46f880689a4463a7de14e4a952b91c68839bade5d2ef1af118be",
+      "bytes": 672
+    },
+    {
+      "id": "table_a08",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/appendix/table_a08_strategy_correlations.csv",
+      "exported_path": "paper-assets/tables/table_a08_strategy_correlations.csv",
+      "sha256": "88fdcdf1aeec692f9a32d1dc0a9de8b1c84e2ecf4f73c1c4247aa3521f9413e1",
+      "bytes": 53
+    },
+    {
+      "id": "table_a09",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/appendix/table_a09_time_series_ablation.csv",
+      "exported_path": "paper-assets/tables/table_a09_time_series_ablation.csv",
+      "sha256": "3aa36354414f27c1a0082536178b664bedbab16c28d61daf7d95fd49569f1c48",
+      "bytes": 316
+    },
+    {
+      "id": "table_a10",
+      "kind": "table",
+      "status": "generated_korean_partial",
+      "source_field": "path",
+      "source_path": "outputs/paper-korean/appendix/table_a10_pca_cnn_friction_trained.csv",
+      "exported_path": "paper-assets/tables/table_a10_pca_cnn_friction_trained.csv",
+      "sha256": "94e61661a810961c6d5836e9c68f991fa560c2b810a4a3cecd99916379e6419d",
+      "bytes": 280
+    }
+  ]
+}

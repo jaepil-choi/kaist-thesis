@@ -1,0 +1,2 @@
+strategy,factor_model,model,objective,lookback_days,rolling_retrain,training_window_days,transaction_cost,short_holding_cost,annual_return,annual_volatility,sharpe,mean_t_statistic,mean_p_value,mean_daily_turnover,mean_short_proportion
+PCA5 / cnn_transformer_frictions / sharpe,PCA5,cnn_transformer_frictions,sharpe,30,True,1000,0.0005,0.0001,0.060172521613974184,0.043847456373074516,1.3723149890839377,2.1263327283953477,0.03387976404516499,0.4635456630548235,0.5027637104980229
