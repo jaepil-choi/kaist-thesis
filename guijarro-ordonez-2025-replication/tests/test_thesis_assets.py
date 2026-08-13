@@ -24,7 +24,7 @@ def _sha256(path: Path) -> str:
 def test_manifest_exports_all_numbered_assets() -> None:
     manifest = json.loads((ASSETS / "manifest.json").read_text(encoding="utf-8"))
 
-    assert manifest["source_run_id"] == "run-20260811T021314Z"
+    assert manifest["source_run_id"] == "gpu-grid-20260812T215833Z"
     assert manifest["artifact_count"] == 46
     assert len(manifest["artifacts"]) == 46
     run_manifest = PROJECT / manifest["source_run_manifest"]

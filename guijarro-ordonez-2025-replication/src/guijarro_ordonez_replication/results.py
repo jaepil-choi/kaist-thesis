@@ -308,17 +308,28 @@ def build_numbered_korean_report(
         }
 
     main = groups["sharpe"]
-    figure, axis = plt.subplots(figsize=(9, 5))
-    for label, daily, _, _ in main:
-        axis.plot(
-            daily["date"],
-            (1 + daily["return"]).cumprod() - 1,
-            label=label,
-        )
-    axis.axhline(0, color="black", linewidth=0.7)
-    axis.set(title="Korean statistical-arbitrage OOS returns", ylabel="Cumulative return")
-    if main:
-        axis.legend(fontsize=7)
+    model_panels = (
+        ("cnn_transformer", "CNN+Transformer"),
+        ("fourier_ffn", "Fourier+FFN"),
+        ("ou_threshold", "OU threshold"),
+    )
+    figure, axes = plt.subplots(1, 3, figsize=(15, 4.8), sharey=True)
+    for axis, (model, title) in zip(axes, model_panels, strict=True):
+        rows = [row for row in main if row[3]["model"] == model]
+        for _, daily, _, audit in rows:
+            axis.plot(
+                daily["date"],
+                (1 + daily["return"]).cumprod() - 1,
+                label=str(audit.get("factor_model", "PCA")),
+                linewidth=1.1,
+            )
+        axis.axhline(0, color="black", linewidth=0.7)
+        axis.set(title=title)
+        axis.tick_params(axis="x", labelrotation=30)
+        if rows:
+            axis.legend(fontsize=6, ncol=2)
+    axes[0].set_ylabel("Cumulative return")
+    figure.suptitle("Korean statistical-arbitrage OOS returns")
     figure.tight_layout()
     figure.savefig(output_directory / "fig_05_korean_cumulative_returns.png", dpi=180)
     plt.close(figure)
@@ -336,25 +347,39 @@ def build_numbered_korean_report(
             ("No-friction objective", "Friction-aware objective"),
             strict=True,
         ):
-            for label, daily, _, _ in rows:
+            for _, daily, _, audit in rows:
+                factor_label = str(audit.get("factor_model", "PCA"))
+                objective_label = "SR" if audit["objective"] == "sharpe" else "MV"
+                label = factor_label if rows is baseline else f"{factor_label} ({objective_label})"
                 axis.plot(daily["date"], daily[metric].rolling(20).mean(), label=label)
             axis.set(title=title, ylabel=ylabel)
+            axis.tick_params(axis="x", labelrotation=30)
             if rows:
-                axis.legend(fontsize=7)
+                axis.legend(fontsize=6, ncol=2)
             else:
                 axis.text(0.5, 0.5, "completed run unavailable", ha="center", va="center")
         figure.tight_layout()
         figure.savefig(output_directory / f"fig_{figure_number}_korean_{metric}.png", dpi=180)
         plt.close(figure)
 
-    figure, axis = plt.subplots(figsize=(9, 5))
-    for label, _, weights, _ in main:
-        nonzero = weights.to_numpy().ravel()
-        nonzero = nonzero[np.abs(nonzero) > 1e-10]
-        axis.hist(nonzero, bins=80, density=True, histtype="step", label=label)
-    axis.set(title="Distribution of nonzero underlying asset weights", xlabel="Weight")
-    if main:
-        axis.legend(fontsize=7)
+    figure, axes = plt.subplots(1, 3, figsize=(15, 4.8), sharex=True, sharey=True)
+    for axis, (model, title) in zip(axes, model_panels, strict=True):
+        rows = [row for row in main if row[3]["model"] == model]
+        for _, _, weights, audit in rows:
+            nonzero = weights.to_numpy().ravel()
+            nonzero = nonzero[np.abs(nonzero) > 1e-10]
+            axis.hist(
+                nonzero,
+                bins=80,
+                density=True,
+                histtype="step",
+                label=str(audit.get("factor_model", "PCA")),
+            )
+        axis.set(title=title, xlabel="Weight")
+        if rows:
+            axis.legend(fontsize=6, ncol=2)
+    axes[0].set_ylabel("Density")
+    figure.suptitle("Distribution of nonzero underlying asset weights")
     figure.tight_layout()
     figure.savefig(output_directory / "fig_08_korean_weight_distribution.png", dpi=180)
     plt.close(figure)
