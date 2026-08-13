@@ -547,43 +547,54 @@ def _train_subperiod(
             )
     signal_start = start + config.lookback_days
     signal_stop = stop
+    # These arrays do not change across epochs.  Materializing them on the GPU
+    # once per subperiod preserves the exact batch slices and dtypes while
+    # avoiding thousands of repeated host-to-device transfers in a 100-epoch run.
+    training_inputs = torch.as_tensor(
+        features[start : stop - config.lookback_days], device=device
+    )
+    training_valid = torch.as_tensor(
+        selected[start : stop - config.lookback_days], device=device
+    )
+    training_returns = torch.as_tensor(
+        panel.residuals[signal_start:signal_stop],
+        dtype=torch.float32,
+        device=device,
+    )
+    training_left = torch.as_tensor(
+        panel.left[signal_start:signal_stop], dtype=torch.float32, device=device
+    )
+    training_right = torch.as_tensor(
+        panel.right[signal_start:signal_stop], dtype=torch.float32, device=device
+    )
+    training_extra = (
+        None
+        if panel.extra_asset_loadings is None
+        else torch.as_tensor(
+            panel.extra_asset_loadings[signal_start:signal_stop],
+            dtype=torch.float32,
+            device=device,
+        )
+    )
     for epoch in range(initial_epoch, config.epochs):
         for batch_index, batch_start in enumerate(
             range(signal_start, signal_stop, config.batch_days)
         ):
             batch_stop = min(batch_start + config.batch_days, signal_stop)
-            feature_slice = slice(
-                batch_start - config.lookback_days,
-                batch_stop - config.lookback_days,
-            )
-            inputs = torch.as_tensor(features[feature_slice], device=device)
-            valid = torch.as_tensor(selected[feature_slice], device=device)
-            returns = torch.as_tensor(
-                panel.residuals[batch_start:batch_stop],
-                dtype=torch.float32,
-                device=device,
-            )
-            left = torch.as_tensor(
-                panel.left[batch_start:batch_stop], dtype=torch.float32, device=device
-            )
-            right = torch.as_tensor(
-                panel.right[batch_start:batch_stop], dtype=torch.float32, device=device
-            )
+            local_start = batch_start - signal_start
+            local_stop = batch_stop - signal_start
+            batch_slice = slice(local_start, local_stop)
             values = _portfolio_path(
                 model,
-                inputs,
-                valid,
-                returns,
-                left,
-                right,
+                training_inputs[batch_slice],
+                training_valid[batch_slice],
+                training_returns[batch_slice],
+                training_left[batch_slice],
+                training_right[batch_slice],
                 (
                     None
-                    if panel.extra_asset_loadings is None
-                    else torch.as_tensor(
-                        panel.extra_asset_loadings[batch_start:batch_stop],
-                        dtype=torch.float32,
-                        device=device,
-                    )
+                    if training_extra is None
+                    else training_extra[batch_slice]
                 ),
                 (
                     previous_by_batch.get(batch_index)

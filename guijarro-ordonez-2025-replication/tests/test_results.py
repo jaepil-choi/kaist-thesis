@@ -53,3 +53,7 @@ def test_numbered_table_grouping_keeps_friction_runs_separate() -> None:
     assert _strategy_group(friction) == "frictions"
     assert _strategy_group({**base, "lookback_days": 60}) == "lookback60"
     assert _strategy_group({**base, "rolling_retrain": False}) == "constant"
+    assert _strategy_group({**base, "model": "direct_ffn"}) is None
+    assert _strategy_group({**base, "model": "ou_ffn"}) is None
+    assert _strategy_group({**base, "model": "fourier_ffn"}) == "sharpe"
+    assert _strategy_group({**base, "model": "ou_threshold"}) == "sharpe"

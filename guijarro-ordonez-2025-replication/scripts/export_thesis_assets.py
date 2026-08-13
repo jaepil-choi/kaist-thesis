@@ -37,10 +37,13 @@ def sha256(path: Path) -> str:
 def main() -> None:
     registry = yaml.safe_load(REGISTRY.read_text(encoding="utf-8"))
     outputs = registry["paper_outputs"]
-    run_manifests = sorted((PROJECT / "outputs" / "orchestration").glob("run-*/manifest.json"))
+    run_manifests = [
+        *list((PROJECT / "outputs" / "orchestration").glob("run-*/manifest.json")),
+        *list((PROJECT / "outputs" / "orchestration").glob("gpu-grid-*/manifest.json")),
+    ]
     if not run_manifests:
         raise FileNotFoundError("no orchestration run manifest is available")
-    run_manifest = run_manifests[-1]
+    run_manifest = max(run_manifests, key=lambda path: path.stat().st_mtime_ns)
     run_id = run_manifest.parent.name
     exported: list[dict[str, object]] = []
 

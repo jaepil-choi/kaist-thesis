@@ -1,0 +1,102 @@
+schema_version: 1
+description: >-
+  Executable Korean price-return experiment grid for the Guijarro-Ordonez
+  replication. Status is derived from validated simulation audits and artifacts;
+  it is not a manually maintained completion flag.
+
+contract:
+  epochs: 100
+  lookback_days: 30
+  holding_days: 1
+  rolling_retrain: true
+  transaction_cost: 0.0
+  short_holding_cost: 0.0
+  oos_start: "2024-01-19"
+  oos_end: "2026-07-20"
+  subperiods: 5
+
+families:
+  p0_baseline_cnn_sharpe:
+    priority: 0
+    models: [cnn_transformer]
+    objectives: [sharpe]
+    pca: [0, 1, 3, 5, 8, 10, 15]
+    ff: [1, 3, 5]
+
+  p1_mean_variance:
+    priority: 1
+    models: [cnn_transformer, fourier_ffn]
+    objectives: [meanvar]
+    pca: [0, 1, 3, 5, 8, 10, 15]
+    ff: [1, 3, 5]
+
+  p2_cnn_60_day:
+    priority: 2
+    models: [cnn_transformer]
+    objectives: [sharpe]
+    lookback_days: 60
+    pca: [0, 1, 3, 5, 8, 10, 15]
+    ff: [1, 3, 5]
+
+  p3_cnn_four_year_constant:
+    priority: 3
+    models: [cnn_transformer]
+    objectives: [sharpe]
+    rolling_retrain: false
+    pca: [0, 1, 3, 5, 8, 10, 15]
+    ff: [1, 3, 5]
+
+  p4_signal_ablation:
+    priority: 4
+    models: [direct_ffn, ou_ffn]
+    objectives: [sharpe]
+    pca: [0, 1, 3, 5, 8, 10, 15]
+    ff: [1, 3, 5]
+
+  p5_friction_aware_cnn:
+    priority: 5
+    models: [cnn_transformer_frictions]
+    objectives: [sharpe, meanvar]
+    transaction_cost: 0.0005
+    short_holding_cost: 0.0001
+    pca:
+      sharpe: [0, 1, 3, 5, 10, 15]
+      meanvar: [0, 1, 3, 5, 10, 15]
+    ff: []
+
+non_runnable:
+  - id: exact_us_replication
+    status: data_blocked
+    factor_family: US_CRSP_Compustat
+    reason: Licensed CRSP and Compustat point-in-time inputs are unavailable.
+  - id: exact_ipca_240_month
+    status: data_blocked
+    factor_family: IPCA
+    k: [1, 3, 5, 8, 10, 15]
+    reason: The Korean sample does not contain the required 240-month initial history.
+  - id: ff8
+    status: data_blocked
+    factor_family: Korean_FF
+    k: 8
+    reason: Exact STREV and LTREV inputs are unavailable.
+  - id: ff10_ff15
+    status: not_applicable
+    factor_family: Korean_FF
+    k: [10, 15]
+    reason: These factor counts are outside the paper specification.
+  - id: constant_eight_year
+    status: data_blocked
+    factor_family: all
+    reason: The 2020-2026 residual panel cannot support an eight-year training window.
+  - id: actual_korean_trading_costs
+    status: data_blocked
+    factor_family: all
+    reason: Security-time bid-ask, shortability, borrow fee, and impact inputs are unavailable.
+  - id: exact_korean_total_return_pit
+    status: data_blocked
+    factor_family: all
+    reason: Total returns, delisting returns, and filing-vintage PIT statements are unavailable.
+  - id: main_table_9_ipca_friction
+    status: data_blocked
+    factor_family: IPCA
+    reason: Main Table 9 is IPCA-specific and cannot be filled with PCA results.

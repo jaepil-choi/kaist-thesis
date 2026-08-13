@@ -201,7 +201,11 @@ def _strategy_group(audit: dict[str, object]) -> str | None:
     if model == "cnn_transformer" and not rolling and objective == "sharpe":
         return "constant"
     if lookback == 30 and rolling and not has_cost:
-        if objective == "sharpe":
+        if objective == "sharpe" and model in {
+            "cnn_transformer",
+            "fourier_ffn",
+            "ou_threshold",
+        }:
             return "sharpe"
         if objective == "meanvar" and model in {"cnn_transformer", "fourier_ffn"}:
             return "meanvar"

@@ -19,6 +19,9 @@ from guijarro_ordonez_replication.registry import (  # noqa: E402
     load_registry,
     status_counts,
 )
+from guijarro_ordonez_replication.experiment_matrix import (  # noqa: E402
+    experiment_coverage,
+)
 from guijarro_ordonez_replication.factors import (  # noqa: E402
     build_annual_memberships,
     build_daily_factors,
@@ -101,9 +104,21 @@ from guijarro_ordonez_replication.model_selection import (  # noqa: E402
 
 def command_status() -> None:
     registry = load_registry(PROJECT / "config" / "output-registry.yml")
+    numbered_counts = dict(sorted(status_counts(registry).items()))
+    coverage = experiment_coverage(PROJECT)
     payload = {
         "paper": registry["paper"],
-        "status_counts": dict(sorted(status_counts(registry).items())),
+        "numbered_artifact_coverage": {
+            "status_counts": numbered_counts,
+            "total": sum(numbered_counts.values()),
+            "meaning": "numbered Figure/Table file coverage; not experiment-grid completion",
+        },
+        "experiment_grid_coverage": {
+            "matrix": coverage["matrix"],
+            "summary": coverage["summary"],
+            "runnable_total": coverage["runnable_total"],
+            "families": coverage["families"],
+        },
     }
     print(json.dumps(payload, indent=2, ensure_ascii=False))
 
@@ -850,12 +865,35 @@ def command_build_appendix() -> None:
     if not candidates:
         raise SystemExit("Complete at least one 100-epoch strategy first.")
     pca_root = PROJECT / "outputs" / "pca"
-    panel = load_pca_residual_panel(
-        pca_root / "daily_residuals_k5_20200102_c252_l60.parquet",
-        pca_root / "daily_low_rank_loadings_k5_20200102_c252_l60.parquet",
-    )
     repository = PROJECT.parent
     config = yaml.safe_load((PROJECT / "config" / "default.yml").read_text("utf-8"))
+    pca_panels = {
+        f"PCA{k}": load_pca_residual_panel(
+            pca_root / f"daily_residuals_k{k}_20200102_c252_l60.parquet",
+            pca_root / f"daily_low_rank_loadings_k{k}_20200102_c252_l60.parquet",
+        )
+        for k in (1, 3, 5, 8, 10, 15)
+    }
+    panels = {
+        "Stock returns K0": identity_return_panel(
+            pca_panels["PCA5"],
+            _load_daily_excess_returns(repository, config),
+        ),
+        **pca_panels,
+        **{
+            f"Korean FF{k}": load_fama_french_residual_panel(
+                PROJECT
+                / "outputs"
+                / "fama-french"
+                / f"daily_residuals_ff{k}_20200102_l60.parquet",
+                PROJECT
+                / "outputs"
+                / "fama-french"
+                / f"daily_factor_legs_ff{k}_20200102_l60.parquet",
+            )
+            for k in (1, 3, 5)
+        },
+    }
     factors = pd.read_csv(
         PROJECT / "outputs" / "kimchi-exact" / "daily_factor_returns.csv",
         parse_dates=["date"],
@@ -864,7 +902,7 @@ def command_build_appendix() -> None:
         repository / config["data"]["sector_classification"]
     )
     audit = build_appendix_outputs(
-        panel,
+        panels,
         sorted(candidates),
         factors,
         industry,

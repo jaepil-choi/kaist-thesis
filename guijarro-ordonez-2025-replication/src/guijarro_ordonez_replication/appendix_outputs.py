@@ -33,10 +33,8 @@ def unconditional_average_residual_returns(
     *,
     start_index: int = 1000,
 ) -> pd.DataFrame:
-    """Return a unit-gross equal-weight average of available PCA residuals."""
+    """Return a unit-gross equal-weight average of available residuals."""
 
-    if panel.extra_asset_loadings is not None:
-        raise ValueError("unconditional average is implemented for PCA composition")
     values = np.zeros(len(panel.dates) - start_index, dtype=float)
     for day_index in range(start_index, len(panel.dates)):
         available = panel.observed[day_index] & (panel.residuals[day_index] != 0)
@@ -45,10 +43,14 @@ def unconditional_average_residual_returns(
             continue
         weight = np.zeros(len(panel.tickers), dtype=float)
         weight[available] = 1 / count
-        asset_weight = weight - (
-            weight @ panel.left[day_index]
-        ) @ panel.right[day_index].T
-        gross = np.abs(asset_weight).sum()
+        if panel.extra_asset_loadings is None:
+            asset_weight = weight - (
+                weight @ panel.left[day_index]
+            ) @ panel.right[day_index].T
+            gross = np.abs(asset_weight).sum()
+        else:
+            factor_weight = weight @ panel.extra_asset_loadings[day_index]
+            gross = np.abs(weight).sum() + np.abs(factor_weight).sum()
         if gross > 0:
             weight /= gross
         values[day_index - start_index] = weight @ panel.residuals[day_index]
@@ -56,7 +58,7 @@ def unconditional_average_residual_returns(
 
 
 def build_appendix_outputs(
-    panel: ResidualPanel,
+    panels: dict[str, ResidualPanel],
     strategy_directories: list[Path],
     factors: pd.DataFrame,
     industry: pd.DataFrame,
@@ -70,12 +72,24 @@ def build_appendix_outputs(
         factors = factors.loc[factors["weight"].eq("vw")].copy()
     if "frequency" in factors:
         factors = factors.loc[factors["frequency"].eq("daily")].copy()
-    unconditional = unconditional_average_residual_returns(panel)
-    unconditional.to_csv(
-        output_directory / "unconditional_average_residual_returns.csv", index=False
-    )
+    if "PCA5" not in panels:
+        raise ValueError("panels must contain the PCA5 benchmark")
+    unconditional_by_model = {
+        label: unconditional_average_residual_returns(panel)
+        for label, panel in panels.items()
+    }
+    pd.concat(
+        [frame.assign(strategy=label) for label, frame in unconditional_by_model.items()],
+        ignore_index=True,
+    ).to_csv(output_directory / "unconditional_average_residual_returns.csv", index=False)
     table_a06 = pd.DataFrame(
-        [{"strategy": "PCA5 average residual", **performance_statistics(unconditional["return"].to_numpy())}]
+        [
+            {
+                "strategy": f"{label} average residual",
+                **performance_statistics(frame["return"].to_numpy()),
+            }
+            for label, frame in unconditional_by_model.items()
+        ]
     )
     table_a06.to_csv(output_directory / "table_a06_unconditional_performance.csv", index=False)
     factor_sets = {
@@ -86,10 +100,11 @@ def build_appendix_outputs(
     }
     alpha_rows = [
         {
-            "strategy": "PCA5 average residual",
+            "strategy": f"{label} average residual",
             "factor_model": name,
-            **factor_alpha(unconditional, factors, columns),
+            **factor_alpha(frame, factors, columns),
         }
+        for label, frame in unconditional_by_model.items()
         for name, columns in factor_sets.items()
     ]
     pd.DataFrame(alpha_rows).to_csv(
@@ -112,6 +127,8 @@ def build_appendix_outputs(
             friction_rows.append(
                 {
                     "strategy": label,
+                    "factor_model": audit.get("factor_model", "PCA"),
+                    "model": audit["model"],
                     "objective": audit["objective"],
                     **performance_statistics(daily["return"].to_numpy()),
                     "transaction_cost": audit["transaction_cost"],
@@ -150,8 +167,13 @@ def build_appendix_outputs(
         output_directory / "table_a09_time_series_ablation.csv", index=False
     )
 
-    residual_frame = pd.DataFrame(panel.residuals, index=panel.dates, columns=panel.tickers)
-    residual_frame = residual_frame.where(panel.observed)
+    benchmark_panel = panels["PCA5"]
+    residual_frame = pd.DataFrame(
+        benchmark_panel.residuals,
+        index=benchmark_panel.dates,
+        columns=benchmark_panel.tickers,
+    )
+    residual_frame = residual_frame.where(benchmark_panel.observed)
     # The paper specifies one-calendar-month smoothing but does not publish the
     # pre-smoothing volatility estimator. We use a trailing 22-trading-day
     # standard deviation and disclose this operational choice in the audit.
@@ -287,7 +309,10 @@ def build_appendix_outputs(
         industry_status = "generated_korean_industry_taxonomy"
 
     audit = {
-        "classification": "Korean PCA5 appendix variants",
+        "classification": "Korean price-return appendix variants",
+        "unconditional_factor_models": list(panels),
+        "unconditional_performance_rows": len(table_a06),
+        "unconditional_alpha_rows": len(alpha_rows),
         "strategy_count": len(strategy_directories),
         "industry_figure_status": industry_status,
         "cost_figure_status": cost_figure_status,
