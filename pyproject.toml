@@ -29,6 +29,7 @@ dependencies = [
     "torch>=2.13.0",
     "tqdm>=4.68.4",
     "truststore>=0.10.4",
+    "wakepy>=1.0.0",
 ]
 
 [dependency-groups]
