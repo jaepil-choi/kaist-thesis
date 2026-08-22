@@ -29,8 +29,15 @@ dependencies = [
     "torch>=2.13.0",
     "tqdm>=4.68.4",
     "truststore>=0.10.4",
+    "vqapr>=0.1.0a10",
     "wakepy>=1.0.0",
 ]
+
+[tool.uv.sources]
+# vqapr is consumed from the working tree on purpose: vqapr-testbed/ exists to find out where the
+# framework does not yet serve a paper replication, so a defect found here is fixed in ../qlibx and
+# picked up on the next run with no publish step.
+vqapr = { path = "../qlibx", editable = true }
 
 [dependency-groups]
 dev = [
