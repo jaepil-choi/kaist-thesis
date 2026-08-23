@@ -9,6 +9,10 @@ wheels/
 # Virtual environments
 .venv
 
+## node (발표자료 생성 스크립트가 pptxgenjs를 사용한다)
+node_modules/
+package-lock.json
+
 ## credentials
 .env
 
