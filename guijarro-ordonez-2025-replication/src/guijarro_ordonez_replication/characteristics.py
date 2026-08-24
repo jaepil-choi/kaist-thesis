@@ -75,6 +75,15 @@ CHARACTERISTIC_COLUMNS = (
 PRICE_CHARACTERISTICS = CHARACTERISTIC_COLUMNS[:6] + CHARACTERISTIC_COLUMNS[36:]
 ACCOUNTING_CHARACTERISTICS = CHARACTERISTIC_COLUMNS[6:36]
 
+# A Korean common share always carries a ticker ending in "0"; preferred and
+# other share classes end in 5, 7, 9 or a letter.  Those classes have no
+# financial statements of their own -- the issuer files one set of accounts for
+# the whole company -- so they can never receive an accounting characteristic.
+COMMON_SHARE_CLASS_SUFFIX = "0"
+
+# Firm-year items that must be present for a statement scope to be usable.
+CORE_STATEMENT_ITEMS = ("total_assets", "total_equity", "sales", "net_income")
+
 # Canonical annual consolidated mappings verified in kwam-enhanced-index.
 # Multiple codes are ordered fallbacks, never values to be summed.
 IPCA_ACCOUNT_CODES = {
@@ -121,10 +130,40 @@ class CharacteristicResult:
     audit: dict[str, object]
 
 
+class MixedStatementScopeWarning(UserWarning):
+    """Some firm-years use separate rather than consolidated statements."""
+
+
+class ShareClassFilterWarning(UserWarning):
+    """Non-common share classes were removed from the universe."""
+
+
+def filter_common_share_class(frame: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+    """Keep only common shares and report how many tickers were removed.
+
+    Preferred classes cannot be matched to statements and, kept in the panel,
+    they both depress measured accounting coverage and duplicate their issuer's
+    exposure.  Removing them is the share-class de-duplication the project
+    requires, not a coverage convenience.
+    """
+
+    ticker = frame["ticker"].astype(str).str.upper()
+    keep = ticker.str.endswith(COMMON_SHARE_CLASS_SUFFIX)
+    dropped = int(ticker.loc[~keep].nunique())
+    if dropped:
+        warnings.warn(
+            f"SHARE_CLASS_FILTER: removed {dropped} non-common share classes.",
+            ShareClassFilterWarning,
+            stacklevel=2,
+        )
+    return frame.loc[keep].copy(), dropped
+
+
 def load_ipca_price_panel(
     path: str | Path,
     *,
     start: str | pd.Timestamp = "2015-01-01",
+    common_share_class_only: bool = False,
 ) -> pd.DataFrame:
     """Load only daily fields required by the 46-characteristic builder."""
 
@@ -152,6 +191,8 @@ def load_ipca_price_panel(
     frame["ticker"] = frame["ticker"].astype(str).str.upper()
     if frame.duplicated(["date", "ticker"]).any():
         raise ValueError("IPCA price panel has duplicate date-ticker keys")
+    if common_share_class_only:
+        frame, _ = filter_common_share_class(frame)
     return frame.sort_values(["ticker", "date"]).reset_index(drop=True)
 
 
@@ -183,35 +224,41 @@ def load_ipca_daily_returns(
     return frame.sort_values(["date", "ticker"]).reset_index(drop=True)
 
 
-def load_ipca_annual_accounting(
-    statement_path: str | Path,
-    annual_share_path: str | Path,
-    dividend_path: str | Path,
-    *,
-    first_fiscal_year: int = 2016,
-    reporting_lag_months: int = 3,
-) -> pd.DataFrame:
-    """Load standardized annual inputs from the current Korean raw sources.
+def _separate_scope_codes() -> dict[str, tuple[str, ...]]:
+    """Map each consolidated account code to its separate-statement twin.
 
-    The same fixed three-month availability lag is applied to every accounting
-    item, as explicitly requested for this sensitivity.  Latest dump revisions
-    are selected by logical key.
+    FnGuide publishes consolidated statements under ``4001NNNNNN`` in
+    ``DW_FNG_연결재무제표`` and separate statements under ``1001NNNNNN`` in
+    ``DW_FNG_재무제표``.  The trailing six digits are shared, so the twin is a
+    prefix substitution.  Two items have no twin: ``noncontrolling_interest``,
+    which does not exist in a separate statement and is therefore zero by
+    definition, and ``deferred_tax``, which the separate chart of accounts does
+    not expose at this granularity and which both consuming formulas already
+    treat as zero when missing.
     """
 
-    if reporting_lag_months != 3:
-        raise ValueError("the Korean IPCA sensitivity requires a fixed 3-month lag")
+    return {
+        item: tuple("1001" + code[4:] for code in codes)
+        for item, codes in IPCA_ACCOUNT_CODES.items()
+        if item not in {"noncontrolling_interest", "deferred_tax"}
+    }
+
+
+IPCA_SEPARATE_ACCOUNT_CODES = _separate_scope_codes()
+
+
+def _statement_scope_wide(
+    dataset: object,
+    *,
+    scope: str,
+    account_codes: dict[str, tuple[str, ...]],
+    first_fiscal_year: int,
+) -> pd.DataFrame:
+    """Pivot one statement scope into a ticker/fiscal-period item table."""
+
     import pyarrow.dataset as ds
 
-    codes = sorted(
-        {code for candidates in IPCA_ACCOUNT_CODES.values() for code in candidates}
-    )
-    dataset = ds.dataset(statement_path, format="parquet", partitioning="hive")
-    predicate = (
-        (ds.field("statement_scope") == "consolidated")
-        & (ds.field("settlement_type") == "D")
-        & (ds.field("fiscal_year") >= first_fiscal_year)
-        & ds.field("account_code").isin(codes)
-    )
+    codes = sorted({code for candidates in account_codes.values() for code in candidates})
     facts = dataset.to_table(
         columns=[
             "ticker",
@@ -220,8 +267,15 @@ def load_ipca_annual_accounting(
             "numeric_value",
             "dump_last_modified",
         ],
-        filter=predicate,
+        filter=(
+            (ds.field("statement_scope") == scope)
+            & (ds.field("settlement_type") == "D")
+            & (ds.field("fiscal_year") >= first_fiscal_year)
+            & ds.field("account_code").isin(codes)
+        ),
     ).to_pandas()
+    if facts.empty:
+        return pd.DataFrame(columns=["ticker", "fiscal_period", *IPCA_ACCOUNT_CODES])
     facts["ticker"] = facts["ticker"].astype(str).str.upper()
     facts["fiscal_period"] = pd.to_datetime(facts["fiscal_period"], errors="raise")
     facts["dump_last_modified"] = pd.to_datetime(
@@ -233,13 +287,11 @@ def load_ipca_annual_accounting(
         logical, keep="last"
     )
     code_to_item = {
-        code: item
-        for item, candidates in IPCA_ACCOUNT_CODES.items()
-        for code in candidates
+        code: item for item, candidates in account_codes.items() for code in candidates
     }
     code_priority = {
         code: priority
-        for candidates in IPCA_ACCOUNT_CODES.values()
+        for candidates in account_codes.values()
         for priority, code in enumerate(candidates)
     }
     facts["item"] = facts["account_code"].map(code_to_item)
@@ -258,6 +310,93 @@ def load_ipca_annual_accounting(
     wide = wide.sort_values(["ticker", "fiscal_period"]).drop_duplicates(
         ["ticker", "calendar_year"], keep="last"
     )
+    wide["statement_scope"] = scope
+    return wide
+
+
+def load_ipca_annual_accounting(
+    statement_path: str | Path,
+    annual_share_path: str | Path,
+    dividend_path: str | Path,
+    *,
+    first_fiscal_year: int = 2016,
+    reporting_lag_months: int = 3,
+    allow_separate_fallback: bool = False,
+) -> pd.DataFrame:
+    """Load standardized annual inputs from the current Korean raw sources.
+
+    The same fixed three-month availability lag is applied to every accounting
+    item, as explicitly requested for this sensitivity.  Latest dump revisions
+    are selected by logical key.
+
+    With ``allow_separate_fallback`` a firm-year that has no usable
+    consolidated statement falls back to its separate statement.  The choice is
+    made per firm-year and is all-or-nothing: mixing consolidated assets with
+    separate sales inside one firm-year would produce an internally
+    inconsistent statement.  Issuers without subsidiaries file separate
+    accounts only, so without the fallback they are dropped entirely.
+    """
+
+    if reporting_lag_months != 3:
+        raise ValueError("the Korean IPCA sensitivity requires a fixed 3-month lag")
+    import pyarrow.dataset as ds
+
+    dataset = ds.dataset(statement_path, format="parquet", partitioning="hive")
+    wide = _statement_scope_wide(
+        dataset,
+        scope="consolidated",
+        account_codes=IPCA_ACCOUNT_CODES,
+        first_fiscal_year=first_fiscal_year,
+    )
+    if allow_separate_fallback:
+        separate = _statement_scope_wide(
+            dataset,
+            scope="separate",
+            account_codes=IPCA_SEPARATE_ACCOUNT_CODES,
+            first_fiscal_year=first_fiscal_year,
+        )
+        # A separate statement has no minority interest by construction.
+        separate["noncontrolling_interest"] = 0.0
+        core = list(CORE_STATEMENT_ITEMS)
+
+        def _keys(frame: pd.DataFrame, complete_only: bool) -> set[tuple]:
+            subset = (
+                frame.loc[frame[core].notna().all(axis=1)] if complete_only else frame
+            )
+            return set(map(tuple, subset[["ticker", "calendar_year"]].to_numpy()))
+
+        # Prefer a core-complete consolidated statement.  Fall back to separate
+        # only where consolidated is absent or incomplete, and keep a partial
+        # consolidated statement when no complete separate one exists either:
+        # characteristics that need just a few items stay computable.
+        consolidated_complete = _keys(wide, True)
+        separate_complete = _keys(separate, True)
+        consolidated_any = _keys(wide, False)
+        take_separate = (separate_complete - consolidated_complete) | (
+            _keys(separate, False) - consolidated_any
+        )
+        drop_consolidated = separate_complete - consolidated_complete
+        wide = wide.loc[
+            [
+                key not in drop_consolidated
+                for key in map(tuple, wide[["ticker", "calendar_year"]].to_numpy())
+            ]
+        ]
+        separate = separate.loc[
+            [
+                key in take_separate
+                for key in map(tuple, separate[["ticker", "calendar_year"]].to_numpy())
+            ]
+        ]
+        if not separate.empty:
+            warnings.warn(
+                f"MIXED_STATEMENT_SCOPE: {len(separate)} firm-years use separate "
+                "statements because no usable consolidated statement exists.",
+                MixedStatementScopeWarning,
+                stacklevel=2,
+            )
+            wide = pd.concat([wide, separate], ignore_index=True)
+        wide = wide.sort_values(["ticker", "fiscal_period"]).reset_index(drop=True)
 
     shares = pd.read_parquet(
         annual_share_path,
@@ -309,6 +448,7 @@ def load_ipca_annual_accounting(
         "ticker",
         "fiscal_period",
         "available_date",
+        "statement_scope",
         "total_assets",
         "total_liabilities",
         "book_equity",
@@ -591,7 +731,10 @@ def build_accounting_characteristics(annual: pd.DataFrame) -> pd.DataFrame:
     capex_proxy = (frame["ppe"] - lag["ppe"]).clip(lower=0).fillna(0) + da
     gross_profit = frame["sales"] - frame["cogs"]
 
-    output = frame[["ticker", "fiscal_period", "available_date"]].copy()
+    carry = ["ticker", "fiscal_period", "available_date"]
+    if "statement_scope" in frame:
+        carry.append("statement_scope")
+    output = frame[carry].copy()
     output["Investment"] = _safe_divide(frame["total_assets"] - lag_assets, lag_assets)
     output["NOA"] = _safe_divide(noa_amount, lag_assets)
     output["DPI2A"] = _safe_divide(delta_ppe_inventory, lag_assets)
@@ -629,7 +772,7 @@ def build_accounting_characteristics(annual: pd.DataFrame) -> pd.DataFrame:
     output["S2P"] = frame["sales"]
     output["Lev"] = _safe_divide(debt, debt + frame["book_equity"])
     output["AT"] = frame["total_assets"]
-    return output[["ticker", "fiscal_period", "available_date", *ACCOUNTING_CHARACTERISTICS]]
+    return output[[*carry, *ACCOUNTING_CHARACTERISTICS]]
 
 
 def _asof_accounting(price: pd.DataFrame, accounting: pd.DataFrame) -> pd.DataFrame:
@@ -648,6 +791,8 @@ def _asof_accounting(price: pd.DataFrame, accounting: pd.DataFrame) -> pd.DataFr
             merged = left.copy()
             for column in ["fiscal_period", "available_date", *ACCOUNTING_CHARACTERISTICS]:
                 merged[column] = pd.NaT if column in {"fiscal_period", "available_date"} else np.nan
+            if "statement_scope" in accounting:
+                merged["statement_scope"] = None
         else:
             merged = pd.merge_asof(
                 left,
@@ -660,6 +805,15 @@ def _asof_accounting(price: pd.DataFrame, accounting: pd.DataFrame) -> pd.DataFr
             )
         pieces.append(merged)
     return pd.concat(pieces, ignore_index=True)
+
+
+def _estimation_universe(raw: pd.DataFrame, cap_proportion: float = 0.01) -> pd.DataFrame:
+    """Apply the IPCA market-cap filter used by the estimator."""
+
+    frame = raw.copy()
+    frame["date"] = pd.to_datetime(frame["date"]).dt.to_period("M").dt.to_timestamp("M")
+    total = frame.groupby("date", sort=False)["market_cap"].transform("sum")
+    return frame.loc[frame["market_cap"].div(total).ge(cap_proportion * 0.01)]
 
 
 def rank_normalize_characteristics(
@@ -710,6 +864,7 @@ def build_monthly_characteristics(
     for column in ("A2ME", "BEME", "CF2P", "D2P", "E2P", "S2P"):
         raw[column] = _safe_divide(raw[column], me)
     raw["Q"] = _safe_divide(raw["Q"] + me, raw["AT"])
+    scope_columns = ["statement_scope"] if "statement_scope" in raw else []
     raw = raw[
         [
             "date",
@@ -718,6 +873,7 @@ def build_monthly_characteristics(
             "market_cap",
             "fiscal_period",
             "available_date",
+            *scope_columns,
             *CHARACTERISTIC_COLUMNS,
         ]
     ]
@@ -725,9 +881,31 @@ def build_monthly_characteristics(
     coverage = {
         column: float(raw[column].notna().mean()) for column in CHARACTERISTIC_COLUMNS
     }
+    # `coverage` spans every ticker and month in the raw panel, including the
+    # years before any statement is available.  IPCA never estimates on that
+    # panel: it drops stocks below 0.01% of aggregate market capitalization.
+    # Instrument selection has to be judged on the universe actually fitted.
+    universe = _estimation_universe(raw)
+    coverage_universe = {
+        column: float(universe[column].notna().mean())
+        for column in CHARACTERISTIC_COLUMNS
+    }
+    if scope_columns:
+        scope_counts = (
+            raw["statement_scope"].value_counts(dropna=True).astype(int).to_dict()
+        )
+    else:
+        scope_counts = {}
     audit: dict[str, object] = {
         "classification": "Korean IPCA non-PIT 3-month-lag sensitivity",
         "characteristic_count": len(CHARACTERISTIC_COLUMNS),
+        "statement_scope_rows": scope_counts,
+        "coverage_basis": {
+            "coverage": "all tickers and months in the raw panel",
+            "coverage_estimation_universe": (
+                "months and tickers that survive the 0.01% market-cap filter"
+            ),
+        },
         "reporting_lag_months": 3,
         "statement_vintage": "latest local dump revision",
         "imputation": "cross-sectional median rank (0.0)" if impute_missing else "none",
@@ -741,6 +919,7 @@ def build_monthly_characteristics(
             "NI": "12-month listed-common-share change fills the bounded annual-share extract",
         },
         "coverage": coverage,
+        "coverage_estimation_universe": coverage_universe,
         "rows": len(raw),
         "start": raw["date"].min().date().isoformat(),
         "end": raw["date"].max().date().isoformat(),

@@ -32,7 +32,17 @@
 - [x] 46개 characteristic builder와 IPCA ALS/residual core
 - [x] 전체 한국 패널 characteristic 산출 및 coverage audit 고정
 - [x] IPCA `initial_months`/rolling window 분리와 ALS convergence gate
-- [ ] K=5 60개월 short-history IPCA: 현재 proxy/imputation 패널에서 비수렴
+- [ ] K=5 60개월 short-history IPCA: 논문 사양(46개 instrument, penalty 없음)에서 여전히 비수렴 (0/7 window, final_delta 3.36e23)
+- [x] coverage>=0.90 instrument 축소(8개)와 Gamma ridge 옵션 구현 및 수렴 grid
+- [x] 연결/별도 account code 체계(4001/1001) 대응과 separate fallback; 회계 characteristic coverage +0.079~+0.100
+- [x] 우선주 등 비보통주 153개 유니버스 제외
+- [x] coverage 측정 기준 3종(raw / 추정 유니버스 / 기간 제한) 분리 및 audit 기록
+- [x] 회계 characteristic 13개를 포함한 28-instrument IPCA 잔차 생성(ridge 0.01)
+- [ ] 금융업 재무제표 테이블 확보 또는 금융업 명시적 제외 결정
+- [ ] FY 2011~2015 연결·별도 재무제표 확보
+- [x] K=5, 8-instrument IPCA 잔차 2종 생성: ridge 0과 ridge 0.01, 각 1,330,517행
+- [ ] ridge 없는 축소 사양은 1e-3 gate만 통과하고 1e-6에서는 0/7 비수렴이므로
+      residual 사용 전 tolerance 근거를 논문에 명시
 - [ ] 240개월 exact IPCA history 확보; 그 전 결과는 short-history sensitivity
 - [x] OU+Threshold benchmark 구현 및 full Korean PCA5 실행
 - [x] Fourier+FFN benchmark 구현 및 100-epoch Korean PCA5 실행

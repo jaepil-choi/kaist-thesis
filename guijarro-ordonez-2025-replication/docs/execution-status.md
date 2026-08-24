@@ -23,6 +23,34 @@ residual file. A separate K=1, 60-month sensitivity converged in all seven
 annual fits and generated 1,330,517 daily residual rows, but it does not remove
 the 240-month exact-replication blocker.
 
+Two further deviating branches now exist and are documented in
+`docs/ipca-methodology.md`: a coverage-selected instrument set and a ridge
+penalty on Gamma. The diagnostic grid in
+`outputs/ipca/reduced_characteristic_grid.json` shows that the ridge, not the
+instrument reduction, is what restores identification. At the paper's 1e-3
+tolerance a reduced eight-instrument K=5 fit appears to converge, but at 1e-6
+it converges in zero of seven windows while every penalized fit converges in
+all seven. Both K=5 eight-instrument arms produced 1,330,517 daily residual
+rows over 2020-01-02--2026-07-20 and their residuals correlate 0.9990, because
+the residual depends on the span of `Z Gamma` rather than on its scale. Only
+eight characteristics reach 90% coverage and all eight are price or trading
+variables, so this branch is not a reduced-form version of the paper's
+characteristic set. None of this changes the 240-month blocker.
+
+The all-price instrument set was later traced to a data-plumbing defect rather
+than to Korean data. Separate-scope statements use `1001` account codes while
+the pipeline carried only the consolidated `4001` codes, and preferred share
+classes were left in the universe with no statements of their own. With
+`--allow-separate-scope` and `--common-share-class-only` every accounting
+characteristic gains 0.079 to 0.100 of coverage on the 2019-onward estimation
+universe with no regression, and a 0.80 threshold now admits 28 instruments of
+which 13 are accounting. Four residual panels were generated on the enhanced
+panel. The ridge conclusion holds: the 28-instrument K=5 fit fails the
+convergence gate without a penalty and converges in all seven windows with
+ridge 0.01. Remaining coverage blockers, namely financial-sector issuers absent
+from the statement extract and the empty FY2011--2015 history, are specified in
+`docs/data-requirements.md`.
+
 ## Final unattended run
 
 Run `run-20260811T021314Z` completed on the AMD GPU on 2026-08-11. Eleven

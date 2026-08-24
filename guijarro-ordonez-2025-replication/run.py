@@ -51,6 +51,7 @@ from guijarro_ordonez_replication.residuals import (  # noqa: E402
     residual_composition_matrix,
 )
 from guijarro_ordonez_replication.characteristics import (  # noqa: E402
+    CHARACTERISTIC_COLUMNS,
     build_monthly_characteristics,
     load_ipca_annual_accounting,
     load_ipca_daily_returns,
@@ -58,6 +59,9 @@ from guijarro_ordonez_replication.characteristics import (  # noqa: E402
 )
 from guijarro_ordonez_replication.ipca import (  # noqa: E402
     estimate_daily_ipca_residuals,
+    ipca_run_tag,
+    prepare_ipca_monthly_panel,
+    select_characteristics_by_coverage,
 )
 from guijarro_ordonez_replication.pca import (  # noqa: E402
     estimate_daily_pca_residuals,
@@ -401,10 +405,29 @@ def command_build_kimchi_factors(*, allow_non_pit_statements: bool) -> None:
     )
 
 
+def ipca_panel_tag(
+    *, allow_separate_scope: bool, common_share_class_only: bool
+) -> str:
+    """Suffix for a characteristic panel built off the paper's default policy.
+
+    The untagged artifacts are consumed by `estimate-pca` and by every existing
+    numbered output, so a deviating build must never overwrite them.
+    """
+
+    tag = ""
+    if allow_separate_scope:
+        tag += "_sepscope"
+    if common_share_class_only:
+        tag += "_common"
+    return tag
+
+
 def command_build_ipca_characteristics(
     *,
     allow_non_pit_statements: bool,
     impute_missing_characteristics: bool,
+    allow_separate_scope: bool = False,
+    common_share_class_only: bool = False,
 ) -> None:
     """Build the paper's 46-characteristic panel from Korean sources."""
 
@@ -417,25 +440,44 @@ def command_build_ipca_characteristics(
     repository = PROJECT.parent
     config = yaml.safe_load((PROJECT / "config" / "default.yml").read_text("utf-8"))
     data = config["data"]
-    prices = load_ipca_price_panel(repository / data["stock_daily"])
+    prices = load_ipca_price_panel(
+        repository / data["stock_daily"],
+        common_share_class_only=common_share_class_only,
+    )
     accounting = load_ipca_annual_accounting(
         repository / data["statement_facts"],
         repository / data["annual_share_counts"],
         repository / data["dividend_items"],
         reporting_lag_months=3,
+        allow_separate_fallback=allow_separate_scope,
     )
     result = build_monthly_characteristics(
         prices,
         accounting,
         impute_missing=impute_missing_characteristics,
     )
+    result.audit["statement_scope_policy"] = (
+        "consolidated with separate fallback"
+        if allow_separate_scope
+        else "consolidated only"
+    )
+    result.audit["share_class_filter"] = (
+        "common share classes only" if common_share_class_only else "all share classes"
+    )
     output = PROJECT / "outputs" / "ipca"
     output.mkdir(parents=True, exist_ok=True)
-    result.raw.to_parquet(output / "monthly_characteristics_raw.parquet", index=False)
-    result.normalized.to_parquet(
-        output / "monthly_characteristics_normalized.parquet", index=False
+    tag = ipca_panel_tag(
+        allow_separate_scope=allow_separate_scope,
+        common_share_class_only=common_share_class_only,
     )
-    (output / "characteristic_audit.json").write_text(
+    result.audit["panel_tag"] = tag
+    result.raw.to_parquet(
+        output / f"monthly_characteristics_raw{tag}.parquet", index=False
+    )
+    result.normalized.to_parquet(
+        output / f"monthly_characteristics_normalized{tag}.parquet", index=False
+    )
+    (output / f"characteristic_audit{tag}.json").write_text(
         json.dumps(result.audit, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     print(
@@ -447,6 +489,69 @@ def command_build_ipca_characteristics(
     )
 
 
+COVERAGE_BASIS_KEYS = {
+    "universe": "coverage_estimation_universe",
+    "raw": "coverage",
+}
+
+
+def _ipca_characteristic_subset(
+    output: Path,
+    coverage_threshold: float,
+    *,
+    panel_tag: str = "",
+    basis: str = "universe",
+    coverage_from: str | None = None,
+) -> tuple[str, ...] | None:
+    """Resolve the instrument subset from a measured coverage audit.
+
+    ``universe`` judges availability on the 0.01% market-cap universe the
+    estimator actually fits; ``raw`` judges it on every ticker and month in the
+    panel, which is the basis the first reduced-instrument runs used.
+
+    ``coverage_from`` overrides both and recomputes coverage on the estimation
+    universe from that month onward.  Korean accounting characteristics are
+    structurally absent before 2017-2019, so a whole-sample average understates
+    how well observed they are in the windows that can actually use them.
+    Restricting the measurement window is a deliberate, documented choice and
+    the selected columns are always recorded in the run audit.
+    """
+
+    if coverage_threshold <= 0.0:
+        return None
+    if coverage_from is not None:
+        raw_path = output / f"monthly_characteristics_raw{panel_tag}.parquet"
+        if not raw_path.exists():
+            raise SystemExit(f"{raw_path.name} is required for --ipca-coverage-from")
+        universe, _ = prepare_ipca_monthly_panel(pd.read_parquet(raw_path))
+        window = universe.loc[universe["date"].ge(pd.Timestamp(coverage_from))]
+        if window.empty:
+            raise SystemExit(f"no estimation-universe months on or after {coverage_from}")
+        measured = {
+            column: float(window[column].notna().mean())
+            for column in CHARACTERISTIC_COLUMNS
+        }
+        return select_characteristics_by_coverage(
+            measured, threshold=coverage_threshold
+        )
+    audit_path = output / f"characteristic_audit{panel_tag}.json"
+    if not audit_path.exists():
+        raise SystemExit(
+            f"{audit_path.name} is required for a coverage-selected instrument "
+            "subset; run build-ipca-characteristics first."
+        )
+    audit = json.loads(audit_path.read_text("utf-8"))
+    key = COVERAGE_BASIS_KEYS[basis]
+    if key not in audit:
+        raise SystemExit(
+            f"{audit_path.name} has no '{key}' block; rebuild the panel to "
+            "record estimation-universe coverage."
+        )
+    return select_characteristics_by_coverage(
+        audit[key], threshold=coverage_threshold
+    )
+
+
 def command_estimate_ipca(
     *,
     factors: int,
@@ -455,17 +560,32 @@ def command_estimate_ipca(
     allow_short_history: bool,
     max_iterations: int,
     tolerance: float,
+    coverage_threshold: float = 0.0,
+    gamma_ridge: float = 0.0,
+    panel_tag: str = "",
+    coverage_basis: str = "universe",
+    coverage_from: str | None = None,
 ) -> None:
     """Estimate daily IPCA residuals from the generated monthly panel."""
 
     repository = PROJECT.parent
     config = yaml.safe_load((PROJECT / "config" / "default.yml").read_text("utf-8"))
     output = PROJECT / "outputs" / "ipca"
-    monthly_path = output / "monthly_characteristics_normalized.parquet"
+    monthly_path = (
+        output / f"monthly_characteristics_normalized{panel_tag}.parquet"
+    )
     if not monthly_path.exists():
         raise SystemExit(
-            "Build monthly characteristics first with build-ipca-characteristics."
+            f"{monthly_path.name} is missing; build it first with "
+            "build-ipca-characteristics."
         )
+    characteristic_columns = _ipca_characteristic_subset(
+        output,
+        coverage_threshold,
+        panel_tag=panel_tag,
+        basis=coverage_basis,
+        coverage_from=coverage_from,
+    )
     monthly = pd.read_parquet(monthly_path)
     prices = _load_daily_excess_returns(repository, config)
 
@@ -482,12 +602,22 @@ def command_estimate_ipca(
         allow_short_history=allow_short_history,
         max_iterations=max_iterations,
         tolerance=tolerance,
+        characteristic_columns=characteristic_columns,
+        gamma_ridge=gamma_ridge,
         progress=report_progress,
         daily_return_definition=(
             "cash-dividend-excluding adjusted price return minus ECOS daily RF"
         ),
     )
-    tag = f"k{factors}_i{initial_months}_w{window_months}"
+    tag = ipca_run_tag(
+        factors=factors,
+        initial_months=initial_months,
+        window_months=window_months,
+        n_characteristics=len(characteristic_columns)
+        if characteristic_columns is not None
+        else None,
+        gamma_ridge=gamma_ridge,
+    ) + panel_tag
     result.residuals.to_parquet(output / f"daily_residuals_{tag}.parquet", index=False)
     result.loadings.to_parquet(output / f"monthly_loadings_{tag}.parquet", index=False)
     (output / f"ipca_audit_{tag}.json").write_text(
@@ -1056,11 +1186,67 @@ def main() -> None:
         action="store_true",
         help="fill missing cross-sectional ranks with the monthly median rank 0",
     )
+    parser.add_argument(
+        "--allow-separate-scope",
+        action="store_true",
+        help=(
+            "fall back to separate (1001) statements for firm-years with no "
+            "usable consolidated (4001) statement"
+        ),
+    )
+    parser.add_argument(
+        "--common-share-class-only",
+        action="store_true",
+        help="drop preferred and other non-common share classes from the universe",
+    )
     parser.add_argument("--ipca-factors", type=int, default=5)
     parser.add_argument("--ipca-initial-months", type=int, default=420)
     parser.add_argument("--ipca-window-months", type=int, default=240)
     parser.add_argument("--ipca-max-iterations", type=int, default=1500)
     parser.add_argument("--ipca-tolerance", type=float, default=1e-3)
+    parser.add_argument(
+        "--ipca-characteristic-coverage",
+        type=float,
+        default=0.0,
+        help=(
+            "keep only characteristics whose measured raw coverage reaches "
+            "this proportion; 0 keeps the paper's 46 instruments"
+        ),
+    )
+    parser.add_argument(
+        "--ipca-coverage-basis",
+        choices=("universe", "raw"),
+        default="universe",
+        help=(
+            "judge characteristic coverage on the 0.01%% market-cap estimation "
+            "universe (default) or on the full raw panel"
+        ),
+    )
+    parser.add_argument(
+        "--ipca-coverage-from",
+        default=None,
+        help=(
+            "measure characteristic coverage only from this month onward, e.g. "
+            "2019-01-01; overrides --ipca-coverage-basis"
+        ),
+    )
+    parser.add_argument(
+        "--ipca-panel-tag",
+        default="",
+        help=(
+            "suffix of the characteristic panel to read, e.g. "
+            "'_sepscope_common'; empty reads the paper-default panel"
+        ),
+    )
+    parser.add_argument(
+        "--ipca-gamma-ridge",
+        type=float,
+        default=0.0,
+        help=(
+            "dimensionless ridge intensity on the Gamma normal equations; "
+            "0 reproduces the paper's unpenalized estimator"
+        ),
+    )
     parser.add_argument("--pca-factors", type=int, default=5)
     parser.add_argument("--pca-initial-oos-date", default="2020-01-02")
     parser.add_argument("--pca-covariance-window-days", type=int, default=252)
@@ -1118,6 +1304,8 @@ def main() -> None:
         command_build_ipca_characteristics(
             allow_non_pit_statements=args.allow_non_pit_statements,
             impute_missing_characteristics=args.impute_missing_characteristics,
+            allow_separate_scope=args.allow_separate_scope,
+            common_share_class_only=args.common_share_class_only,
         )
     elif args.command == "estimate-ipca":
         command_estimate_ipca(
@@ -1127,6 +1315,11 @@ def main() -> None:
             allow_short_history=args.allow_short_history_ipca,
             max_iterations=args.ipca_max_iterations,
             tolerance=args.ipca_tolerance,
+            coverage_threshold=args.ipca_characteristic_coverage,
+            gamma_ridge=args.ipca_gamma_ridge,
+            panel_tag=args.ipca_panel_tag,
+            coverage_basis=args.ipca_coverage_basis,
+            coverage_from=args.ipca_coverage_from,
         )
     elif args.command == "estimate-pca":
         command_estimate_pca(

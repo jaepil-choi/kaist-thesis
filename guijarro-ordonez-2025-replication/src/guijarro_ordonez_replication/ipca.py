@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 import warnings
 
@@ -16,10 +16,19 @@ from .characteristics import CHARACTERISTIC_COLUMNS
 
 FloatArray = NDArray[np.float64]
 PAPER_WINDOW_MONTHS = 240
+PAPER_GAMMA_RIDGE = 0.0
 
 
 class ShortHistoryIPCAWarning(UserWarning):
     """The IPCA estimation window is shorter than the paper's 240 months."""
+
+
+class ReducedCharacteristicIPCAWarning(UserWarning):
+    """The IPCA estimation uses fewer than the paper's 46 characteristics."""
+
+
+class RidgeIPCAWarning(UserWarning):
+    """Gamma is penalized; the paper's estimator has no ridge term."""
 
 
 @dataclass(frozen=True)
@@ -31,6 +40,7 @@ class IPCAFit:
     iterations: int
     converged: bool
     final_delta: float
+    gamma_ridge: float = PAPER_GAMMA_RIDGE
 
 
 @dataclass(frozen=True)
@@ -40,6 +50,103 @@ class DailyIPCAResult:
     residuals: pd.DataFrame
     loadings: pd.DataFrame
     audit: dict[str, object]
+
+
+def ipca_run_tag(
+    *,
+    factors: int,
+    initial_months: int,
+    window_months: int,
+    n_characteristics: int | None = None,
+    gamma_ridge: float = PAPER_GAMMA_RIDGE,
+) -> str:
+    """Build the artifact tag for one IPCA specification.
+
+    The paper's specification keeps the historical
+    ``k{K}_i{initial}_w{window}`` tag unchanged so that existing outputs stay
+    addressable.  Deviating runs append the instrument count and the ridge
+    intensity.
+    """
+
+    tag = f"k{factors}_i{initial_months}_w{window_months}"
+    if (
+        n_characteristics is not None
+        and n_characteristics != len(CHARACTERISTIC_COLUMNS)
+    ):
+        tag += f"_c{n_characteristics}"
+    if gamma_ridge != PAPER_GAMMA_RIDGE:
+        tag += "_r" + f"{gamma_ridge:g}".replace(".", "p").replace("-", "m")
+    return tag
+
+
+def select_characteristics_by_coverage(
+    coverage: Mapping[str, float],
+    *,
+    threshold: float,
+) -> tuple[str, ...]:
+    """Return the characteristics observed at least ``threshold`` of the time.
+
+    ``coverage`` is the raw non-missing proportion recorded in
+    ``characteristic_audit.json``.  The result keeps the canonical
+    ``CHARACTERISTIC_COLUMNS`` order so that Gamma rows stay comparable across
+    runs.  A threshold of 0 reproduces the paper's full 46-column instrument
+    set.
+    """
+
+    if not 0.0 <= threshold <= 1.0:
+        raise ValueError("threshold must be in [0, 1]")
+    missing = sorted(set(CHARACTERISTIC_COLUMNS).difference(coverage))
+    if missing:
+        raise ValueError(f"coverage is missing characteristics: {missing}")
+    selected = tuple(
+        column
+        for column in CHARACTERISTIC_COLUMNS
+        if float(coverage[column]) >= threshold
+    )
+    if not selected:
+        raise ValueError(f"no characteristic reaches coverage {threshold}")
+    return selected
+
+
+def validate_characteristic_columns(
+    columns: Sequence[str] | None,
+) -> tuple[str, ...]:
+    """Validate an instrument subset and warn when it is not the paper's 46."""
+
+    if columns is None:
+        return tuple(CHARACTERISTIC_COLUMNS)
+    selected = tuple(columns)
+    if not selected:
+        raise ValueError("characteristic_columns must not be empty")
+    unknown = sorted(set(selected).difference(CHARACTERISTIC_COLUMNS))
+    if unknown:
+        raise ValueError(f"unknown characteristics: {unknown}")
+    if len(set(selected)) != len(selected):
+        raise ValueError("characteristic_columns contains duplicates")
+    if len(selected) != len(CHARACTERISTIC_COLUMNS):
+        warnings.warn(
+            f"REDUCED_CHARACTERISTICS: estimating Gamma on {len(selected)} of "
+            f"{len(CHARACTERISTIC_COLUMNS)} paper characteristics.",
+            ReducedCharacteristicIPCAWarning,
+            stacklevel=2,
+        )
+    return selected
+
+
+def validate_gamma_ridge(gamma_ridge: float) -> float:
+    """Validate the Gamma ridge penalty and warn for any non-paper value."""
+
+    penalty = float(gamma_ridge)
+    if not np.isfinite(penalty) or penalty < 0.0:
+        raise ValueError("gamma_ridge must be a finite, non-negative number")
+    if penalty != PAPER_GAMMA_RIDGE:
+        warnings.warn(
+            f"RIDGE_GAMMA: penalizing Gamma with relative ridge {penalty:g}; "
+            "the paper's estimator solves the unpenalized normal equations.",
+            RidgeIPCAWarning,
+            stacklevel=2,
+        )
+    return penalty
 
 
 def validate_ipca_window(
@@ -96,6 +203,7 @@ def _gamma_step(
     *,
     n_characteristics: int,
     n_factors: int,
+    ridge: float = PAPER_GAMMA_RIDGE,
 ) -> FloatArray:
     size = n_characteristics * n_factors
     left = np.zeros((size, size), dtype=float)
@@ -109,6 +217,14 @@ def _gamma_step(
         # materializing an N_t-by-(L*K) matrix for every month and iteration.
         left += np.kron(z_t.T @ z_t, np.outer(factor_t, factor_t))
         right += np.kron(z_t.T @ ret_t, factor_t)
+    if ridge > 0.0:
+        # Scale-free ridge: the raw normal-equation matrix grows with the
+        # number of months and the cross-section size, so a bare lambda*I is
+        # not comparable across windows or characteristic subsets.  Penalizing
+        # by the mean diagonal makes `ridge` a dimensionless shrinkage
+        # intensity.  This term does not exist in the paper's estimator.
+        scale = float(np.trace(left)) / size
+        left = left + ridge * scale * np.eye(size)
     try:
         solution = np.linalg.solve(left, right)
     except np.linalg.LinAlgError:
@@ -124,8 +240,13 @@ def fit_ipca_als(
     max_iterations: int = 1500,
     tolerance: float = 1e-3,
     initial_gamma: FloatArray | None = None,
+    gamma_ridge: float = PAPER_GAMMA_RIDGE,
 ) -> IPCAFit:
-    """Fit the paper/reference-code IPCA alternating least-squares system."""
+    """Fit the paper/reference-code IPCA alternating least-squares system.
+
+    ``gamma_ridge`` defaults to the paper's zero penalty.  A positive value is
+    a deliberate deviation and is recorded on the returned fit.
+    """
 
     if not returns or len(returns) != len(characteristics):
         raise ValueError("returns and characteristics must contain the same months")
@@ -170,6 +291,7 @@ def fit_ipca_als(
             factors,
             n_characteristics=n_characteristics,
             n_factors=n_factors,
+            ridge=gamma_ridge,
         )
         if initial_gamma is None:
             factors = _factor_step(returns, characteristics, updated)
@@ -184,23 +306,62 @@ def fit_ipca_als(
         iterations=iteration,
         converged=converged,
         final_delta=delta,
+        gamma_ridge=float(gamma_ridge),
     )
+
+
+def _ipca_classification(deviations: Sequence[str]) -> str:
+    """Label one IPCA specification by how it departs from the paper."""
+
+    if not deviations:
+        return "paper-exact 240-month IPCA"
+    if list(deviations) == ["short-history"]:
+        # Preserved verbatim: earlier K=1 audits on disk use this exact label.
+        return "Korean short-history IPCA sensitivity"
+    return "Korean IPCA sensitivity (" + ", ".join(deviations) + ")"
+
+
+def prepare_ipca_monthly_panel(
+    monthly_panel: pd.DataFrame,
+    *,
+    cap_proportion: float = 0.01,
+) -> tuple[pd.DataFrame, pd.DatetimeIndex]:
+    """Normalize dates and apply the paper's small-cap exclusion.
+
+    Returns the filtered panel and its sorted month-end index so that the
+    estimator and any diagnostic share one universe definition.
+    """
+
+    if cap_proportion < 0 or cap_proportion >= 100:
+        raise ValueError("cap_proportion must be in [0, 100)")
+    monthly = monthly_panel.copy()
+    monthly["date"] = pd.to_datetime(monthly["date"], errors="raise")
+    monthly["date"] = monthly["date"].dt.to_period("M").dt.to_timestamp("M")
+    monthly["ticker"] = monthly["ticker"].astype(str).str.upper()
+    total_cap = monthly.groupby("date", sort=False)["market_cap"].transform("sum")
+    monthly = monthly.loc[
+        monthly["market_cap"].div(total_cap).ge(cap_proportion * 0.01)
+    ].copy()
+    dates = pd.DatetimeIndex(sorted(monthly["date"].unique()))
+    return monthly, dates
 
 
 def _monthly_arrays(
     panel: pd.DataFrame,
     dates: pd.DatetimeIndex,
+    columns: Sequence[str] = CHARACTERISTIC_COLUMNS,
 ) -> tuple[tuple[FloatArray, ...], tuple[FloatArray, ...]]:
+    selected = list(columns)
     returns: list[FloatArray] = []
     chars: list[FloatArray] = []
     for date in dates:
         month = panel.loc[panel["date"].eq(date)].dropna(
-            subset=["return", *CHARACTERISTIC_COLUMNS]
+            subset=["return", *selected]
         )
         if len(month) == 0:
             raise ValueError(f"no complete IPCA observations for {date.date()}")
         returns.append(month["return"].to_numpy(float))
-        chars.append(month[list(CHARACTERISTIC_COLUMNS)].to_numpy(float))
+        chars.append(month[selected].to_numpy(float))
     return tuple(returns), tuple(chars)
 
 
@@ -216,6 +377,8 @@ def estimate_daily_ipca_residuals(
     allow_short_history: bool = False,
     max_iterations: int = 1500,
     tolerance: float = 1e-3,
+    characteristic_columns: Sequence[str] | None = None,
+    gamma_ridge: float = PAPER_GAMMA_RIDGE,
     progress: Callable[[dict[str, object]], None] | None = None,
     daily_return_definition: str = "caller-supplied return",
     require_convergence: bool = True,
@@ -231,14 +394,20 @@ def estimate_daily_ipca_residuals(
     Composition matrices are intentionally not materialized here: an N-by-N
     matrix for every day can exceed hundreds of GB.  They can be reconstructed
     from the saved daily loadings as ``I - B pinv(B)``.
+
+    ``characteristic_columns`` restricts the instrument set and
+    ``gamma_ridge`` penalizes the Gamma normal equations.  Both default to the
+    paper's specification and both emit a warning when they do not.
     """
 
+    selected_columns = validate_characteristic_columns(characteristic_columns)
+    penalty = validate_gamma_ridge(gamma_ridge)
     required_monthly = {
         "date",
         "ticker",
         "return",
         "market_cap",
-        *CHARACTERISTIC_COLUMNS,
+        *selected_columns,
     }
     required_daily = {"date", "ticker", "return"}
     missing_monthly = sorted(required_monthly.difference(monthly_panel.columns))
@@ -250,17 +419,9 @@ def estimate_daily_ipca_residuals(
     if reestimate_every_months <= 0:
         raise ValueError("reestimate_every_months must be positive")
 
-    monthly = monthly_panel.copy()
-    monthly["date"] = pd.to_datetime(monthly["date"], errors="raise")
-    monthly["date"] = monthly["date"].dt.to_period("M").dt.to_timestamp("M")
-    monthly["ticker"] = monthly["ticker"].astype(str).str.upper()
-    if cap_proportion < 0 or cap_proportion >= 100:
-        raise ValueError("cap_proportion must be in [0, 100)")
-    total_cap = monthly.groupby("date", sort=False)["market_cap"].transform("sum")
-    monthly = monthly.loc[
-        monthly["market_cap"].div(total_cap).ge(cap_proportion * 0.01)
-    ].copy()
-    dates = pd.DatetimeIndex(sorted(monthly["date"].unique()))
+    monthly, dates = prepare_ipca_monthly_panel(
+        monthly_panel, cap_proportion=cap_proportion
+    )
     if initial_months is None:
         initial_months = window_months
     if initial_months < window_months:
@@ -293,7 +454,9 @@ def estimate_daily_ipca_residuals(
                     "train_end": train_dates[-1].date().isoformat(),
                 }
             )
-        train_returns, train_chars = _monthly_arrays(monthly, train_dates)
+        train_returns, train_chars = _monthly_arrays(
+            monthly, train_dates, selected_columns
+        )
         fit = fit_ipca_als(
             train_returns,
             train_chars,
@@ -303,6 +466,7 @@ def estimate_daily_ipca_residuals(
             ),
             tolerance=tolerance,
             initial_gamma=previous_gamma,
+            gamma_ridge=penalty,
         )
         if require_convergence and not fit.converged:
             raise RuntimeError(
@@ -316,11 +480,11 @@ def estimate_daily_ipca_residuals(
             next_month = char_date + pd.offsets.MonthEnd(1)
             z = monthly.loc[
                 monthly["date"].eq(char_date),
-                ["ticker", *CHARACTERISTIC_COLUMNS],
+                ["ticker", *selected_columns],
             ].dropna()
             if z.empty:
                 continue
-            beta = z[list(CHARACTERISTIC_COLUMNS)].to_numpy(float) @ fit.gamma
+            beta = z[list(selected_columns)].to_numpy(float) @ fit.gamma
             load = pd.DataFrame(beta, columns=[f"beta_{k + 1}" for k in range(n_factors)])
             load.insert(0, "ticker", z["ticker"].to_numpy())
             load.insert(0, "characteristic_date", char_date)
@@ -360,6 +524,7 @@ def estimate_daily_ipca_residuals(
                 "iterations": fit.iterations,
                 "converged": fit.converged,
                 "final_delta": fit.final_delta,
+                "gamma_max_abs": float(np.max(np.abs(fit.gamma))),
             }
         )
         if progress is not None:
@@ -373,13 +538,21 @@ def estimate_daily_ipca_residuals(
     loadings = pd.concat(loading_parts, ignore_index=True).drop_duplicates(
         ["holding_month", "ticker"], keep="last"
     )
+    deviations: list[str] = []
+    if window_months != PAPER_WINDOW_MONTHS:
+        deviations.append("short-history")
+    if len(selected_columns) != len(CHARACTERISTIC_COLUMNS):
+        deviations.append("reduced-characteristics")
+    if penalty != PAPER_GAMMA_RIDGE:
+        deviations.append("ridge-gamma")
     audit: dict[str, object] = {
-        "classification": (
-            "paper-exact 240-month IPCA"
-            if window_months == PAPER_WINDOW_MONTHS
-            else "Korean short-history IPCA sensitivity"
-        ),
-        "characteristic_count": len(CHARACTERISTIC_COLUMNS),
+        "classification": _ipca_classification(deviations),
+        "deviations": deviations,
+        "characteristic_count": len(selected_columns),
+        "paper_characteristic_count": len(CHARACTERISTIC_COLUMNS),
+        "characteristic_columns": list(selected_columns),
+        "gamma_ridge": penalty,
+        "paper_gamma_ridge": PAPER_GAMMA_RIDGE,
         "n_factors": n_factors,
         "initial_months": initial_months,
         "window_months": window_months,
