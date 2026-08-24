@@ -197,6 +197,86 @@ def identity_return_panel(
     )
 
 
+def load_ipca_residual_panel(
+    residual_path: Path,
+    loading_path: Path,
+) -> ResidualPanel:
+    """Load IPCA residuals and rebuild their daily composition matrix.
+
+    The IPCA residual is ``R - B pinv(B'B) B' R``, so the composition matrix is
+    ``Phi = I - B pinv(B'B) B'``.  Writing it as ``I - left @ right.T`` with
+    ``left = B`` and ``right = B pinv(B'B)`` matches the low-rank form the
+    policy already applies, and never materializes an N-by-N matrix.
+
+    Betas are estimated once per holding month from the prior month's
+    characteristics, so every trading day inside a holding month shares one
+    ``B``.  ``pinv`` is inverted on exactly the tickers that month selected,
+    which is the same cross-section the residual estimator projected on.
+    """
+
+    residual_frame = pd.read_parquet(residual_path)
+    loading_frame = pd.read_parquet(loading_path)
+    residual_required = {"date", "ticker", "residual", "return_observed"}
+    if missing := residual_required.difference(residual_frame.columns):
+        raise ValueError(f"residual input is missing columns: {sorted(missing)}")
+    beta_columns = sorted(
+        (column for column in loading_frame if column.startswith("beta_")),
+        key=lambda name: int(name.removeprefix("beta_")),
+    )
+    if not beta_columns:
+        raise ValueError("loading input has no beta_ columns")
+    if "holding_month" not in loading_frame:
+        raise ValueError("loading input is missing holding_month")
+
+    residual_frame["date"] = pd.to_datetime(residual_frame["date"], errors="raise")
+    residual_frame["ticker"] = residual_frame["ticker"].astype(str).str.upper()
+    if residual_frame.duplicated(["date", "ticker"]).any():
+        raise ValueError("IPCA residuals contain duplicate date-ticker keys")
+    loading_frame["holding_month"] = pd.to_datetime(
+        loading_frame["holding_month"], errors="raise"
+    )
+    loading_frame["ticker"] = loading_frame["ticker"].astype(str).str.upper()
+    if loading_frame.duplicated(["holding_month", "ticker"]).any():
+        raise ValueError("IPCA loadings contain duplicate month-ticker keys")
+
+    dates = pd.DatetimeIndex(sorted(residual_frame["date"].unique()))
+    tickers = tuple(sorted(residual_frame["ticker"].unique()))
+    ticker_index = {ticker: position for position, ticker in enumerate(tickers)}
+    shape = (len(dates), len(tickers))
+    rank = len(beta_columns)
+    residuals = np.zeros(shape, dtype=float)
+    observed = np.zeros(shape, dtype=bool)
+    date_codes = pd.Categorical(residual_frame["date"], categories=dates).codes
+    ticker_codes = pd.Categorical(residual_frame["ticker"], categories=tickers).codes
+    residuals[date_codes, ticker_codes] = residual_frame["residual"].to_numpy(float)
+    observed[date_codes, ticker_codes] = residual_frame["return_observed"].to_numpy(bool)
+
+    left = np.zeros((*shape, rank), dtype=float)
+    right = np.zeros((*shape, rank), dtype=float)
+    month_of_date = dates.to_period("M")
+    by_month = {
+        period: np.flatnonzero(month_of_date == period)
+        for period in month_of_date.unique()
+    }
+    for holding_month, group in loading_frame.groupby("holding_month", sort=False):
+        rows = by_month.get(holding_month.to_period("M"))
+        if rows is None or len(rows) == 0:
+            continue
+        positions = np.array(
+            [ticker_index[ticker] for ticker in group["ticker"] if ticker in ticker_index]
+        )
+        if positions.size == 0:
+            continue
+        keep = np.array([ticker in ticker_index for ticker in group["ticker"]])
+        beta = group.loc[keep, beta_columns].to_numpy(float)
+        projected = beta @ np.linalg.pinv(beta.T @ beta)
+        left[np.ix_(rows, positions)] = beta
+        right[np.ix_(rows, positions)] = projected
+    if not all(np.isfinite(array).all() for array in (residuals, left, right)):
+        raise ValueError("IPCA arrays must be finite")
+    return ResidualPanel(dates, tickers, residuals, left, right, observed)
+
+
 def load_fama_french_residual_panel(
     residual_path: Path,
     factor_leg_path: Path,

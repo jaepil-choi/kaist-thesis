@@ -69,6 +69,7 @@ from guijarro_ordonez_replication.pca import (  # noqa: E402
 from guijarro_ordonez_replication.trading import (  # noqa: E402
     SimulationConfig,
     identity_return_panel,
+    load_ipca_residual_panel,
     load_pca_residual_panel,
     simulate_rolling_strategy,
 )
@@ -677,6 +678,75 @@ def command_estimate_pca(
     print(json.dumps(result.audit, ensure_ascii=False, indent=2))
 
 
+def command_simulate_ipca(
+    *,
+    residual_tag: str,
+    model_name: str,
+    objective: str,
+    lookback_days: int,
+    epochs: int,
+    holding_days: int,
+    transaction_cost: float,
+    short_holding_cost: float,
+    rolling_retrain: bool,
+) -> None:
+    """Run a paper policy on a Korean IPCA residual branch."""
+
+    ipca_output = PROJECT / "outputs" / "ipca"
+    residual_path = ipca_output / f"daily_residuals_{residual_tag}.parquet"
+    loading_path = ipca_output / f"monthly_loadings_{residual_tag}.parquet"
+    if not residual_path.exists() or not loading_path.exists():
+        raise SystemExit(
+            f"Build the IPCA branch first; {residual_path.name} or "
+            f"{loading_path.name} is missing."
+        )
+    cost_tag = (
+        f"tc{transaction_cost:g}_hc{short_holding_cost:g}"
+        if transaction_cost or short_holding_cost
+        else "no-cost"
+    )
+    tag = (
+        f"ipca-{residual_tag}_{model_name}_{objective}_lb{lookback_days}_"
+        f"e{epochs}_{'rolling' if rolling_retrain else 'constant'}_{cost_tag}"
+    )
+    if holding_days != 1:
+        tag += f"_h{holding_days}"
+    output = PROJECT / "outputs" / "strategies" / tag
+    output.mkdir(parents=True, exist_ok=True)
+    panel = load_ipca_residual_panel(residual_path, loading_path)
+    simulation_config = SimulationConfig(
+        model_name=model_name,
+        objective=objective,
+        lookback_days=lookback_days,
+        epochs=epochs,
+        holding_days=holding_days,
+        transaction_cost=transaction_cost,
+        short_holding_cost=short_holding_cost,
+        rolling_retrain=rolling_retrain,
+        checkpoint_directory=output / "checkpoints",
+    )
+
+    def report_progress(event: dict[str, object]) -> None:
+        print(json.dumps(event, ensure_ascii=False), file=sys.stderr, flush=True)
+
+    result = simulate_rolling_strategy(
+        panel,
+        simulation_config,
+        progress=report_progress,
+    )
+    result.daily.to_csv(output / "daily_performance.csv", index=False)
+    result.weights.to_parquet(output / "daily_asset_weights.parquet")
+    audit = {
+        **result.audit,
+        "factor_model": f"IPCA {residual_tag}",
+        "residual_tag": residual_tag,
+    }
+    (output / "simulation_audit.json").write_text(
+        json.dumps(audit, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    print(json.dumps({"output": str(output), **audit}, ensure_ascii=False, indent=2))
+
+
 def command_simulate_pca(
     *,
     factors: int,
@@ -1162,6 +1232,7 @@ def main() -> None:
             "estimate-ipca",
             "estimate-pca",
             "simulate-pca",
+            "simulate-ipca",
             "report-pca",
             "report-strategies",
             "build-spec-outputs",
@@ -1202,6 +1273,11 @@ def main() -> None:
     parser.add_argument("--ipca-factors", type=int, default=5)
     parser.add_argument("--ipca-initial-months", type=int, default=420)
     parser.add_argument("--ipca-window-months", type=int, default=240)
+    parser.add_argument(
+        "--ipca-residual-tag",
+        default="k5_i60_w60_c28_r0p01_sepscope_common",
+        help="tag of the IPCA residual and loading artifacts to simulate",
+    )
     parser.add_argument("--ipca-max-iterations", type=int, default=1500)
     parser.add_argument("--ipca-tolerance", type=float, default=1e-3)
     parser.add_argument(
@@ -1328,6 +1404,18 @@ def main() -> None:
             covariance_window_days=args.pca_covariance_window_days,
             loading_window_days=args.pca_loading_window_days,
             max_oos_days=args.pca_max_oos_days,
+        )
+    elif args.command == "simulate-ipca":
+        command_simulate_ipca(
+            residual_tag=args.ipca_residual_tag,
+            model_name=args.simulation_model,
+            objective=args.simulation_objective,
+            lookback_days=args.simulation_lookback_days,
+            epochs=args.simulation_epochs,
+            holding_days=args.simulation_holding_days,
+            transaction_cost=args.simulation_transaction_cost,
+            short_holding_cost=args.simulation_short_holding_cost,
+            rolling_retrain=not args.simulation_constant_model,
         )
     elif args.command == "simulate-pca":
         command_simulate_pca(
