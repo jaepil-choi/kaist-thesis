@@ -1,6 +1,6 @@
 ---
 name: corporate-windows
-description: Diagnose and recover Windows enterprise environment failures involving non-ASCII or long paths, TLS and system trust stores, uv cache or permissions, private package indexes and proxies, native builds, Git locks, Quarto, Codex patching, or approved Oracle access. Use when commands fail only on a managed Windows machine, under a non-ASCII user profile, or with certificate, access-denied, wheel-build, index-authentication, path, SQLPlus, or file-lock errors.
+description: Diagnose and recover Windows enterprise environment failures involving non-ASCII or long paths, TLS and system trust stores, uv cache or permissions, private package indexes and proxies, native builds, Git locks, Quarto rendering, Codex patching, or approved Oracle access. Use when commands fail only on a managed Windows machine, under a non-ASCII user profile, or with certificate, access-denied, wheel-build, index-authentication, path, SQLPlus, or file-lock errors. Also use for any Quarto failure on Windows, including "quarto render" or "quarto check" failing with "Theme file compilation failed", an empty Sass or dart-sass error, or a "path not found" error from compileSass or revealTheme.
 ---
 
 # Corporate Windows Workflow
@@ -61,7 +61,8 @@ reference:
   `references/native-build-toolchain.md`
 - `.git/index.lock`, dubious ownership, case-only rename, or line-ending failures:
   `references/git-windows.md`
-- Quarto rendering under a non-ASCII Windows profile: `references/quarto.md`
+- Quarto render or check failing at theme/Sass compilation under a non-ASCII Windows profile:
+  `references/quarto.md`
 - Codex `apply_patch` wrapper failure: `references/apply-patch.md`
 - Oracle or SQLPlus access: `references/oracle-sqlplus.md`
 
