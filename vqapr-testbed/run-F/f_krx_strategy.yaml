@@ -1,0 +1,5 @@
+components:
+  f_krx_strategy:
+    kind: strategy
+    path: f_krx_strategy.py
+    object_name: FKrxStrategy

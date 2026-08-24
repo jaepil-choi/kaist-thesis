@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\cli\main.py", line 170, in main
+    payload = handler(args, project_root=project_root)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\cli\run.py", line 182, in run
+    frozen = preflight_run(project_root, definition_from_document(document, workspace))
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\cli\run.py", line 145, in definition_from_document
+    return RunDefinition(
+           ^^^^^^^^^^^^^^
+  File "<string>", line 15, in __init__
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\flow\run.py", line 126, in __post_init__
+    require_tz_aware(self.start, name="start")
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\domain\timestamps.py", line 21, in require_tz_aware
+    raise ValueError(f"{name} must be timezone-aware")
+ValueError: start must be timezone-aware

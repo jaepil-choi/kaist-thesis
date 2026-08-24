@@ -1,0 +1,5 @@
+components:
+  krx_exchange:
+    kind: exchange
+    path: krx_exchange.py
+    object_name: SmallKrxExchange

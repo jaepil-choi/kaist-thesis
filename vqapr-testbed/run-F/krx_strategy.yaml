@@ -1,0 +1,5 @@
+components:
+  krx_strategy:
+    kind: strategy
+    path: krx_strategy.py
+    object_name: KrxStrategy

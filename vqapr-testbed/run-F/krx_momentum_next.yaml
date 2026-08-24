@@ -1,0 +1,5 @@
+components:
+  krx_momentum_next:
+    kind: strategy
+    path: krx_momentum_next.py
+    object_name: KrxMomentumNext

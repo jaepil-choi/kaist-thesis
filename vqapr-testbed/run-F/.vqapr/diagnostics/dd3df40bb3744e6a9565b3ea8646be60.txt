@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\cli\main.py", line 170, in main
+    payload = handler(args, project_root=project_root)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\cli\register.py", line 588, in run
+    registered=apply(document, project_root, base=declaration.parent),
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\cli\register.py", line 533, in apply
+    register_agenda(project_root, _agenda(str(agenda_id), body, workspace))
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\public.py", line 301, in register_agenda
+    return Workspace.create(project_root).register_agenda(agenda)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\workspace.py", line 723, in register_agenda
+    return self._register_declaration(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\workspace.py", line 897, in _register_declaration
+    raise _workspace_error(
+vqapr.domain.errors.VqaprError: DATA:workspace.agenda.register — 1 failure(s)
+  [workspace.agenda.register.conflict] agenda_id 'f-daily-rebalance' must keep its existing declaration or use a new identity

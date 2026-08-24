@@ -1,0 +1,39 @@
+# Agendas and the configs that bind roles to them - register with `vqapr register <this-file>`
+#
+# An agenda is a cadence: the days a thing happens on, and the local time of day. A config binds
+# a role to one agenda. Both live here because neither is usable alone -- an agenda nothing is
+# bound to never fires, and a config naming an unregistered agenda is refused.
+#
+# A run spec names these by id (`strategy.agenda_id`, `valuation.agenda_id`). Naming an agenda
+# there does NOT bind it; the binding is the `strategy_configs`/`valuation_configs` entry below.
+# A run whose components are registered but unbound fails preflight with
+# `workspace.strategy_config.register.missing`.
+
+agendas:
+  krx-rebalance-next:               # your chosen identity, named by a run spec's agenda_id
+    role: strategy_callback         # one of: strategy_callback, valuation, monitoring
+    sessions:                       # leave a final data-only day for next-session execution
+      - "2024-01-04"
+      - "2024-01-05"
+      - "2024-01-08"
+      - "2024-01-09"
+    at: "15:31"                     # fire after the close observation becomes available
+    timezone: Asia/Seoul            # zone `at` is expressed in; DST is derived from it
+
+  krx-valuation-next:               # valuation usually runs on the same days as the strategy
+    role: valuation
+    from_dataset: krx_prices
+    at: "15:31"
+    timezone: Asia/Seoul
+
+strategy_configs:
+  krx_momentum_next:                # component_id of a registered StrategyModel
+    agenda_id: krx-rebalance-next   # the agenda above whose occurrences drive it
+
+valuation_configs:
+  krx-valuation-next:               # any identity; the agenda it names is what matters
+    agenda_id: krx-valuation-next
+
+# monitoring_policies:              # optional; only if the run spec declares `monitoring`
+#   default:
+#     agenda_id: daily-monitoring

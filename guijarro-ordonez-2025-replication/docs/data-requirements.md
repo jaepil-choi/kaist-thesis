@@ -30,6 +30,17 @@ Kimchi Factor 직접 산출의 규범은 저장소 루트
 - `data/kaist_pilot/canonical/common/korean_equity/adjusted_prices.parquet`
   - 8,651,872행, 4,962종목, 2015-01-02~2026-07-20
   - `return`, `market_cap`, 거래량, 거래대금 및 수정가격 필드
+  - 원본 `date`는 세션 날짜이지 관측 가능 시각이 아니다. 일별 종가의 `available_at`은
+    `Asia/Seoul` 현지시각 기준으로 **2016-08-01 전에는 15:00, 그날부터는 15:30**을
+    사용한다. KRX는 2016-08-01에 증권시장 정규장을 30분 연장했다
+    ([KRX 2016 brochure](https://global.krx.co.kr/contents/GLB/01/0107/0107010000/20170630_eng_brochure.pdf),
+    [현재 KRX 규정의 09:00~15:30](https://regulation.krx.co.kr/contents/RGL/03/03020401/RGL03020401.jsp)).
+    전 기간에 15:30을 적용하면 2015~2016-07 관측치를 실제보다 30분 늦게 공개된 것으로
+    기록한다.
+  - timezone을 붙일 때 UTC epoch를 재표시하는 cast를 쓰지 않는다. 예를 들어
+    `2015-01-02 15:00` 현지 wall time은 `2015-01-02 15:00+09:00`이어야 하며,
+    `2015-01-03 00:00+09:00`이 아니다. 전체 변환 전에 이 알려진 한 행을
+    `Asia/Seoul -> UTC -> Asia/Seoul`로 round-trip하여 날짜, 시각, offset을 검증한다.
 - `fng_statement_facts/`
   - 22개 partition, 39,307,271행, FY 2016~2026
   - 실제 공시시각이 없어 exact PIT characteristic에는 바로 사용할 수 없음

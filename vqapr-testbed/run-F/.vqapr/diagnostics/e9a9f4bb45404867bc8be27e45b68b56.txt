@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\cli\main.py", line 170, in main
+    payload = handler(args, project_root=project_root)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\cli\register.py", line 588, in run
+    registered=apply(document, project_root, base=declaration.parent),
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\cli\register.py", line 538, in apply
+    _component(str(component_id), body, project_root, base=base)
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\cli\register.py", line 464, in _component
+    ref = register(
+          ^^^^^^^^^
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\extension\registration.py", line 165, in register_exchange
+    return _register(
+           ^^^^^^^^^^
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\extension\registration.py", line 80, in _register
+    conformance(ref, project_root=project_root).raise_if_failed()
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\domain\errors.py", line 98, in raise_if_failed
+    raise VqaprError(
+vqapr.domain.errors.VqaprError: DATA:component.conformance — 1 failure(s)
+  [component.load.construction_failed] component object must load and construct from its registered config

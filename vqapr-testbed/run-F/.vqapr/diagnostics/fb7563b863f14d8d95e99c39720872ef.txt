@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\cli\main.py", line 170, in main
+    payload = handler(args, project_root=project_root)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\cli\run.py", line 182, in run
+    frozen = preflight_run(project_root, definition_from_document(document, workspace))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\public.py", line 325, in preflight_run
+    return _preflight_run(Workspace.open(project_root), definition)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\flow\preflight.py", line 508, in preflight_run
+    _validate_execution_targets(
+  File "D:\chljeffreyz\DevProjects\qlibx\src\vqapr\flow\preflight.py", line 367, in _validate_execution_targets
+    raise VqaprError(
+vqapr.domain.errors.VqaprError: EXCHANGE:preflight.execution — 1 failure(s)
+  [preflight.execution.target_outside_horizon] every strategy occurrence must have an exact execution target inside the run horizon; extend end through the required execution snapshot, or choose a fill selector whose target exists after that decision

@@ -1,0 +1,464 @@
+sources:
+  f_krx_exec-source:
+    path: krx_slice.parquet
+    hive_partitioned: false
+  f_krx_prices-source:
+    path: krx_slice.parquet
+    hive_partitioned: false
+  krx_execution-source:
+    path: krx_slice.parquet
+    hive_partitioned: false
+  krx_execution_next-source:
+    path: krx_slice.parquet
+    hive_partitioned: false
+  krx_prices-source:
+    path: krx_slice.parquet
+    hive_partitioned: false
+datasets:
+  f_krx_prices:
+    source: f_krx_prices-source
+    instrument_field: instrument
+    available_at: available_at
+    key_fields:
+    - available_at
+    - instrument
+    fields:
+      return: return
+      close: close
+  krx_prices:
+    source: krx_prices-source
+    instrument_field: instrument
+    available_at: available_at
+    key_fields:
+    - available_at
+    - instrument
+    fields:
+      adj_close: adj_close
+      close: close
+      return: return
+execution_inputs:
+  f_krx_exec:
+    source: f_krx_exec-source
+    trade_at_field: trade_at
+    instrument_field: instrument
+    is_tradable_field: is_tradable
+    price_fields:
+      close: close
+    fill:
+      selector: SAME_DAY
+      local_time: '15:00:00'
+      timezone: Asia/Seoul
+      trade_price: close
+      fold: null
+      offset: null
+  krx_execution:
+    source: krx_execution-source
+    trade_at_field: trade_at
+    instrument_field: instrument
+    is_tradable_field: is_tradable
+    price_fields:
+      close: close
+    fill:
+      selector: SAME_DAY
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      trade_price: close
+      fold: null
+      offset: null
+  krx_execution_next:
+    source: krx_execution_next-source
+    trade_at_field: trade_at
+    instrument_field: instrument
+    is_tradable_field: is_tradable
+    price_fields:
+      close: close
+    fill:
+      selector: NEXT_ELIGIBLE
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      trade_price: close
+      fold: null
+      offset: null
+components:
+  f_krx_exchange:
+    kind: exchange
+    path: D:\chljeffreyz\DevProjects\kaist-thesis\vqapr-testbed\run-F\f_krx_exchange.py
+    object_name: FKrxExchange
+    config: {}
+    fingerprint: 8b25bb29c8ee46b739c148ac7f7ab7d83df89f45d9e46c294c8bd6dfc3d926c7
+  f_krx_signal:
+    kind: data_model
+    path: D:\chljeffreyz\DevProjects\kaist-thesis\vqapr-testbed\run-F\f_krx_signal.py
+    object_name: FKrxSignal
+    config: {}
+    fingerprint: 3102a10143ddb6e21d91e33f3d11f3339c5d4e16ef55da27ad2376f53784a581
+  f_krx_strategy:
+    kind: strategy_model
+    path: D:\chljeffreyz\DevProjects\kaist-thesis\vqapr-testbed\run-F\f_krx_strategy.py
+    object_name: FKrxStrategy
+    config: {}
+    fingerprint: 9a2358a1ac30cd1756b2de3369a170940531fe271018002e6bc387fcee9119bd
+  f_krx_strategy_causal:
+    kind: strategy_model
+    path: D:\chljeffreyz\DevProjects\kaist-thesis\vqapr-testbed\run-F\f_krx_strategy_causal.py
+    object_name: FKrxStrategyCausal
+    config: {}
+    fingerprint: 5855130439a17e4d44a649d1a43efe68758a1e40dd317fb0cadb98b2ecfbcc98
+  krx_exchange:
+    kind: exchange
+    path: D:\chljeffreyz\DevProjects\kaist-thesis\vqapr-testbed\run-F\krx_exchange.py
+    object_name: SmallKrxExchange
+    config: {}
+    fingerprint: 12755e24c5fe1808fb105b178463517705c914da358d6274362122d5ef309fd7
+  krx_momentum:
+    kind: strategy_model
+    path: D:\chljeffreyz\DevProjects\kaist-thesis\vqapr-testbed\run-F\krx_momentum.py
+    object_name: KrxMomentum
+    config: {}
+    fingerprint: dbb007baa06661bbc3344490b7cadb88b38354130af877d6b7b9eb4ee13c8c95
+  krx_momentum_data:
+    kind: data_model
+    path: D:\chljeffreyz\DevProjects\kaist-thesis\vqapr-testbed\run-F\krx_momentum_data.py
+    object_name: KrxMomentumData
+    config: {}
+    fingerprint: 0dc8df29e340d14fc727dcb3aa6020de12b116575d1c1fbcd738eaa23d667b0d
+  krx_momentum_next:
+    kind: strategy_model
+    path: D:\chljeffreyz\DevProjects\kaist-thesis\vqapr-testbed\run-F\krx_momentum_next.py
+    object_name: KrxMomentumNext
+    config: {}
+    fingerprint: c6999395ece4215baefa6dd6087153be940666a97e09725233710984f665569d
+agendas:
+  daily-rebalance:
+    role: STRATEGY_CALLBACK
+    timezone: Asia/Seoul
+    occurrences:
+    - occurrence_id: daily-rebalance-2024-01-02
+      local_date: '2024-01-02'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: daily-rebalance-2024-01-03
+      local_date: '2024-01-03'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: daily-rebalance-2024-01-04
+      local_date: '2024-01-04'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: daily-rebalance-2024-01-05
+      local_date: '2024-01-05'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: daily-rebalance-2024-01-08
+      local_date: '2024-01-08'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: daily-rebalance-2024-01-09
+      local_date: '2024-01-09'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: daily-rebalance-2024-01-10
+      local_date: '2024-01-10'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    provenance: 'vqapr register: daily-rebalance'
+    content_identity: c97bbf0cc813995f44b23fff4ca080630fd2b57e6bd18e2ce24e4231e1fa9e70
+    provenance_identity: 054e763786f5375716c1f0add01fac99c905233c062a577ded86b6ddd1cf37b1
+  daily-valuation:
+    role: VALUATION
+    timezone: Asia/Seoul
+    occurrences:
+    - occurrence_id: daily-valuation-2024-01-02
+      local_date: '2024-01-02'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: daily-valuation-2024-01-03
+      local_date: '2024-01-03'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: daily-valuation-2024-01-04
+      local_date: '2024-01-04'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: daily-valuation-2024-01-05
+      local_date: '2024-01-05'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: daily-valuation-2024-01-08
+      local_date: '2024-01-08'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: daily-valuation-2024-01-09
+      local_date: '2024-01-09'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: daily-valuation-2024-01-10
+      local_date: '2024-01-10'
+      local_time: '15:30:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    provenance: 'vqapr register: daily-valuation'
+    content_identity: 043c88a63a6224968390be93123463ed3f7bab6f63a30c6cd2dfb72a259d0108
+    provenance_identity: 3d1a321a5a7011f99334e3262e2e603b7019cd97501aaa38a4aae2c51bb52a92
+  f-causal-rebalance:
+    role: STRATEGY_CALLBACK
+    timezone: Asia/Seoul
+    occurrences:
+    - occurrence_id: f-causal-rebalance-2024-01-02
+      local_date: '2024-01-02'
+      local_time: '14:59:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-causal-rebalance-2024-01-03
+      local_date: '2024-01-03'
+      local_time: '14:59:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-causal-rebalance-2024-01-04
+      local_date: '2024-01-04'
+      local_time: '14:59:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-causal-rebalance-2024-01-05
+      local_date: '2024-01-05'
+      local_time: '14:59:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-causal-rebalance-2024-01-08
+      local_date: '2024-01-08'
+      local_time: '14:59:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-causal-rebalance-2024-01-09
+      local_date: '2024-01-09'
+      local_time: '14:59:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-causal-rebalance-2024-01-10
+      local_date: '2024-01-10'
+      local_time: '14:59:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    provenance: 'vqapr register: f-causal-rebalance'
+    content_identity: 4475965dfe92978ff26750c52125fb69daf0946c9dbb6ed3bcf8079e5bc521d3
+    provenance_identity: ea9ed0631f103e07873e6472bbebef94dca80d6cf7afc8cb0eef4e3c64ac92c9
+  f-daily-rebalance:
+    role: STRATEGY_CALLBACK
+    timezone: Asia/Seoul
+    occurrences:
+    - occurrence_id: f-daily-rebalance-2015-01-02
+      local_date: '2015-01-02'
+      local_time: '15:00:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-daily-rebalance-2015-01-05
+      local_date: '2015-01-05'
+      local_time: '15:00:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-daily-rebalance-2015-01-06
+      local_date: '2015-01-06'
+      local_time: '15:00:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-daily-rebalance-2015-01-07
+      local_date: '2015-01-07'
+      local_time: '15:00:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-daily-rebalance-2015-01-08
+      local_date: '2015-01-08'
+      local_time: '15:00:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-daily-rebalance-2015-01-09
+      local_date: '2015-01-09'
+      local_time: '15:00:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    provenance: 'vqapr register: f-daily-rebalance'
+    content_identity: f08f650a3725df325c357cd848606cc79ab9715d3abcc75912414fe11e43e3e8
+    provenance_identity: 1680ef032f68474b3091610f516352fc8db2d854dd0f4e260cd3307548d048ac
+  f-daily-valuation:
+    role: VALUATION
+    timezone: Asia/Seoul
+    occurrences:
+    - occurrence_id: f-daily-valuation-2015-01-02
+      local_date: '2015-01-02'
+      local_time: '15:00:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-daily-valuation-2015-01-05
+      local_date: '2015-01-05'
+      local_time: '15:00:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-daily-valuation-2015-01-06
+      local_date: '2015-01-06'
+      local_time: '15:00:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-daily-valuation-2015-01-07
+      local_date: '2015-01-07'
+      local_time: '15:00:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-daily-valuation-2015-01-08
+      local_date: '2015-01-08'
+      local_time: '15:00:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: f-daily-valuation-2015-01-09
+      local_date: '2015-01-09'
+      local_time: '15:00:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    provenance: 'vqapr register: f-daily-valuation'
+    content_identity: 4a368929bc15c34d0456cf035f383843161a618c6f1949011a07168d92ab9ddd
+    provenance_identity: aa34108a77ce5c4673b351bc5d5d3d3b05ff33c379d0b08cf95b12491933fb69
+  krx-rebalance-next:
+    role: STRATEGY_CALLBACK
+    timezone: Asia/Seoul
+    occurrences:
+    - occurrence_id: krx-rebalance-next-2024-01-04
+      local_date: '2024-01-04'
+      local_time: '15:31:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: krx-rebalance-next-2024-01-05
+      local_date: '2024-01-05'
+      local_time: '15:31:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: krx-rebalance-next-2024-01-08
+      local_date: '2024-01-08'
+      local_time: '15:31:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: krx-rebalance-next-2024-01-09
+      local_date: '2024-01-09'
+      local_time: '15:31:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    provenance: 'vqapr register: krx-rebalance-next'
+    content_identity: e542709d9159a29340f004056ce11b722c9ebaf469ee7559200ea251b1696bfb
+    provenance_identity: b5527680446612429317761564ed62b366e17196365ea0d20b2b31a078cc8fc7
+  krx-valuation-next:
+    role: VALUATION
+    timezone: Asia/Seoul
+    occurrences:
+    - occurrence_id: krx-valuation-next-2024-01-02
+      local_date: '2024-01-02'
+      local_time: '15:31:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: krx-valuation-next-2024-01-03
+      local_date: '2024-01-03'
+      local_time: '15:31:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: krx-valuation-next-2024-01-04
+      local_date: '2024-01-04'
+      local_time: '15:31:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: krx-valuation-next-2024-01-05
+      local_date: '2024-01-05'
+      local_time: '15:31:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: krx-valuation-next-2024-01-08
+      local_date: '2024-01-08'
+      local_time: '15:31:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: krx-valuation-next-2024-01-09
+      local_date: '2024-01-09'
+      local_time: '15:31:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    - occurrence_id: krx-valuation-next-2024-01-10
+      local_date: '2024-01-10'
+      local_time: '15:31:00'
+      timezone: Asia/Seoul
+      fold: 0
+      offset: +09:00
+    provenance: 'vqapr register: krx-valuation-next'
+    content_identity: 1890fe32e41849d82d035179e63e3027adf4e50b6165708ef08671598adb1a17
+    provenance_identity: caaf462956edf29e6f2606422f5df05010f09fb39c52fc9e9f3bc8d6c7bdb515
+strategy_configs:
+  daily-rebalance:
+    component: krx_momentum
+    agenda_role: STRATEGY_CALLBACK
+  f-causal-rebalance:
+    component: f_krx_strategy_causal
+    agenda_role: STRATEGY_CALLBACK
+  f-daily-rebalance:
+    component: f_krx_strategy
+    agenda_role: STRATEGY_CALLBACK
+  krx-rebalance-next:
+    component: krx_momentum_next
+    agenda_role: STRATEGY_CALLBACK
+valuation_configs:
+  daily-valuation:
+    agenda_role: VALUATION
+  f-daily-valuation:
+    agenda_role: VALUATION
+  krx-valuation-next:
+    agenda_role: VALUATION

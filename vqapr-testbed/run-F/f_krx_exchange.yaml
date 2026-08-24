@@ -1,0 +1,5 @@
+components:
+  f_krx_exchange:
+    kind: exchange
+    path: f_krx_exchange.py
+    object_name: FKrxExchange
