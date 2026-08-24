@@ -9,7 +9,7 @@ wheels/
 # Virtual environments
 .venv
 
-## node (발표자료 생성 스크립트가 pptxgenjs를 사용한다)
+## node
 node_modules/
 package-lock.json
 
@@ -21,6 +21,10 @@ data/
 
 ## scratch pad outputs (retrieved paper data, not source)
 scratch-pad-for-ai/outputs/
+
+## one-off schema/debug dumps at the repo root
+/col_dump.txt
+/cols.txt
 
 ## scratch runtime caches (rebuildable)
 scratch-pad-for-ai/rocm-cache-*/
