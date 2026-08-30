@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "permissions": {
+    "deny": [
+      "Read(./.venv/**)",
+      "Read(./README.md)",
+      "Read(../**)",
+      "Edit(../**)",
+      "Write(../**)",
+      "Glob(../**)",
+      "Grep(../**)",
+      "Edit(./.venv/**)",
+      "Write(./.venv/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell|Read|Write|Edit|NotebookEdit|Glob|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"${CLAUDE_PROJECT_DIR:-.}/.claude/guard_boundary.py\"",
+            "timeout": 10,
+            "statusMessage": "checking the testbed boundary"
+          }
+        ]
+      }
+    ]
+  }
+}
