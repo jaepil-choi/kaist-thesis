@@ -3841,7 +3841,7 @@ wheels = [
 
 [[package]]
 name = "vqapr"
-version = "0.1.0a15"
+version = "0.2.0a2"
 source = { editable = "../qlibx" }
 dependencies = [
     { name = "cvxpy" },
@@ -3868,6 +3868,7 @@ requires-dist = [
 dev = [
     { name = "pytest", specifier = ">=9.1,<10" },
     { name = "ruff", specifier = ">=0.16,<0.17" },
+    { name = "vulture", specifier = ">=2.14,<3" },
 ]
 
 [[package]]

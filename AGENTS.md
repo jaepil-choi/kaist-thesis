@@ -54,6 +54,42 @@
 - 원천 데이터는 불변으로 취급하고, 전처리와 분석 산출물은 코드로 다시 만들 수
   있게 한다. 로컬 절대경로를 코드에 박지 말고 설정 또는 환경변수로 주입한다.
 
+## vqapr Testbed Isolation
+
+- `vqapr-final-testbed/`는 sibling repo `../qlibx`가 배포한 `vqapr` wheel을
+  **처음 쓰는 사용자 입장에서** 검증하는 실험 환경이다. 목적은 replication 결과가
+  아니라 `FINDINGS.md`, 즉 프레임워크가 사용자를 막아 세운 지점의 기록이다.
+- **testbed 안의 `AGENTS.md`가 이 파일보다 우선한다.** working directory, 작업
+  대상, 요청된 산출물이 `vqapr-final-testbed/` 아래에 있으면 그 파일을 먼저 읽고
+  그 규칙만 따른다. 이 파일의 replication 원칙과 문서화 규칙은 그 안에서 적용되지
+  않는다.
+- 격리가 목록이 아니라 **디렉터리 단위**다. 평가 대상 agent는
+  `vqapr-final-testbed/` 밖으로 나가는 것 자체가 금지된다 — 읽기, 나열, glob,
+  `cd`, 밖으로 빠져나가는 relative path 전부. repo root, `docs/`, `data/`,
+  `guijarro-ordonez-2025-replication/`, `kaniel-2023-replication/`,
+  `arnott-2023-replication/`, `Deep_Learning_Statistical_Arbitrage_Code/`,
+  `KAIST_thesis-master/`, 그리고 `../qlibx`가 한 번에 닫힌다.
+- 이 repo에서 가장 위험한 것은 `qlibx` source가 아니라
+  **`guijarro-ordonez-2025-replication/`** 이다. testbed가 다루는 바로 그 논문의
+  완성된 한국 replication이라, 읽으면 이 실험이 관찰하려는 판단을 통째로 건너뛰게
+  된다.
+- 이 격리는 편의가 아니라 실험의 조건이다. source나 기존 replication을 읽은
+  agent는 public surface가 실제로는 허용하지 않는 우회를 조용히 해내고, 그러면
+  findings가 0건인 깨끗한 run이 나오는데 그건 성공처럼 보이지만 아무 가치가 없다.
+- 기준은 "가능한가"가 아니라 "막히지 않는가"다. 추측으로 우회해서 결국 되게 만든
+  것도 finding이고, 트리거가 분명하지 않은 답답함도 finding이다. 특히 **source를
+  열어보고 싶은 충동을 느끼면 열지 말고 `FINDINGS.md`에 `urge` severity로 먼저
+  적는다.**
+- testbed에서 public surface가 부족하거나 틀렸으면 우회하지 말고 `FINDINGS.md`에
+  기록한다. 막힌 지점 자체가 이 testbed의 산출물이다. 이미 upstream에 접수된 결함은
+  `FINDINGS.md`의 `KNOWN ISSUES`에 있으니 중복 접수하지 않고, 이번 run에서 비용이
+  든 만큼만 해당 항목에 덧붙인다.
+- `README.md`는 평가자 전용이고 agent는 읽지 않는다. `.claude/guard_boundary.py`가
+  PreToolUse hook으로 위 경계를 기계적으로 막는다.
+- testbed의 `data/`, `paper/`, `workspace/`, `outputs/`, `.venv/`는 생성물이거나
+  복사본이므로 commit하지 않는다. 복원 방법은 testbed `README.md`의 Protocol에 있다.
+- `vqapr-testbed/`는 이전 세대의 문서만 남은 디렉터리이며 현재 실험 대상이 아니다.
+
 ## Python 환경과 실행
 
 - 이 프로젝트의 Python 환경과 의존성 관리는 `uv`를 사용한다.
