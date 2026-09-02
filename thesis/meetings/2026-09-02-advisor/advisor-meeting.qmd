@@ -21,11 +21,6 @@ format:
 2. **구현 현황** — 미국 결과와 한국 결과를 나란히 놓고 대조
 3. **쟁점 및 질문** — 판단을 여쭙고 싶은 것들
 
-::: {.note}
-미국 수치·그림은 원 논문 Table 1·2, Figure 2·3·4·5를 그대로 캡처했습니다.
-한국 수치는 재현 실행 산출물에서 옮긴 값이며 발표자료가 따로 계산하지 않았습니다.
-:::
-
 # 1. 논문 소개
 
 ## 왜 이 논문을 골랐나
@@ -175,7 +170,7 @@ $$\max_{\theta,\ w^{\epsilon}} \ \mathrm{SR}\!\left(w^{R\top}_{t-1}R_t\right)
 
 # 2. 구현 현황
 
-## 표본과 실행 계약
+## 세팅 비교 — 미국 vs 한국
 
 | 항목 | 미국 (원 논문) | 한국 (재현) |
 |:--|:--|:--|
@@ -185,10 +180,8 @@ $$\max_{\theta,\ w^{\epsilon}} \ \mathrm{SR}\!\left(w^{R\top}_{t-1}R_t\right)
 | 수익률 정의 | total return | 조정 price return (**현금배당 제외**) |
 | 팩터모형 | FF5, PCA, IPCA | 한국 FF1/3/5, PCA (**IPCA 차단**) |
 | lookback | 30일 | 30일 (동일) |
-| 학습 계약 | 1,000일 학습, 125일 재학습 | 동일, seed 0, 100 epochs |
+| 학습·재학습 | 1,000일 학습, 125일 재학습 | 동일, seed 0, 100 epochs |
 | 알파 기준 | FF8 | 한국 FF5 + MOM (6팩터) |
-
-**어느 것도 미국 결과의 exact replication이 아닙니다.** 한국 price-return variant입니다.
 
 ## 무엇이 돌아갔나
 
@@ -201,8 +194,6 @@ $$\max_{\theta,\ w^{\epsilon}} \ \mathrm{SR}\!\left(w^{R\top}_{t-1}R_t\right)
 - Ablation 2종: direct FFN, OU-feature FFN
 - 하이퍼파라미터 16개 grid, 대안 네트워크 5종 × 잔차 2종
 - 강건성: 60일 lookback, 5일 보유, 가중치 집중도, 단순 반전 벤치마크
-
-최종 무인 실행 `run-20260811T021314Z`에서 11개 태스크 성공, 실패 0건, 테스트 67개 통과.
 
 ## 정책 비교 — 미국 vs 한국 {.smaller}
 
@@ -372,12 +363,12 @@ R_t --> 당일 PCA/loading 추정 --> Phi_t --> t일 종목 비중 --> t일 수�
 ```
 
 - 정책 신호 자체는 $t-1$까지만 봅니다. 문제는 잔차 구성행렬 쪽입니다.
-- 현재 저희 PCA $K>0$ 결과는 **공개코드 충실 / 논문 계약 위반** 상태입니다.
+- 현재 저희 PCA $K>0$ 결과는 **공개코드는 따랐지만 논문 서술과는 어긋난** 상태입니다.
 - 고치면 PCA 계열 결과 전체를 재실행해야 합니다. 앞의 4.15도 다시 나옵니다.
 
 ::: {.ask}
 [여쭙고 싶은 것]{.hd}
-공개코드를 그대로 따라가고 논문에 한계로 명시할지, 아니면 논문 본문 계약대로 고치고 재실행할지.
+공개코드를 그대로 따라가고 논문에 한계로 명시할지, 아니면 논문 본문대로 고치고 재실행할지.
 전자는 원 논문과의 비교가능성을, 후자는 결과의 타당성을 택하는 선택으로 보입니다.
 :::
 
@@ -453,7 +444,7 @@ IPCA를 (a) 단기 sensitivity로만 보고하고 PCA를 주력으로 갈지, (b
 
 ## 논의사항 정리
 
-1. **PCA look-ahead** — 공개코드를 따를지, 논문 계약대로 고치고 재실행할지
+1. **PCA look-ahead** — 공개코드를 따를지, 논문 본문대로 고치고 재실행할지
 2. **IPCA** — 단기 sensitivity로 보고 / ridge deviation 채택 / 240개월 확보 중 어느 쪽
 3. **표본기간** — 2.5년 OOS로 충분한지, 소급 확보를 우선순위로 올릴지
 4. **데이터** — 현금배당 제외 price return 허용 여부
@@ -463,18 +454,4 @@ IPCA를 (a) 단기 sensitivity로만 보고하고 PCA를 주력으로 갈지, (b
 ::: {.note}
 추가로, 한국에서만 갈린 결과가 하나 있습니다. FF5 잔차가 PCA5보다 뚜렷하게 약한 점(2.27 vs 4.15)인데,
 팩터 구축 품질 문제인지 한국 시장의 특성인지 확인할 필요가 있어 보입니다.
-:::
-
-## 부록 — 수치 출처
-
-- 미국: 원 논문 Table 1, Table 2, Figure 2·3·4·5 캡처
-- 한국 성과·회전율: `paper-assets/tables/table_01_korean_performance.csv`
-- 한국 알파: `paper-assets/tables/table_02_korean_factor_alpha.csv`
-- 실행 이력: `run-20260811T021314Z` (2026-08-11 완료, 11 태스크 성공, 실패 0)
-- look-ahead 쟁점: `docs/issues/pca-current-day-look-ahead.md`
-- 데이터 blocker: `docs/data-requirements.md`, `docs/replication-checklist.md`
-
-::: {.note}
-한국 결과는 조정되지 않은 연구용 백테스트이며 운용 가능한 성과 추정치가 아닙니다.
-번호가 붙은 한국 산출물은 원문 수치의 exact replication이 아닙니다.
 :::
