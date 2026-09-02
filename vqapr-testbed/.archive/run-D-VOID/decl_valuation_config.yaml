@@ -1,0 +1,4 @@
+valuation_configs:
+  daily-valuation-v3:
+    agenda_id: daily-valuation-v3
+    agenda_role: VALUATION

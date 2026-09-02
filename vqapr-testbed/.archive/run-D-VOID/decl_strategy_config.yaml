@@ -1,0 +1,5 @@
+strategy_configs:
+  korean_equity_strategy:
+    component: korean_equity_strategy
+    agenda_id: daily-rebalance-v4
+    agenda_role: STRATEGY_CALLBACK

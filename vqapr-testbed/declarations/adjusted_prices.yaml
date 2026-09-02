@@ -1,0 +1,30 @@
+# Dataset declaration — register with `vqapr register <this-file.yaml>`
+#
+# A dataset and its source file register together. There is no separate `sources:`
+# section; source_id and path are declared here, inline under the dataset.
+
+datasets:
+  krx_adjusted_prices:
+    source_id: krx_adjusted_prices-source
+    path: ../data/adjusted_prices_prepared.parquet
+    instrument_field: ticker
+    available_at: available_at
+    # ^ This is the critical field, and it has two separate requirements.
+    #
+    #   MEANING: it is NOT when the event happened — it is when the observation was
+    #   available. A daily close is available at the session close; an accounting fact is
+    #   available at publication, weeks after the period it covers. Getting this wrong is a
+    #   look-ahead the framework cannot detect for you.
+    #
+    #   TYPE: the column must already be a TIMEZONE-AWARE timestamp in the parquet. A naive
+    #   timestamp is refused, because '2024-01-02 15:30' does not say which market close it
+    #   is. Localize it while preparing the data; registration does not convert it for you.
+    key_fields:
+      - date
+      - ticker
+    fields:
+      close: adj_close
+      return: return
+      market_cap: market_cap
+      volume: trade_volume
+    # hive_partitioned: false

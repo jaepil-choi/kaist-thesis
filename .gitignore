@@ -44,3 +44,10 @@ vqapr-testbed/outputs/
 ## as deliberate rather than incidental.)
 vqapr-final-testbed/FINDINGS.md
 vqapr-final-testbed/build/
+## vqapr-testbed: archived runs keep their notes, not their materialized workspaces
+vqapr-testbed/.archive/**/workspace-*/
+## vqapr-testbed local workspace pointer (per-machine)
+vqapr-testbed/.vqapr/
+
+## agent session runtime state
+.gjc/

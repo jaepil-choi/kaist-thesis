@@ -1,0 +1,5 @@
+components:
+  korean_equity_exchange:
+    kind: exchange
+    path: korean_equity_exchange.py
+    object_name: KoreanEquityExchange

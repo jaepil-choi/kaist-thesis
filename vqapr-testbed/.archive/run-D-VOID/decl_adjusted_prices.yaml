@@ -1,0 +1,16 @@
+# Dataset declaration — register with `vqapr register <this-file.yaml>`
+
+datasets:
+  korean_equity_adjusted_prices:
+    source_id: korean_equity_adjusted_prices-source
+    path: workspace/prepared_data/adjusted_prices.parquet
+    instrument_field: ticker
+    available_at: available_at        # tz-aware Asia/Seoul, close+15:30, see scripts/prepare_prices.py
+    key_fields:
+      - date
+      - ticker
+    fields:
+      close: adj_close
+      volume: trade_volume
+      return: return
+      market_cap: market_cap

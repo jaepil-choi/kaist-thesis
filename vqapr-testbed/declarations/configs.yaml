@@ -1,0 +1,10 @@
+strategy_configs:
+  krx_momentum_strategy:
+    component: krx_momentum_strategy
+    agenda_id: daily-rebalance
+    agenda_role: strategy_callback
+
+valuation_configs:
+  krx_valuation:
+    agenda_id: daily-valuation
+    agenda_role: valuation

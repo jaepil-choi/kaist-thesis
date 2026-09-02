@@ -64,4 +64,22 @@ rather than assembled to justify what got built. None of these are decisions yet
 
 ## Entries
 
-_(nothing yet — the point is to fill this from what was actually written)_
+Nothing was promoted or even written from scratch this session. This run stopped at Rung 2 — a
+single toy long-only cross-sectional reversal on 3 KRX names using `vqapr new`'s own scaffold
+line, unmodified. No PCA, no residual extraction, no characteristic panel, no OU estimation — none
+of the operations `data-requirements.md` names as this paper's actual shape were reached. The one
+line of "signal" logic (five-day reversal) is the scaffold's own suggestion, not hand-written
+paper logic, so there is nothing here yet that clears the "written for this paper" bar this file
+exists to track.
+
+The only hand-written non-scaffold code was infrastructure — two `pyarrow` data-prep scripts
+(`prepare_data.py`, `prepare_venue.py`) building `available_at`/`trade_at` columns and a hand-built
+`Exchange` component (`krx_venue.py`) wiring the shipped `KrxExchange`/`krx_rules` helpers. None of
+that is a `transforms/`-candidate operation; it's registration plumbing every user writes once.
+
+**What the next session should expect to write here:** rolling PCA on a 252-day covariance,
+residual extraction against that PCA, and 46-characteristic cross-sectional standardisation are
+the first three items in the "Candidates" table above and are the actual reason `vqapr.transforms`
+gets exercised by this paper. None were attempted — the target for this run was "get one `vqapr
+run` to complete," not "reproduce the paper's factor model."
+

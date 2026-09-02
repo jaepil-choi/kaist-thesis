@@ -1,0 +1,5 @@
+components:
+  korean_equity_strategy:
+    kind: strategy
+    path: korean_equity_strategy.py
+    object_name: KoreanEquityStrategy

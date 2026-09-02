@@ -1,0 +1,15 @@
+agendas:
+  daily-rebalance-v4:
+    role: STRATEGY_CALLBACK
+    timezone: Asia/Seoul
+    at: "09:00"
+    from_dataset: korean_equity_adjusted_prices
+    start: "2016-01-04"
+    end: "2016-12-29"
+  daily-valuation-v3:
+    role: VALUATION
+    timezone: Asia/Seoul
+    at: "15:30"
+    from_dataset: korean_equity_adjusted_prices
+    start: "2016-01-04"
+    end: "2016-12-29"

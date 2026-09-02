@@ -1,0 +1,17 @@
+# Execution input declaration - register with `vqapr register <this-file.yaml>`
+
+execution_inputs:
+  korean_equity_venue_v9:
+    table:
+      source_id: korean_equity_venue_v9-source
+      path: workspace/prepared_data/venue.parquet
+      trade_at_field: trade_at
+      instrument_field: ticker
+      is_tradable_field: is_tradable
+      price_fields:
+        close: adj_close
+    fill:
+      selector: same_day
+      at: "15:30"
+      timezone: Asia/Seoul
+      trade_price: close

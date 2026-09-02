@@ -108,3 +108,56 @@ skill is worth.
   no `SKILL.md` in the tree. F-001. Whether to build it, or to run purpose 1 without it and use
   the result as the specification, is a decision for the owner.
 - Nothing else. Purposes 2 and 3 have no entries yet because no code has been written.
+
+---
+
+## Mission A run — 2026-08-24, registration attempt, stopped without a registered dataset
+
+**Stop condition triggered:** two, simultaneously, on the same command. Condition 2 (second
+`blocked` entry, F-005 and F-007) and condition 3 (three attempts at `vqapr register
+workspace/adjusted_prices.yaml`, three different failure reasons: F-005 missing `fields`, F-006
+missing `source_id`, F-007 `source_id`'s referent — a `sources:` section — rejected as an unknown
+section by the same command that just demanded it).
+
+**Dataset registered:** no. `vqapr list datasets` after the run still reports `{"count": 0, ...}`.
+The declaration YAML is left at `workspace/adjusted_prices.yaml` in its last (unregistrable)
+state — a `sources:` + `datasets:` document — as evidence, not as a fix. It fails.
+
+**What the next reader should not have to rediscover:**
+
+1. **`vqapr register` needs a `fields` mapping under `datasets.<id>`.** Nothing in `register
+   --help` or `vqapr new`'s output says this. The shape that worked syntactically (not yet proven
+   to satisfy schema validation, since registration never got past the `source_id` block) was
+   `fields: {logical_name: parquet_column_name, ...}`.
+2. **`datasets.<id>` also needs a `source_id`.** What a `source_id` refers to is unresolved. It is
+   NOT a top-level `sources:` section in the same document — `register` explicitly rejects that
+   with `unknown section(s): sources; this command registers datasets, execution_inputs, agendas,
+   components, strategy_configs, valuation_configs, monitoring_policies`. Yet `vqapr list sources`
+   is a real, distinct listable kind. Where a source actually gets declared — a different YAML
+   registered by a different, undiscovered mechanism, an inline block under the dataset itself
+   with some other key, or something `vqapr new` should have a subcommand for and does not — was
+   not resolved within this run's budget. This is the single open question blocking registration.
+3. **`vqapr new` has no dataset/source scaffold.** Only `datamodel`, `strategy`, and `run-spec`.
+   Whatever a dataset or source declaration's full valid shape is, it currently has to be
+   reverse-engineered one `ValueError` at a time against `.vqapr/diagnostics/unhandled.txt`
+   tracebacks rooted in qlibx internals — not read from any `--help` surface or scaffold.
+4. **Required-key validation on `register` does not go through `failures[]`.** Every one of
+   F-005/F-006/F-007 came back as `{"stage": "unhandled", "failures": [], "error":
+   "ValueError: ..."}`, contradicting the installed SKILL.md's own instruction to "read the
+   `failures` array first." The `error` string happened to be legible each time, but that is luck,
+   not contract. This is the framework's most valuable fix candidate from this run: it would have
+   collapsed three round trips into one, and kept the whole exercise inside the CLI surface instead
+   of forcing a read of `.vqapr/diagnostics/unhandled.txt` tracebacks that name qlibx source files.
+5. **`--project-root` is a global option syntactically usable only before the subcommand** (argparse
+   positional-sensitivity), not documented as such, and not needed anyway when already inside the
+   project root — dead end, but cost real minutes (F-004).
+
+**Recommended next move:** before touching this declaration again, find where `sources` are
+actually declared without reading `qlibx/` — check whether `vqapr new` gains a scaffold for it, or
+whether a `source` block belongs inline under `datasets.<id>` under some key other than the
+top-level `sources:` section this run tried. If no such mechanism is discoverable from `--help`
+surfaces and the SKILL.md alone, that absence is itself the next `F-` entry, not a reason to read
+the framework source.
+
+**Friction entries written this run:** F-003 (slowed), F-004 (slowed), F-005 (blocked), F-006
+(slowed), F-007 (blocked). Two blocked, three slowed, five total. Zero `qlibx/` reads.
