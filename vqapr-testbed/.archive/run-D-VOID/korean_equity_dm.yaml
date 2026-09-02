@@ -1,5 +1,0 @@
-components:
-  korean_equity_dm:
-    kind: datamodel
-    path: korean_equity_dm.py
-    object_name: KoreanEquityDm

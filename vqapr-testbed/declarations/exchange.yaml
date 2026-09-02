@@ -1,5 +1,0 @@
-components:
-  krx_venue:
-    kind: exchange
-    path: ../krx_venue.py
-    object_name: build

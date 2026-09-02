@@ -1,5 +1,0 @@
-components:
-  krx_prices_model:
-    kind: datamodel
-    path: krx_prices_model.py
-    object_name: KrxPricesModel

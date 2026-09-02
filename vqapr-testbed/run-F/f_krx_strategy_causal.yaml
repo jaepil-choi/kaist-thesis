@@ -1,5 +1,0 @@
-components:
-  f_krx_strategy_causal:
-    kind: strategy
-    path: f_krx_strategy_causal.py
-    object_name: FKrxStrategyCausal

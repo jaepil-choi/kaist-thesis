@@ -3,7 +3,7 @@
 AGENTS.md states three rules that an agent can read and then fail to apply. This script makes two
 of them mechanical:
 
-  1. Nothing outside vqapr-final-testbed/ may be read, listed, globbed, grepped, opened, imported,
+  1. Nothing outside vqapr-scenario-testbed/ may be read, listed, globbed, grepped, opened, imported,
      copied from, or written to.
   2. The installed package source under .venv/ may not be read, even though the filesystem makes
      it reachable.
@@ -103,7 +103,7 @@ def classify(raw: str) -> str | None:
         resolved.relative_to(ROOT)
     except ValueError:
         return (
-            f"{resolved} is outside vqapr-final-testbed/. AGENTS.md: everything at or above this "
+            f"{resolved} is outside vqapr-scenario-testbed/. AGENTS.md: everything at or above this "
             "directory's parent is out of bounds -- not 'prefer not to', not 'ask first'. "
             "Ask the user to hand you what you need; the asking is data too."
         )
@@ -152,10 +152,10 @@ def check_command(command: str) -> None:
             "via help(), inspect.getdoc and inspect.signature are allowed; the source body is not."
         )
     if CD_UP.search(scanned):
-        deny("this command changes directory out of vqapr-final-testbed/. AGENTS.md forbids it.")
+        deny("this command changes directory out of vqapr-scenario-testbed/. AGENTS.md forbids it.")
     if CLIMB.search(scanned):
         deny(
-            "this command contains a relative path that climbs above vqapr-final-testbed/. "
+            "this command contains a relative path that climbs above vqapr-scenario-testbed/. "
             "AGENTS.md: a relative path that climbs out is out of bounds even when it resolves to "
             "something harmless."
         )
@@ -194,7 +194,7 @@ def main() -> None:
     pattern = args.get("pattern")
     if isinstance(pattern, str) and (CLIMB.search(pattern) or ".venv" in pattern):
         deny(
-            f"the pattern {pattern!r} reaches outside vqapr-final-testbed/ or into .venv/. "
+            f"the pattern {pattern!r} reaches outside vqapr-scenario-testbed/ or into .venv/. "
             "Scope the search to this directory."
         )
 

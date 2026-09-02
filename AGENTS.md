@@ -56,15 +56,18 @@
 
 ## vqapr Testbed Isolation
 
-- `vqapr-final-testbed/`는 sibling repo `../qlibx`가 배포한 `vqapr` wheel을
-  **처음 쓰는 사용자 입장에서** 검증하는 실험 환경이다. 목적은 replication 결과가
-  아니라 `FINDINGS.md`, 즉 프레임워크가 사용자를 막아 세운 지점의 기록이다.
+- `vqapr-scenario-testbed/`는 sibling repo `../qlibx`가 배포한 `vqapr` wheel을
+  **처음 쓰는 사용자 입장에서** 검증하는 실험 환경이다. 사전지식이 없는 agent가
+  주어진 scenario를 통제된 디렉터리 안에서 스스로 얼마나 수행하는지를 본다. 목적은
+  replication 결과가 아니라 `FINDINGS.md`, 즉 프레임워크가 사용자를 막아 세운
+  지점의 기록이며, 각 항목마다 **upstream vqapr이 고쳐야 할 결함인지, agent 자신의
+  실수인지**를 판정하는 것이 핵심 산출물이다.
 - **testbed 안의 `AGENTS.md`가 이 파일보다 우선한다.** working directory, 작업
-  대상, 요청된 산출물이 `vqapr-final-testbed/` 아래에 있으면 그 파일을 먼저 읽고
+  대상, 요청된 산출물이 `vqapr-scenario-testbed/` 아래에 있으면 그 파일을 먼저 읽고
   그 규칙만 따른다. 이 파일의 replication 원칙과 문서화 규칙은 그 안에서 적용되지
   않는다.
 - 격리가 목록이 아니라 **디렉터리 단위**다. 평가 대상 agent는
-  `vqapr-final-testbed/` 밖으로 나가는 것 자체가 금지된다 — 읽기, 나열, glob,
+  `vqapr-scenario-testbed/` 밖으로 나가는 것 자체가 금지된다 — 읽기, 나열, glob,
   `cd`, 밖으로 빠져나가는 relative path 전부. repo root, `docs/`, `data/`,
   `guijarro-ordonez-2025-replication/`, `kaniel-2023-replication/`,
   `arnott-2023-replication/`, `Deep_Learning_Statistical_Arbitrage_Code/`,
@@ -82,13 +85,16 @@
   적는다.**
 - testbed에서 public surface가 부족하거나 틀렸으면 우회하지 말고 `FINDINGS.md`에
   기록한다. 막힌 지점 자체가 이 testbed의 산출물이다. 이미 upstream에 접수된 결함은
-  `FINDINGS.md`의 `KNOWN ISSUES`에 있으니 중복 접수하지 않고, 이번 run에서 비용이
+  `FINDINGS.md`의 `Known issues`에 있으니 중복 접수하지 않고, 이번 run에서 비용이
   든 만큼만 해당 항목에 덧붙인다.
 - `README.md`는 평가자 전용이고 agent는 읽지 않는다. `.claude/guard_boundary.py`가
   PreToolUse hook으로 위 경계를 기계적으로 막는다.
-- testbed의 `data/`, `paper/`, `workspace/`, `outputs/`, `.venv/`는 생성물이거나
-  복사본이므로 commit하지 않는다. 복원 방법은 testbed `README.md`의 Protocol에 있다.
-- `vqapr-testbed/`는 이전 세대의 문서만 남은 디렉터리이며 현재 실험 대상이 아니다.
+- testbed의 `data/`, `paper/`, `workspace/`, `outputs/`, `.venv/`, `FINDINGS.md`,
+  `SCENARIO.md`는 생성물이거나 복사본이므로 commit하지 않는다. 복원 방법은 testbed
+  `README.md`의 Protocol에 있다.
+- 이전 세대 testbed(`vqapr-testbed/`, `vqapr-final-testbed/`)는 2026-09-02에 삭제했다.
+  run 1의 findings는 `../qlibx/docs/handoff/2026-08-30-final-testbed-findings.md`에
+  있고, 디렉터리 자체는 git history에서만 볼 수 있다.
 
 ## Python 환경과 실행
 

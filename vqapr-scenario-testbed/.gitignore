@@ -1,0 +1,16 @@
+# Only the staged environment is tracked: the contract, the control files, the dependency pin, the
+# lock and the installed skill. Nothing a run produces is ever committed -- a committed FINDINGS.md,
+# workspace or scenario would hand the next agent the previous agent's answers, which is exactly
+# what the isolation exists to prevent. README.md says how to restage paper/ and data/.
+FINDINGS.md
+SCENARIO.md
+data/
+paper/
+workspace/
+outputs/
+build/
+.vqapr/
+.venv/
+__pycache__/
+.gjc/
+# uv.lock is tracked: the venv must be reproducible byte-for-byte across runs.

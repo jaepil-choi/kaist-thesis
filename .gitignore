@@ -30,24 +30,8 @@ scratch-pad-for-ai/outputs/
 scratch-pad-for-ai/rocm-cache-*/
 scratch-pad-for-ai/uv-cache-*/
 
-## vqapr-testbed: source is tracked, everything a run derives is not.
-## workspace/ holds registered panels, materialized parquets and a workspace.yaml
-## that grows with run length; outputs/ is measurement. Both are reproducible.
-vqapr-testbed/workspace/
-vqapr-testbed/outputs/
-
-## vqapr-final-testbed: ONLY the staged environment is tracked -- the contract, the control
-## files, the dependency pins. Nothing a run produces may ever be committed. A future run has
-## to start from a clean slate, and a committed FINDINGS.md or build/ would hand the next agent
-## the previous agent's answers, which is exactly what the isolation exists to prevent.
-## (`build/` is already caught by the global rule above; it is named here so the exclusion reads
-## as deliberate rather than incidental.)
-vqapr-final-testbed/FINDINGS.md
-vqapr-final-testbed/build/
-## vqapr-testbed: archived runs keep their notes, not their materialized workspaces
-vqapr-testbed/.archive/**/workspace-*/
-## vqapr-testbed local workspace pointer (per-machine)
-vqapr-testbed/.vqapr/
+## vqapr-scenario-testbed: the testbed carries its own .gitignore (run artifacts, FINDINGS.md,
+## SCENARIO.md, staged data). Nothing to add here.
 
 ## agent session runtime state
 .gjc/

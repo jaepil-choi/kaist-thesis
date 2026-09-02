@@ -1,5 +1,0 @@
-components:
-  f_krx_signal:
-    kind: datamodel
-    path: f_krx_signal.py
-    object_name: FKrxSignal

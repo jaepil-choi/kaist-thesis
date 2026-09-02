@@ -1,5 +1,0 @@
-components:
-  krx_momentum_data:
-    kind: datamodel
-    path: krx_momentum_data.py
-    object_name: KrxMomentumData
