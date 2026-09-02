@@ -225,7 +225,7 @@ out of the repository) so the next run starts clean; keep a copy of `FINDINGS.md
 |---|---|---|---|
 | kwam run | `0.2.0a1` | `qlibx@develop`, 2026-08-29 | 13 defects → `docs/issues/015`–`027` |
 | run 1 (`vqapr-final-testbed/`) | `0.2.0a1`, same bytes | same | `docs/handoff/2026-08-30-final-testbed-findings.md` |
-| run 2 (this directory) | pinned in `pyproject.toml` — fill in | post-convergence `develop` — fill in | pending |
+| run 2 (this directory) | `0.3.0` | `qlibx@develop@4f616f5a` (`v0.3.0`), 2026-09-03 — the convergence campaign, records `129`–`139` | staged 2026-09-03; pending |
 
 Record the run 2 row here once the wheel is built, and mirror it in the `FINDINGS.md` header.
 
