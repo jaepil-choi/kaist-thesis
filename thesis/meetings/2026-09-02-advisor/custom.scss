@@ -1,0 +1,239 @@
+/*-- scss:defaults --*/
+
+// 지도교수 미팅용 단색 테마. 한글 본문은 Windows 기본 한글 글꼴을 우선한다.
+$font-family-sans-serif: "Malgun Gothic", "맑은 고딕", "Pretendard",
+  "Apple SD Gothic Neo", "Noto Sans KR", sans-serif !default;
+
+$presentation-font-size-root: 30px !default;
+$presentation-heading-font: $font-family-sans-serif !default;
+$presentation-heading-color: #111111 !default;
+$body-color: #111111 !default;
+$body-bg: #ffffff !default;
+$link-color: #444444 !default;
+
+/*-- scss:rules --*/
+
+.reveal .slides section {
+  text-align: left;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 700;
+}
+
+.reveal h2 {
+  font-size: 1.35em;
+  border-bottom: 1px solid #d9d9d9;
+  padding-bottom: 0.25em;
+  margin-bottom: 0.6em;
+}
+
+.reveal h3 {
+  font-size: 0.78em;
+  color: #555555;
+  margin-bottom: 0.35em;
+}
+
+// 섹션 구분 슬라이드 (# 헤딩)
+.reveal .slides section.title-slide h1,
+.reveal section > h1 {
+  font-size: 1.9em;
+}
+
+.reveal table {
+  font-size: 0.85em;
+  margin: 0.4em 0 0.6em 0;
+  border-collapse: collapse;
+}
+
+.reveal table th {
+  background: #f4f4f4;
+  border-bottom: 1px solid #bfbfbf;
+  font-weight: 700;
+}
+
+.reveal table td,
+.reveal table th {
+  padding: 0.22em 0.55em;
+  border-top: none;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.reveal ul,
+.reveal ol {
+  font-size: 0.9em;
+}
+
+// 강조 박스
+.reveal .highlight-box {
+  background: #f4f4f4;
+  border-left: 3px solid #111111;
+  padding: 0.5em 0.9em;
+  margin-top: 0.7em;
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+
+// 슬라이드 하단 각주성 메모
+.reveal .note {
+  color: #8c8c8c;
+  font-size: 0.66em;
+  font-style: italic;
+  line-height: 1.45;
+  margin-top: 0.7em;
+}
+
+.reveal .note p {
+  margin: 0;
+}
+
+.reveal .columns {
+  gap: 1.2em;
+}
+
+.reveal .columns p,
+.reveal .columns ul,
+.reveal .columns ol {
+  font-size: 0.88em;
+}
+
+.reveal .columns .note,
+.reveal .columns .highlight-box {
+  font-size: inherit;
+}
+
+.reveal img {
+  margin: 0.2em 0;
+  border: 1px solid #ebebeb;
+  background: #ffffff;
+}
+
+.reveal .slide-number {
+  color: #8c8c8c;
+  background: transparent;
+  font-size: 0.5em;
+}
+
+// ── 아래는 논문 흐름형 구성을 위해 추가한 클래스 ──────────────────
+
+// 슬라이드 하나가 주장 하나를 담을 때
+.reveal .claim {
+  font-size: 1.05em;
+  font-weight: 700;
+  line-height: 1.45;
+  margin: 0.5em 0 0.7em 0;
+}
+
+.reveal .claim .sub {
+  display: block;
+  font-size: 0.62em;
+  font-weight: 400;
+  color: #555555;
+  margin-top: 0.5em;
+  line-height: 1.5;
+}
+
+// "왜 그렇게 하는가" 설명 블록
+.reveal .why {
+  border-left: 3px solid #999999;
+  background: #fafafa;
+  padding: 0.45em 0.9em;
+  margin: 0.6em 0;
+  font-size: 0.82em;
+  line-height: 1.55;
+}
+
+.reveal .why .lab {
+  font-weight: 700;
+  color: #111111;
+}
+
+// 큰 숫자 나열
+.reveal .nums {
+  display: flex;
+  gap: 1.6em;
+  margin: 0.7em 0;
+  align-items: flex-end;
+}
+
+.reveal .nums .n {
+  flex: 1;
+}
+
+.reveal .nums .v {
+  font-size: 1.9em;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.reveal .nums .k {
+  font-size: 0.62em;
+  color: #666666;
+  margin-top: 0.35em;
+  line-height: 1.4;
+}
+
+.reveal .nums .n.dim .v { color: #a8a8a8; }
+
+// 잔차 구성 도식
+.reveal .flow {
+  font-size: 0.8em;
+  line-height: 1.7;
+  margin: 0.5em 0;
+  font-family: "Consolas", "D2Coding", monospace;
+}
+
+.reveal .flow .rule {
+  border-top: 1px solid #111111;
+  margin: 0.25em 0;
+  width: 30em;
+}
+
+// 대비 (기존 방식 / 이 논문)
+.reveal .xo {
+  display: flex;
+  gap: 1.2em;
+  margin: 0.6em 0;
+}
+
+.reveal .xo > div {
+  flex: 1;
+  padding: 0.5em 0.85em;
+  font-size: 0.8em;
+  line-height: 1.5;
+}
+
+.reveal .xo .old {
+  background: #f7f7f7;
+  border-top: 3px solid #c4c4c4;
+}
+
+.reveal .xo .new {
+  background: #f2f2f2;
+  border-top: 3px solid #111111;
+}
+
+.reveal .xo .hd {
+  font-weight: 700;
+  margin-bottom: 0.3em;
+  display: block;
+}
+
+// 지도교수께 여쭙는 항목
+.reveal .ask {
+  border: 1px solid #111111;
+  padding: 0.55em 0.95em;
+  margin-top: 0.7em;
+  font-size: 0.82em;
+  line-height: 1.55;
+}
+
+.reveal .ask .hd {
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.25em;
+}
