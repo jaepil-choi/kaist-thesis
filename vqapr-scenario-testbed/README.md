@@ -225,7 +225,7 @@ out of the repository) so the next run starts clean; keep a copy of `FINDINGS.md
 |---|---|---|---|
 | kwam run | `0.2.0a1` | `qlibx@develop`, 2026-08-29 | 13 defects → `docs/issues/015`–`027` |
 | run 1 (`vqapr-final-testbed/`) | `0.2.0a1`, same bytes | same | `docs/handoff/2026-08-30-final-testbed-findings.md` |
-| run 2 (this directory) | `0.3.0` | `qlibx@develop@4f616f5a` (`v0.3.0`), 2026-09-03 — the convergence campaign, records `129`–`139` | staged 2026-09-03; pending |
+| run 2 (this directory) | `0.3.0` | `qlibx@develop@4f616f5a` (`v0.3.0`), 2026-09-03 — the convergence campaign, records `129`–`139` | run 2026-09-03, both phases (FF5+MOM K=6 OU+Thresh; then K=0/K=5 x OU+Thresh/Fourier+FFN, profiled). 17 findings, no `blocked`; 14 filed as `docs/issues/055`-`068`, of which `058` and `061` were closed the same day (records `146`, `143`). Copy: `../../qlibx/docs/handoff/2026-09-03-scenario-testbed-run-2-findings.md` |
 
 Record the run 2 row here once the wheel is built, and mirror it in the `FINDINGS.md` header.
 
