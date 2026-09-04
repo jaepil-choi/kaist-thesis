@@ -3610,11 +3610,12 @@ wheels = [
 
 [[package]]
 name = "vqapr"
-version = "0.3.0"
+version = "0.4.1"
 source = { editable = "../qlibx" }
 dependencies = [
     { name = "duckdb" },
     { name = "pyarrow" },
+    { name = "pydantic" },
     { name = "pytz" },
     { name = "pyyaml" },
 ]
@@ -3623,6 +3624,7 @@ dependencies = [
 requires-dist = [
     { name = "duckdb", specifier = ">=1.5,<2" },
     { name = "pyarrow", specifier = ">=25,<26" },
+    { name = "pydantic", specifier = ">=2,<3" },
     { name = "pytz", specifier = ">=2024.1" },
     { name = "pyyaml", specifier = ">=6,<7" },
 ]
