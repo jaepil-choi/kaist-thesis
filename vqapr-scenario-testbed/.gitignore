@@ -10,6 +10,14 @@ workspace/
 outputs/
 build/
 .vqapr/
+# Whatever a run writes. Run 2 and run 3 used out/, work/, prep/ and runs/; none of them were
+# ignored, so the run's own answers were one `git add -A` away from being committed. An agent
+# names its own directories, so keep this list current at staging time and prefer `git add -p`.
+out/
+work/
+prep/
+runs/
+scratch/
 .venv/
 __pycache__/
 .gjc/

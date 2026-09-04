@@ -1,8 +1,8 @@
 {
   "files": {
     "SKILL.md": {
-      "sha256": "e3a75285567dd1f32745f4ba34fc595e67ecb067520775977b35d7249dd070ff"
+      "sha256": "c15e9e0678554eac121de1e3f0df1043f40e69c760f5366d129ddb0cf7f2d3a3"
     }
   },
-  "package_version": "0.3.0"
+  "package_version": "0.4.0"
 }
