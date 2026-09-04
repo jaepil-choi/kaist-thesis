@@ -385,9 +385,14 @@ def low_rank_asset_weights(
         raise ValueError("invalid residual-weight or low-rank loading shapes")
     if residual_weights.shape != left.shape[:2]:
         raise ValueError("weight and loading coordinates do not match")
-    factor_exposure = torch.einsum("tn,tnk->tk", residual_weights, left)
+    # The residual former is ``Phi = I - right @ left.T`` (``eps = Phi r``), so the map from
+    # residual weights to asset weights is its transpose, ``Phi' = I - left @ right.T``: the
+    # authors multiply on the left, ``aw = w' Phi`` (public code simulation.py:81). Only this
+    # orientation makes ``aw @ r`` equal ``w @ eps``.
+    # See docs/issues/pca-composition-matrix-transposed.md.
+    factor_exposure = torch.einsum("tn,tnk->tk", residual_weights, right)
     asset_weights = residual_weights - torch.einsum(
-        "tk,tnk->tn", factor_exposure, right
+        "tk,tnk->tn", factor_exposure, left
     )
     gross = asset_weights.abs().sum(dim=1, keepdim=True)
     denominator = gross + 1e-8

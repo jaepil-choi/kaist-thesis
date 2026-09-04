@@ -5,6 +5,22 @@ Pelger, and Zanotti (2025). The machine-readable source of truth for the 45
 numbered outputs is `config/output-registry.yml`; every numerical result below
 is recoverable from an ignored `outputs/**/simulation_audit.json` file.
 
+## Invalidated results: PCA `K > 0`
+
+On 2026-09-04 the residual-to-asset weight map for the low-rank (PCA) path was
+found to be transposed relative to the authors' public code. The defect, the
+evidence and the fix are in
+`docs/issues/pca-composition-matrix-transposed.md`. The code is fixed
+(`src/guijarro_ordonez_replication/trading.py`, with a regression test in
+`tests/test_trading.py`), but **every stored PCA `K > 0` artifact under
+`outputs/strategies/` predates the fix and is invalid**: the saved asset
+weights, the reported returns, turnover, short proportion and leverage, and
+every table, figure and checkpoint built from them. They must not be quoted
+until the re-run listed in that issue is done.
+
+Fama-French, IPCA and PCA `K = 0` results are unaffected; the issue explains
+why each is out of scope.
+
 ## Classification boundary
 
 No output in this project is an exact replication of the paper's U.S. result.

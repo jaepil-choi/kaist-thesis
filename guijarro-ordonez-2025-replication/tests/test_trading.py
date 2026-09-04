@@ -82,18 +82,42 @@ def test_identity_return_panel_uses_reference_universe_and_zero_composition() ->
 
 
 def test_low_rank_mapping_matches_dense_composition() -> None:
+    # ``left`` holds the standardized eigenvectors S and ``right`` the return loadings B, so the
+    # residual former is ``Phi = I - B S' = I - right @ left.T`` and the public code takes asset
+    # weights by multiplying on the left, ``aw = w' Phi`` (simulation.py:81).
     residual_weights = torch.tensor([[0.7, -0.2, 0.4]])
     left = torch.tensor([[[0.2], [0.4], [-0.1]]])
     right = torch.tensor([[[0.3], [-0.2], [0.5]]])
     normalized_residual, asset = low_rank_asset_weights(
         residual_weights, left, right
     )
-    dense = torch.eye(3) - left[0] @ right[0].T
+    dense = torch.eye(3) - right[0] @ left[0].T
     expected_raw = residual_weights @ dense
     expected_gross = expected_raw.abs().sum()
     torch.testing.assert_close(asset, expected_raw / expected_gross)
     torch.testing.assert_close(normalized_residual, residual_weights / expected_gross)
     torch.testing.assert_close(asset.abs().sum(dim=1), torch.ones(1))
+
+
+def test_low_rank_asset_weights_earn_the_reported_residual_return() -> None:
+    """The mapped book must earn what the residual accounting reports.
+
+    ``eps = Phi r`` with ``Phi = I - right @ left.T``, so for any residual allocation ``w`` the
+    identity ``asset_weights @ r == residual_weights @ eps`` holds -- and holds only for the
+    authors' orientation. Transposing the map breaks it, which is what
+    docs/issues/pca-composition-matrix-transposed.md records.
+    """
+    generator = torch.Generator().manual_seed(0)
+    returns = torch.randn(6, generator=generator) / 50
+    left = torch.randn(1, 6, 2, generator=generator)
+    right = torch.randn(1, 6, 2, generator=generator)
+    residual_weights = torch.randn(1, 6, generator=generator)
+    phi = torch.eye(6) - right[0] @ left[0].T
+    residuals = phi @ returns
+    normalized_residual, asset = low_rank_asset_weights(
+        residual_weights, left, right
+    )
+    torch.testing.assert_close(asset @ returns, normalized_residual @ residuals)
 
 
 def test_factor_leg_mapping_adds_synthetic_hedges() -> None:
