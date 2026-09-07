@@ -1585,7 +1585,7 @@ dependencies = [
     { name = "pyyaml" },
 ]
 wheels = [
-    { filename = "vqapr-0.5.0-py3-none-any.whl", hash = "sha256:0518769e107dcf10c92d4d3805428be5ff26d9291e1da94e2c9c91eaf00b3727" },
+    { filename = "vqapr-0.5.0-py3-none-any.whl", hash = "sha256:e7f9a4786d1b7dc4a7c197724fc061ebdcadfa8b18667a655b8778f5398e8897" },
 ]
 
 [package.metadata]
