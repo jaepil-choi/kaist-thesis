@@ -1575,8 +1575,8 @@ wheels = [
 
 [[package]]
 name = "vqapr"
-version = "0.4.0"
-source = { path = "../../qlibx/dist/vqapr-0.4.0-py3-none-any.whl" }
+version = "0.5.0"
+source = { path = "../../qlibx/dist/vqapr-0.5.0-py3-none-any.whl" }
 dependencies = [
     { name = "duckdb" },
     { name = "pyarrow" },
@@ -1585,7 +1585,7 @@ dependencies = [
     { name = "pyyaml" },
 ]
 wheels = [
-    { filename = "vqapr-0.4.0-py3-none-any.whl", hash = "sha256:6854c2d6f55ba2eb6ae1beec6fca5c35ff261402b588f8792b77789b424972ea" },
+    { filename = "vqapr-0.5.0-py3-none-any.whl", hash = "sha256:0518769e107dcf10c92d4d3805428be5ff26d9291e1da94e2c9c91eaf00b3727" },
 ]
 
 [package.metadata]
@@ -1637,7 +1637,7 @@ requires-dist = [
     { name = "tabulate", specifier = ">=0.10.0" },
     { name = "torch", specifier = ">=2.14.0" },
     { name = "tqdm", specifier = ">=4.70.0" },
-    { name = "vqapr", path = "../../qlibx/dist/vqapr-0.4.0-py3-none-any.whl" },
+    { name = "vqapr", path = "../../qlibx/dist/vqapr-0.5.0-py3-none-any.whl" },
 ]
 
 [[package]]

@@ -55,7 +55,11 @@ registered and passes validation.
    <file.py>`, which needs no YAML at all.
 3. `vqapr register strategy <id> <file.py>` -- register it by naming the kind, the id and the
    file. The file must define exactly one `StrategyModel` subclass; zero and two are both
-   refused, and the refusal says which.
+   refused, and the refusal says which. **One strategy is one file.** Re-registering an edited
+   file keeps the id and records a new fingerprint, and a reader of the run record sees that as
+   *tuning* the same strategy. A variant you do not mean as a tuning -- another arm of a
+   methodology, a different signal, even the same class with one constant changed -- is a new
+   file under a new id. There is no config channel; which of the two you mean is your call.
 4. `vqapr new dataset --out d.yaml` -- get a dataset template with every required key
 5. `vqapr new execution-input --out ei.yaml` -- get a venue-table template
 6. `vqapr new exchange <id> --instruments A005930 A000660 --out venue.py` -- get a runnable
@@ -105,18 +109,33 @@ theirs: `decide`, `compute`, `project`/`monitor`. `vqapr show model <id>` descri
 
 **What a model is handed follows the dataset's `grain`.** `inputs()` returns a mapping from an
 alias you name to a `va.DatasetInput(dataset_id=, fields=, lookback=)`, and the call reads it
-with one of two verbs, in every role:
+with one of two verbs, in every role. `inputs()` is evaluated at registration and at preflight,
+BEFORE any memory is restored and before a run's `initial_model_memory` is applied, so what a
+model reads cannot depend on either: a family of settings that changes the reads is a family of
+registered components, one file and one id each.
 
 - **`read(alias, field)` on a panel grain** (`instrument_instant`, `instant`) returns a
   **`PanelWindow`**: `instants` (the same for every name) x `instruments`; `values[name]` is
-  that name's values over the instants, `None` where it had none; `latest()` is the newest value
-  per name -- the cross-section. It is a slice of a panel the run built once, not a query.
+  that name's values over the instants, `None` where it had none; **`current()` is the
+  cross-section at the last instant** -- a name with no row there is absent, not carried forward;
+  `latest()` is the newest value per name anywhere in the window, however old. On a sparse table
+  (a name has a row only on sessions it is eligible) a decision wants `current()`: `latest()`
+  silently trades an ineligible name on a stale value. It is a slice of a panel the run built
+  once, not a query.
 - **`rows(alias)` on `grain: rows`** (the vendor's long table) returns a **tuple of
   `Observation`s**, one per (instant, instrument), each carrying `instrument_id`, its own
   `available_at` and `values`; names interleave within an instant.
 - Each verb refuses the other grain by name. A value keeps its parquet column's type -- `float`
   from a DOUBLE column, `Decimal` from a DECIMAL one -- so write `Decimal(str(value))` and never
   `Decimal(value)`.
+- **What `compute()` returns is typed by its first session.** The output dataset's schema is
+  whatever pyarrow infers from the first non-empty session's rows, and every later session must
+  fit it; nothing is declared and nothing is cast. A `Decimal`'s precision and scale are part of
+  that type, and a ratio computed by ordinary division lands on a different scale from one session
+  to the next -- so **return `float` for a continuous quantity**, and where you genuinely need
+  `Decimal` (money, an exact ratio) quantize it to one scale yourself in `compute`. The refusal
+  (`datamodel.output.schema_mismatch`) quotes pyarrow and the established schema and does not
+  guess further; the data and its types are yours.
 
 **Choose the lookback member deliberately; they are a pair.** `RowsLookback(rows=N)` gives each name
 its **own** last N observations, so on an unbalanced panel the batch's calendar span is set by the
@@ -158,7 +177,11 @@ session (evaluation time, output `available_at`, row count), no per-instrument l
 `vqapr show datamodel <run-id>/<id>@<fp8>` read the record, and `vqapr show dataset <id>` reads
 back what it computed. The output is readable by any component that declares it -- which is the
 point: one model's output is the next model's input. Running the same run again is refused while
-its output dataset is registered (`check.datamodel.output_registered`).
+its output dataset is registered (`check.datamodel.output_registered`); `vqapr rm dataset <id>`
+withdraws the registration and deletes the chunks under `.vqapr/materialized/<id>/`, and is the
+way to retry a datamodel run or to drop a throw-away output. It refuses while a registered run
+takes its sessions from that dataset (`sessions_from`), naming the run; a dataset you registered
+from your own path is withdrawn without touching your file.
 
 **`vqapr show dataset <id> [--limit N]`** works for any registered dataset, not just a
 materialized one. It reports the registration's own facts — source, path, declared fields, span —
@@ -180,14 +203,23 @@ works when exactly one record of that strategy exists; `vqapr list strategies --
 lists them all, filterable by `--strategy`, `--fingerprint`, `--failed-contract`, `--since`.
 
 **Read a record from Python with `vqapr.public.read_strategy_table(store_root, run_id,
-table, strategy_ref)`.** The rows are parquet on disk, one directory per table and one file per
-chunk (`.vqapr/runs/<run-id>/strategies/<strategy-id>@<fp8>/tables/<table>/*.parquet`), so
+table, strategy_ref)`.** `store_root` is the path the run's result printed under that name --
+`<project>/.vqapr` unless `--store-root` moved it -- and NOT the project directory;
+`strategy_ref` is the `record` the result printed (`<strategy-id>@<fp8>`), or the bare
+`<strategy-id>` when one record of it exists, or omitted when the run holds one strategy. A root,
+run id or ref that names no record is refused (`RunRecordMissing`) naming what was found
+instead, so an empty frame means an empty table and nothing else. The rows are parquet on
+disk, one directory per table and one file per chunk
+(`.vqapr/runs/<run-id>/strategies/<strategy-id>@<fp8>/tables/<table>/*.parquet`), so
 `duckdb.read_parquet` on that directory reads them too: an instant is a `TIMESTAMPTZ` and comes
 back as the same instant, and a `Decimal` is exact text (the column's metadata marks it) that
 `read_strategy_table` restores and you cast yourself anywhere else.
 `read_strategy_table` decodes by the column types the writer recorded beside the table, so
 `nav` comes back a `Decimal` and `observed_at` an aware `datetime`. Rows reach the disk as
-each occurrence is accepted, so a long run can be watched and a killed one keeps what it did.
+each occurrence is accepted, so a long run can be watched -- `vqapr list strategies --run
+<run-id>` lists a strategy that has no record yet with `status: running`, its `chunks` (one per
+accepted session) and its `last_event_time`; see "Watching a long run" below -- and a killed one
+keeps what it did.
 
 `vqapr run <run-id> --no-account-positions` records only the `_ACCOUNT` row (cash and NAV)
 at each valuation instead of one row per held instrument; fills are recorded either way.
@@ -212,12 +244,14 @@ through `self.recorder`, and writing to an undeclared one refuses mid-run:
 A run whose strategy declared constraints records a fourth:
 
 - **`vqapr.monitoring`** -- what each declared constraint measured on the committed account
-  right after each commit. `constraint` (the rule's id), `passed`, `measured`, `bound`,
-  `excess`, `offenders` (the breaching instrument ids, space-separated; empty when none),
-  `account_version`. `event_time` is the fill instant the book was committed and judged at. **This is the table compliance
-  questions are asked of** -- the strategy record's `contract` block only counts how often each
-  constraint held; which name breached which limit by how much is here, one row per constraint
-  per commit.
+  right after each commit. `constraint` (the rule's id), `passed` (the author's own comparison),
+  `measured`, `bound`, `excess`, `verdict` (the framework's: `held`, `within_tolerance` or
+  `breached`), `tolerance` (what the excess was judged against), `offenders` (the breaching
+  instrument ids, space-separated; empty when none), `account_version`. `event_time` is the fill
+  instant the book was committed and judged at. **This is the table compliance questions are asked
+  of** -- the strategy record's `contract` block only counts (`held` / `within_tolerance` /
+  `breached` of `checked`, with the worst excess of each); which name breached which limit by how
+  much is here, one row per constraint per commit.
 
 Every row of every table also carries the same five envelope fields: `run_id`, `producer_id`,
 `stage`, `event_time` and `sequence` -- which run wrote it, what wrote it, at what point, when the
@@ -274,7 +308,13 @@ registers and runs unedited. It has two members and two consumers: `project` ret
 upper weight bound for every instrument -- the box the optimiser must stay inside, not the
 offenders and not a correction -- and `monitor` looks at the marked account from outside and
 returns a `ConstraintFinding` with the bound and the measured value. A breach never stops a run;
-it is recorded, and `show strategy` reports it under `contract`.
+it is recorded, and `show strategy` reports it under `contract`. **Compare strictly; the
+framework applies the tolerance.** A book executes in whole lots and is marked after its fills,
+so the realised weight lands a little off the target -- the framework judges every finding's
+`excess` against `max(bound * 1%, 10bp of NAV)` once, in one place, and files it as `held`,
+`within_tolerance` or `breached`; only `breached` makes the contract `ok: false`, and the counts
+of all three are reported so nothing is hidden. Override the line with a `tolerance` property on
+your Constraint returning a `Decimal` share of NAV (`None`, the default, keeps the framework's).
 
 **Stop condition:** `register` accepted every declaration without failures, and each kind you
 registered lists what you expect. `list` takes exactly one kind per call and `kind` is a required
@@ -295,21 +335,28 @@ under returns `count: 0`, which is an answer rather than a failure.
 
 #### Correcting a registration during setup
 
-Registrations are immutable identities in the sense that one id means one declaration -- registering
-a *different* declaration under an id that is already taken is refused, because that is a genuine
-mistake rather than an edit. Correcting the thing you already registered is not that, and it is the
-ordinary loop: edit the file and `vqapr register <file> --force` to replace it in place. The id
-stays, dependent configs and specs keep working, and the run record carries a new `source_digest`
-for whatever ran.
+Registrations are identities: one id means one declaration, and editing a COMPONENT you already
+registered is the ordinary loop: change the file and run the same `vqapr register <kind> <id>
+<file.py>` again. It replaces the
+registration in place, with no flag -- there is no `register --force`; the only `--force` the CLI
+has belongs to `vqapr run`, where it replaces a run RECORD. **A `runs:` declaration is the
+exception:** a run definition is the provenance of a result, so re-registering the same `run_id`
+with a changed body is refused (`workspace.run.register.conflict`). To edit one during setup,
+withdraw it first -- `vqapr rm run-definition <run-id>` -- and register the edited declaration
+again; its records, if any, stay readable. The success payload then carries
+`replaced: {fingerprint: <the old one>}`, and is silent about it when the id was new or the bytes
+unchanged. The id stays, the runs that name it keep working, and the next run's record carries a
+new `source_digest` for whatever ran.
 
 That digest is the provenance, and it is a **receipt rather than a gate**: it records what ran, and
 nothing re-checks it afterwards. Two runs of edited code carry two different digests, which is what
-makes an edit visible in the record.
+makes an edit visible in the record. A run that already pinned the old fingerprint is unaffected:
+its record testifies to what it used.
 
-- **Editing a component you registered:** change the file and re-register with `--force`. No new id,
-  no config edit, no spec edit.
-- **Withdrawing one:** `vqapr remove <kind> <id>` refuses while something still references it, and
-  names what does.
+- **Editing a component you registered:** change the file and re-register. No new id, no flag,
+  no run edit.
+- **Withdrawing one:** `vqapr rm <kind> <id>` refuses while a registered run still names it, and
+  names which run does.
 - **A genuinely different declaration:** give it its own id, so one id never means two things.
 - If this is a disposable first-run workspace with no result to preserve, keep the authored YAML
   and component files, obtain approval for the destructive reset, remove only the project-local
@@ -397,17 +444,74 @@ three strategies, not three runs.
    every strategy (or those named), in `N` processes when asked
 
 **Stop condition:** `vqapr check <run-id>` returns `ok:true`, then `vqapr run <run-id>`
-returns `ok:true` with a `strategies` map carrying an `occurrences` count, an
-`account_version` and a `record` (`<strategy-id>@<fp8>`) per strategy -- or, for a datamodel run,
-a `datamodels` map carrying `dataset_id`, `rows`, `sessions` and its `record`.
+returns `ok:true` with a `strategies` map carrying `status: completed`, an `occurrences` count,
+an `account_version` and a `record` (`<strategy-id>@<fp8>`) per strategy -- or, for a datamodel
+run, a `datamodels` map carrying `dataset_id`, `rows`, `sessions` and its `record`.
 
-**Tweaks are directories.** A strategy's record is named by its registered fingerprint, which
-folds the file bytes and the config: edit the strategy and re-register it under the same id,
-run again, and the new record lands BESIDE the old one. Counting `<strategy-id>@*` under
-`.vqapr/runs/<run-id>/strategies/` is how many times it was tweaked. Running the same
-fingerprint again is refused unless `--force` replaces that one record; `vqapr rm strategy
-<run-id>/<strategy-id>@<fp8>` and `vqapr rm run <run-id> [--keep-latest]` remove records, and
-both refuse while a writer may still hold the record.
+**When one strategy fails, the others still run.** Each strategy is its own flow with its own
+account, so a refusal inside one -- your `decide()` raised, or the `Rebalance` it returned was
+outside its budget -- is that strategy's outcome, not the run's. The envelope is then `ok:false`
+with `stage: run.strategy_failed` and the SAME `strategies` map: `status: completed` lines as
+above beside `status: failed` lines that carry that strategy's refusal (`stage`, `component_id`,
+`failures`, `at`). The top-level `failures` gathers every failed strategy's entries, each stamped
+`strategy: <id>`; read `fix` first, as always, and `source` names the strategy
+(`key_path: strategies.<id>`) and, for a raise from your own file, the file and the line. The
+completed records stand. Fix the failed strategy, register the file again, and
+`vqapr run <run-id> --strategy <id>` runs it alone into a new record beside them. The shape is
+the same under `--jobs N`.
+
+**Watching a long run.** A strategy's record (`strategy.json`) is written last, so until then
+`vqapr list strategies --run <run-id>` lists it with `status: running`, `chunks` (one per
+accepted session), `last_event_time` (the last session it accepted) and `lock.refreshed_ago`
+(seconds since the run last touched its lock). A directory whose lock has gone quiet for two
+minutes and still has no record is `status: unfinished`: the strategy was killed, or its flow
+ended in a refusal -- the run's own envelope says which. `vqapr show strategy` reads finished
+records only.
+
+**Registering a run's table as a dataset.** A strategy's record streams every table it
+writes -- the package's `vqapr.weight`, `vqapr.account`, `vqapr.fill`, `vqapr.monitoring`, and
+any table the strategy declared with `tables()` -- as a parquet directory under
+`.vqapr/runs/<run-id>/strategies/<strategy-id>@<fp8>/tables/<table>/`. That directory registers
+like any other source, so one run's decisions are the next run's input (a member run feeding an
+ensemble) with no publishing step in between:
+
+```yaml
+datasets:
+  reversal_allocation:
+    source_id: reversal-weights
+    path: .vqapr/runs/reversal/strategies/reversal@1a2b3c4d/tables/vqapr.weight
+    instrument_field: instrument
+    available_at: event_time        # the decision instant the row was written at
+    grain: instrument_instant
+    key_fields: [event_time, instrument]
+    fields:
+      weight: "CAST(weight AS DECIMAL(38, 12))"   # a record stores Decimals as text
+```
+
+`vqapr list strategies --run <run-id>` gives the `<strategy-id>@<fp8>`; `available_at` is
+`event_time` for every package table (a valuation writes `observed_at` and `event_time` at the
+same instant). A `Decimal` column is stored as text with `vqapr.type: decimal` metadata, so a
+numeric field is `CAST` in the registration -- `DECIMAL(38, 12)` is exact for a weight, which the
+optimiser placed on the `1e-12` grid. The run's own `run.json` carries the sha256 of every source it
+read, which is the provenance a later reader wants.
+
+**Tweaks are records, not directories.** A strategy's record is named by its registered
+fingerprint, which folds the file bytes and the config: edit the strategy and re-register it under
+the same id, run again, and the new record lands BESIDE the old one. **Count records**: the rows
+`vqapr list strategies --run <run-id>` (or `list datamodels --run`) reports with
+`status: completed` are how many times it was tweaked. Counting directories over-counts by the
+crashes: a run killed or refused inside a callback leaves a directory with rows and no record,
+which `list` shows as `status: unfinished` and which `vqapr rm strategy|datamodel <run-id>/<ref>`
+removes. Running the same fingerprint again is refused unless `--force` replaces that one record;
+`vqapr rm strategy <run-id>/<strategy-id>@<fp8>` and `vqapr rm run <run-id> [--keep-latest]`
+remove records, and both refuse while a writer may still hold the record.
+
+**Removing a run entirely: `vqapr rm run <run-id> --cascade`.** One gesture removes its records,
+its registered definition, the materialized datasets its datamodels wrote, and the components it
+named -- keeping, and naming as `kept`, any dataset or component another registered run still
+names. The single-kind verbs still exist for the step-by-step case, `vqapr list runs` keeps
+showing a run whose definition was withdrawn but whose records remain (`status: orphaned`), and
+`rm run-definition` reports the records it left and the verb that removes them.
 
 ## Writing a strategy
 
@@ -432,6 +536,14 @@ What the strategy needs to remember between callbacks lives in `self.memory` (st
 framework restores it before every `decide()` and snapshots it after, so read it, change it, and
 leave it. One instance serves the whole run.
 
+State that will not fit strict JSON goes through `save_payload`/`load_payload`, and preflight
+proves the pair **before the first callback**: it calls `save_payload` on a fresh instance,
+`load_payload` on a second fresh instance with those bytes, then `save_payload` again, and the two
+byte strings must match. So `save_payload` must be deterministic (no timestamp, no `id()`, no
+unordered set iteration), and `load_payload` must accept an **empty** source -- the default
+`save_payload` writes nothing, so a bare `pickle.load(source)` refuses the run with `EOFError`.
+The refusal names which of the three steps failed and carries the original exception.
+
 `Rebalance.of` takes **relative** conviction. `long={"A": 2, "B": 1}` means A is liked twice as
 much as B; normalising, rounding onto the canonical grid and balancing against cash is the
 package's arithmetic, not yours. You never make weights sum to one by hand.
@@ -439,7 +551,19 @@ package's arithmetic, not yours. You never make weights sum to one by hand.
 A short is declared by **which mapping** a name appears in, never by a negative number:
 `short={"A": 2}` means twice as short. Passing both sides makes the book signed automatically.
 
-Return `Hold(reason="...")` to decline. The reason is one token, no spaces.
+`of` splits `invested` **evenly** between the two sides, so it tops out at half a textbook
+$1-long/$1-short book and cannot say "more shorts than longs". When the signal decides the split,
+use `Rebalance.signed(weights, gross=1)` instead: weights are **signed** there (a negative number
+IS the short), `gross` is the sum of absolute weights, and the long/short ratio comes out exactly
+as the signal produced it. `gross=2` is the textbook $1/$1 book. Cash is the net residual either
+way, so a dollar-neutral book has cash 1.
+
+```python
+return va.Rebalance.signed({"A": 0.8, "B": 0.2, "C": -1.0})   # 0.5 long, 0.5 short
+```
+
+Return `Hold(reason="...")` to decline. The reason is prose a human reads -- spaces are fine,
+and only an empty string is refused.
 
 ### Before you hand-roll it: `vqapr.public`
 
@@ -482,6 +606,87 @@ This rung depends on what the specific task requires. Common steps:
 - Compare output against known baselines
 - Verify that account state matches expectations
 - Check that the simulation result is deterministic across runs with identical inputs
+
+**Start from the report, not from the tables.** `strategy_report` and `run_report` in
+`vqapr.public` read a finished record back and compute, once, what a paper's tables need:
+
+```python
+from decimal import Decimal
+from pathlib import Path
+from vqapr.public import run_report, strategy_report
+
+store = Path(".vqapr")                       # the `store_root` `vqapr run` printed
+one = strategy_report(store, "reversal")     # the run's only strategy, or name "<id>" / "<id>@<fp8>"
+every = run_report(store, "ff-arm", benchmark="bm-book", risk_free_annual=Decimal("0.03"))
+one.as_record()                              # JSON-ready: Decimal as text, instants with offset
+```
+
+A `StrategyReport` has six sections, each a pydantic document, each `None` with a reason in
+`omitted` when the record cannot give it:
+
+- **`performance`** — NAV, period returns and drawdown as series (`instants` beside `values`);
+  total and annualised return, volatility, Sharpe, Sortino, Calmar, max drawdown and when,
+  positive-period share; `by_year` and `by_month`. `periods_per_year` is inferred from the
+  valuation grid and says so (`inferred`); pass it to override. Sharpe is against
+  `risk_free_annual`, zero unless you give one -- the record holds no rate.
+- **`book`** — held / long / short counts and gross, net, long, short exposure, cash share, max
+  weight, top-five share and HHI, per valuation, from the marked positions.
+- **`attribution`** — P&L per period by name and by side (long / short), and `residual`: the part
+  of the NAV change no marked name explains. Zero when every held name was marked; a non-zero
+  residual is a finding, not noise. `position_hit_rate` is the share of name-periods with a
+  positive P&L.
+- **`trading`** — one-way realised turnover (from fills) beside one-way intended turnover (from
+  weights); costs summed from `vqapr.fill` (commission, tax, basis points of notional, share of
+  mean NAV per year, by roster kind); `fills` (the same summary `vqapr run` prints, including
+  `never_filled`); holding periods.
+- **`intent`** — each decision's weights against the book at the first valuation after it:
+  `gap` (Σ |realised − intended|) and `weight_sign_hit_rate`.
+- **`compliance`** — per constraint: `checked` split into `held` / `within_tolerance` /
+  `breached` / `unmeasured`, the worst excess and when, the offending names by count.
+
+A `RunReport` holds every strategy's report plus `headline` (one row per strategy), the
+`correlation` of period returns on the instants all strategies share, and `relative` (active
+return, tracking error, information ratio) against the `benchmark` strategy you name -- a
+benchmark must be a book of the same run, because an index level is not in the record.
+
+**Three hit rates, three names.** `positive_period_share`, `position_hit_rate` and
+`weight_sign_hit_rate` measure different things; do not report any of them as "hit ratio"
+without saying which.
+
+#### Reporting: tables and figures for a paper
+
+The package computes the values and stops there; **it ships no plotting library and no
+renderer**, on purpose (PRD UC-REPORT-001). Render in the project with whatever the project
+already uses -- `pandas` + `matplotlib` is the usual pair; add them to the project, never to
+vqapr. Every series in the document is `instants` beside `values`, so
+`pd.Series(s.values, index=pd.DatetimeIndex(s.instants)).astype(float)` is the whole bridge.
+
+What a paper expects, and where it comes from:
+
+- **Table 1, the headline.** One row per strategy: annualised return, volatility, Sharpe, max
+  drawdown, turnover, cost, breaches. `run_report(...).headline`. Round for the table only;
+  keep the document's exact text for the appendix or the replication package.
+- **Table 2, by year.** `performance.by_year` per strategy: total return, volatility, Sharpe, max
+  drawdown. Add `relative` columns when a benchmark book is in the run.
+- **Figure 1, cumulative return with drawdown beneath.** `performance.nav` normalised to 1 (or
+  cumulative `returns`), one line per strategy, `performance.drawdown` as a filled area below on a
+  shared x axis.
+- **Figure 2, the book over time.** `book.gross_exposure`, `net_exposure`, `held` -- three small
+  panels, one x axis.
+- **Figure 3, correlation.** `run_report(...).correlation.values` as a heat map with the value
+  printed in each cell.
+- **Table 3, execution.** `trading.costs`, `trading.fills`, `intent.mean_gap`,
+  `annualized_realized_turnover` beside `annualized_intended_turnover` -- the second pair is the
+  size of what did not execute.
+- **Table 4, compliance.** `compliance.constraints`: checked / held / within tolerance / breached,
+  worst excess, top offenders.
+
+House style for a paper figure: serif or the journal's font; one column ≈ 3.3 in wide, two
+columns ≈ 7 in; 300 dpi PNG for review, PDF for submission; no top and right spines; a light
+horizontal grid only; a legend inside the axes or a caption; colour that survives greyscale
+(vary line style, not only hue); the zero line drawn. Label axes with units (`%`, `× NAV/yr`).
+State in the caption what `periods_per_year` and `risk_free_annual` were, because the
+document carries them and a reader will ask.
 
 ## Reading vqapr's output
 
