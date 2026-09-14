@@ -59,8 +59,8 @@ out of it is out of bounds even when it resolves to something harmless.
 This bans, among other things: the repository root and its `AGENTS.md`, every replication project in
 this repository — `guijarro-ordonez-2025-replication/`, `kaniel-2023-replication/`,
 `arnott-2023-replication/`, `Deep_Learning_Statistical_Arbitrage_Code/`, `KAIST_thesis-master/` —
-the repository's `docs/`, `config/`, `scripts/` and `data/`, the sibling `qlibx` repository in any
-form (source, tests, docs, showcase, references, git history, the built wheel), and every other
+the repository's `docs/`, `config/`, `scripts/` and `data/`, the sibling `vqapr` repository (formerly
+`qlibx`) in any form (source, tests, docs, showcase, references, git history, the built wheel), and every other
 testbed directory in any repository.
 
 The replication project matters especially. **A completed run of this same paper already exists
@@ -77,7 +77,7 @@ You may read and use freely:
 
 - the installed `vqapr` distribution's **public** surface — the documented public imports
 - the CLI: any `vqapr` subcommand, and `--help` on any of them
-- the agent skill at `.agents/skills/vqapr/SKILL.md`
+- the agent skills under `.agents/skills/vqapr-*/` (mirrored in `.claude/skills/vqapr-*/`)
 - error messages, structured failure payloads, `explain` topics, scaffold template comments, and
   docstrings reachable through `help()`
 - source that `vqapr new` scaffolds into this directory — that is your code once it is emitted

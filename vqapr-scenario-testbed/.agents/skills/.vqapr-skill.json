@@ -1,0 +1,16 @@
+{
+  "package_version": "0.16.0",
+  "skills": [
+    "analyze-result",
+    "inspect-workspace",
+    "introduce-vqapr",
+    "make-compliance",
+    "make-datamodel",
+    "make-exchange",
+    "make-strategy",
+    "register-dataset",
+    "report-issue-dev",
+    "run-backtest"
+  ],
+  "target": "agents"
+}

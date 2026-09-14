@@ -7,7 +7,9 @@ This is the third generation of the vqapr testbed in this repository, and the fi
 the post-convergence wheel. The two earlier directories (`vqapr-testbed/`, run against an editable
 `0.1.0a11`; `vqapr-final-testbed/`, run 2026-08-30 against the `0.2.0a1` wheel) were deleted on
 2026-09-02 and survive only in git history. Their findings went upstream:
-`../../qlibx/docs/handoff/2026-08-30-final-testbed-findings.md` and `docs/issues/015`–`027`.
+`../../vqapr/docs/handoff/2026-08-30-final-testbed-findings.md` and `docs/issues/015`–`027`. The
+sibling repository was `../../qlibx` until it was renamed `../../vqapr`; the provenance table below
+keeps the old name where it records history.
 
 ---
 
@@ -31,8 +33,8 @@ What you are reading for afterwards:
   a real user cannot classify them either.
 - `urge` entries: where the surface ran out and the agent wanted the source.
 
-The wheel under test is a **major rework**. The qlibx convergence campaign
-(`../../qlibx/docs/refactoring/2026-09-02-the-convergence-campaign.md`) changes the surface, the
+The wheel under test is a **major rework**. The convergence campaign
+(`../../vqapr/docs/refactoring/2026-09-02-the-convergence-campaign.md`) changes the surface, the
 registration transaction, the run record, the panel and the run layout. Treat this run as a new
 baseline, not a re-measurement of run 1: the shape of friction is expected to move, and the known
 issues list is rebuilt from scratch.
@@ -66,7 +68,7 @@ is in it is part of the job, and friction there is `No` per `AGENTS.md`.
 **Known issues are present, and are not a to-do list.** `FINDINGS.md` opens with a `## Known
 issues` section that you fill at staging time against the wheel you built (Protocol step 0). The
 agent annotates when one costs it time; it does not re-file them. Do not copy run 1's list forward —
-most of it is fixed or renamed by the campaign. Read each `../../qlibx/docs/issues/` entry's status.
+most of it is fixed or renamed by the campaign. Read each `../../vqapr/docs/issues/` entry's status.
 
 **Autonomy is expected.** `AGENTS.md` tells the agent to carry the scenario out end to end and to
 ask you only about the scenario itself — never about how vqapr does something. If it asks you a
@@ -79,7 +81,7 @@ each one lands in `FINDINGS.md` as `Resolved by: asked`.
 ## Isolation
 
 - **The dependency is a built wheel** — the exact `vqapr` wheel pinned in `pyproject.toml`, from
-  `../../qlibx/dist/`. The `.venv` holds a released distribution: no repository, no `tests/`, no
+  `../../vqapr/dist/`. The `.venv` holds a released distribution: no repository, no `tests/`, no
   `docs/`, no showcase, no git history. It is a pure-Python wheel, so the module source *is* still
   physically readable under `site-packages/vqapr/`; `AGENTS.md` forbids opening it and
   `.claude/guard_boundary.py` denies any command that names `.venv` or reaches for
@@ -88,13 +90,13 @@ each one lands in `FINDINGS.md` as `Resolved by: asked`.
   `vqapr-scenario-testbed/` at all — no reading, listing, globbing, or `cd` above it, and no relative
   path that climbs out. `.claude/settings.json` adds `Read(../**)`-style denies on top of the hook.
 
-**The extra risk here is this repository, not `qlibx`.** `guijarro-ordonez-2025-replication/` is a
+**The extra risk here is this repository, not `../../vqapr`.** `guijarro-ordonez-2025-replication/` is a
 completed Korean replication of the very paper in `paper/`: pipeline, variable definitions, timing
 decisions, `outputs/`, and a written `docs/execution-status.md`. So are
 `Deep_Learning_Statistical_Arbitrage_Code/` (the authors' own code) and `docs/markdown/summary/`.
 Reading any of them lets the agent skip precisely the decisions this run exists to watch.
 
-A defect found here is fixed upstream in `../../qlibx` and picked up by rebuilding the wheel. That
+A defect found here is fixed upstream in `../../vqapr` and picked up by rebuilding the wheel. That
 is your move, not the agent's.
 
 ---
@@ -107,11 +109,11 @@ CLAUDE.md         @AGENTS.md — same contract for Claude Code sessions.
 README.md         this file. Evaluator only; the agent is told not to read it.
 FINDINGS.md       the deliverable. gitignored. You stage the header + Known issues; the agent writes the rest.
 SCENARIO.md       optional, gitignored. The scenario, if you prefer to write it down rather than say it.
-pyproject.toml    exact wheel pin on ../../qlibx/dist/, plus pandas/pyarrow/duckdb/numpy.
+pyproject.toml    exact wheel pin on ../../vqapr/dist/, plus pandas/pyarrow/duckdb/numpy.
 uv.lock           generated in step 0 and committed with the pin, so a run's venv is reproducible.
 .python-version   3.12
-.claude/          guard_boundary.py (PreToolUse deny hook) + settings.json + the skill adapter.
-.agents/skills/   the installed vqapr skill. Written by `vqapr skill install` in step 0; commit it.
+.claude/          guard_boundary.py (PreToolUse deny hook) + settings.json + skills/, the Claude copy of the skills.
+.agents/skills/   the installed vqapr skills (vqapr-*/, ten at 0.16.0). Written by `vqapr skill install` in step 0; commit it.
 paper/            the paper text. gitignored — restage per the protocol below.
 data/             staged inputs, ~786 MB. gitignored.
 workspace/        whatever the agent registers. gitignored.
@@ -157,9 +159,11 @@ marked `Resolved by: asked`, and the shape of the question tells you how legible
 **0. Pin, lock and stage the wheel under test.** Between runs this directory carries no venv and no
 `FINDINGS.md` body, so nothing from the previous wheel leaks into the next run.
 
-1. Build the wheel in `../../qlibx` (`uv build`; its `dist/` is gitignored there, so whatever is in
-   it is whatever you last built). Make sure `pyproject.toml` here pins that exact version and
-   filename — `0.2.0a2` is a placeholder from 2026-09-02 and may need to change.
+1. Build the wheel in `../../vqapr` **from the release tag**, not from `develop`: `git archive
+   <tag>` into a scratch directory, then `uv build --wheel --out-dir ../../vqapr/dist` there.
+   `develop` moves past a tag without bumping the version, so a wheel built from it carries a
+   release's name and different code. Its `dist/` is gitignored, so whatever is in it is whatever
+   you last built. Make sure `pyproject.toml` here pins that exact version and filename.
 2. From `vqapr-scenario-testbed/`:
 
    ```powershell
@@ -168,8 +172,8 @@ marked `Resolved by: asked`, and the shape of the question tells you how legible
    uv run --no-sync vqapr skill install --into .
    ```
 
-3. Open `FINDINGS.md` and fill the header table (wheel filename, build date, qlibx commit) and the
-   `## Known issues` list from `../../qlibx/docs/issues/` — only the entries still open against this
+3. Open `FINDINGS.md` and fill the header table (wheel filename, build date, vqapr tag and commit)
+   and the `## Known issues` list from `../../vqapr/docs/issues/` — only the entries still open against this
    wheel, one line each. An empty list is valid. If `FINDINGS.md` is missing, recreate it from the
    skeleton at the end of this file.
 4. Commit `pyproject.toml`, `uv.lock` and `.agents/skills/` together so the run is reproducible.
@@ -200,7 +204,7 @@ it was seven verbs at `0.2.0a1` and the campaign reshapes it); `{"current": true
 true, ...}`; and a `deny` decision from the hook.
 
 **3. Start the agent in a fresh session** whose working directory is `vqapr-scenario-testbed/`, with
-no prior vqapr context in its history. A session that has already read `qlibx/src` — or
+no prior vqapr context in its history. A session that has already read `vqapr/src` — or
 `guijarro-ordonez-2025-replication/` — cannot be the subject. That is the one condition that
 invalidates the whole run.
 
@@ -212,10 +216,10 @@ convention acceptable" — fair. "How does vqapr do X" — not; tell it the pack
 say, and let it record the gap. Every exchange should land in `FINDINGS.md` as `Resolved by: asked`.
 
 **6. Afterwards**, triage `FINDINGS.md`. Re-check every `Yes` against the surface before filing it
-upstream in `../../qlibx`. Read `Unsure` and `urge` entries closest. Note where the agent's `No`
+upstream in `../../vqapr`. Read `Unsure` and `urge` entries closest. Note where the agent's `No`
 entries cluster. Then delete `FINDINGS.md`, `SCENARIO.md`, `workspace/` and `outputs/` (or move them
 out of the repository) so the next run starts clean; keep a copy of `FINDINGS.md` upstream in
-`../../qlibx/docs/handoff/` the way run 1 did.
+`../../vqapr/docs/handoff/` the way run 1 did.
 
 ---
 
@@ -226,8 +230,9 @@ out of the repository) so the next run starts clean; keep a copy of `FINDINGS.md
 | kwam run | `0.2.0a1` | `qlibx@develop`, 2026-08-29 | 13 defects → `docs/issues/015`–`027` |
 | run 1 (`vqapr-final-testbed/`) | `0.2.0a1`, same bytes | same | `docs/handoff/2026-08-30-final-testbed-findings.md` |
 | run 2 (this directory) | `0.3.0` | `qlibx@develop@4f616f5a` (`v0.3.0`), 2026-09-03 — the convergence campaign, records `129`–`139` | run 2026-09-03, both phases (FF5+MOM K=6 OU+Thresh; then K=0/K=5 x OU+Thresh/Fourier+FFN, profiled). 17 findings, no `blocked`; 14 filed as `docs/issues/055`-`068`, of which `058` and `061` were closed the same day (records `146`, `143`). Copy: `../../qlibx/docs/handoff/2026-09-03-scenario-testbed-run-2-findings.md` |
+| run 4 (this directory) | `0.16.0` | `vqapr@v0.16.0@3a52646d`, built 2026-09-14 from the tag archive (sha256 `b0ed0b27…c1e6`) | run 2026-09-14: Korean FF3 factors in three scenarios (canonical FF; Kimchi-matched; Kimchi-matched with a separate-statement fallback). 21 findings (15 `Yes`, 6 `No`), none `blocked`. The `Yes` entries were re-checked on the wheel's surface by three verifier sessions. They are filed as 22 `docs/issues/report-2026-09-14-*` reports, 8 of which came from the verification itself. Not filed: F-007 (ruled by `064`) and F-018 (scenario wording). Copy with triage: `../../vqapr/docs/handoff/2026-09-14-scenario-testbed-run-4-findings.md` |
 
-Record the run 2 row here once the wheel is built, and mirror it in the `FINDINGS.md` header.
+Record each run's row here once the wheel is built, and mirror it in the `FINDINGS.md` header.
 
 ---
 
@@ -254,13 +259,13 @@ If the gitignored `FINDINGS.md` is missing, recreate it from this:
 
 | | |
 |---|---|
-| **Wheel** | `vqapr-<version>-py3-none-any.whl` — built <date> from `qlibx@<branch>@<commit>` |
-| **Skill** | `.agents/skills/vqapr/SKILL.md`, installed by `vqapr skill install --into .` |
+| **Wheel** | `vqapr-<version>-py3-none-any.whl` — built <date> from `vqapr@<tag>@<commit>` |
+| **Skill** | `.agents/skills/vqapr-*/`, installed by `vqapr skill install --into .` |
 | **Scenario** | given live / `SCENARIO.md` |
 
 ## Known issues
 
-- **NNN** — title (one line per open ../../qlibx/docs/issues entry; the agent annotates under it)
+- **NNN** — title (one line per open ../../vqapr/docs/issues entry; the agent annotates under it)
 
 ## Findings
 

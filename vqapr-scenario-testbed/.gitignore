@@ -4,6 +4,7 @@
 # what the isolation exists to prevent. README.md says how to restage paper/ and data/.
 FINDINGS.md
 SCENARIO.md
+SCENARIO-*.md
 data/
 paper/
 workspace/
