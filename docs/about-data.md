@@ -133,6 +133,18 @@ date로 대체하면 look-ahead bias가 생긴다.
 - `adjusted_prices.parquet`의 raw price·수정계수·수익률·시가총액을 사용한다.
   qlibx의 `daily_market.parquet`는 근거 없는 `available_at = date - 1 day` 규칙이
   있어 복사하지 않았다.
+- 2026-09-14부터 `adjusted_prices.parquet`은 벤더 조정계수 결함을 고친 보정본이다.
+  - 원본은 qlibx 복사본이자 kwam-enhanced-index `build_adjusted_prices`의 출력이다.
+    `canonical/common/korean_equity_source/adjusted_prices.uncorrected.parquet`에 보존했다.
+  - `scripts/kaist_pilot/correct_adjusted_prices.py`가 이 원본에서 보정본을 다시 만든다.
+  - 보정은 9행이다.
+    - 분할·병합 미반영 1행: A052670 2026-02-09, 1,500:1
+    - 재개일 수정계수 0 1행: A065180 2016-06-02. 이전 조정가격이 inf였다.
+    - 기준가와 어긋난 수정계수 7행
+  - 수익률이 바뀐 행은 A052670 하나다(+29,948% → −79.97%).
+  - 틱 단위 반올림으로 생긴 기준가 차이는 결함으로 보지 않고 벤더 계수를 유지했다.
+  - 행별 내역은 `metadata/checks/qlibx_korean_equity/adjusted_prices_corrections.csv`,
+    실행 기록은 `metadata/manifests/114_adjusted_prices_corrections_20260914.json`에 있다.
 - qlibx의 `factor_returns.parquet`는 Carhart 계약이 아니라 별도 전략 sleeve
   수익률이므로 논문 factor 입력으로 복사하지 않았다.
 - 재무 facts에는 여러 dump의 반복 logical key가 있다. 최신값을 무조건 고르지
