@@ -136,6 +136,12 @@ key list.
 A dataset and its source file register together — `source_id` and `path` are declared inline, and
 the path resolves relative to the YAML.
 
+**Registering data declares nothing tradable.** The instrument roster is a separate declaration,
+and a ticker in the data does not have to be in it — only the ids in it can be ordered. If the user
+will run a strategy on this data, tell them now that the ids it may trade must be registered as
+instruments before the run (the **run-backtest** skill, step 0): an order for any other id fails
+the whole run.
+
 `field_types` is a declaration the user makes and registration checks **once**, against the file:
 one of `TIMESTAMP_TZ`, `DATE`, `INTEGER`, `DOUBLE`, `VARCHAR`, `BOOLEAN`. A `DECIMAL` column is
 refused — cast it to `DOUBLE` while preparing — so a model reads one numeric type per field and

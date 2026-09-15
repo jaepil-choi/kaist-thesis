@@ -11,7 +11,8 @@ A complete journey the product runs as it stands:
 - a **five-day reversal strategy**
 - a **venue**
 - a small **synthetic panel** — ten names over three years of real KRX sessions
-- `sample.yaml` — the one declaration that registers all of it
+- `instruments.yaml` — the roster: the ten names and what each IS
+- `sample.yaml` — registers the data, the strategy, the venue and the run
 
 It is not a starter layout and there is no hidden built-in alpha. It is a reference journey, and it
 is not created in a project that did not ask for it.
@@ -25,15 +26,23 @@ a real panel looks like, and a sample that was neatly rectangular would teach th
 `current()` versus `latest()`, coverage failures, and the tradability question all only appear on a
 panel like this one.
 
-## The four commands, and what each answers
+## The five commands, and what each answers
+
+```bash
+vqapr register ./first-run/instruments.yaml
+```
+
+Registers the roster: the ten names and what each IS. It is its own declaration because a dataset
+may carry names no strategy trades; only the names here can be ordered, and a strategy run is
+refused at `check` until some are registered.
 
 ```bash
 vqapr register ./first-run/sample.yaml
 ```
 
-Registers the two datasets (the prices and the venue table) with their sources, the exchange and the components — in
-dependency order, so the document cannot fail for the order it was typed in. Follow with
-`vqapr list datasets` and `vqapr list components` to see what arrived.
+Registers the two datasets (the prices and the venue table) with their sources, the exchange, the
+strategy and the run — in dependency order, so the document cannot fail for the order it was typed
+in. Follow with `vqapr list datasets` and `vqapr list components` to see what arrived.
 
 ```bash
 vqapr check sample-run

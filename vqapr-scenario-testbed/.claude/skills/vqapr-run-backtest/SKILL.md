@@ -40,6 +40,7 @@ one run would have made it.
 
 ```
 Run progress:
+- [ ] 0. Strategy run: every id it may order is registered as an instrument
 - [ ] 1. vqapr new run --out runs.yaml
 - [ ] 2. Fill it with registered ids
 - [ ] 3. vqapr register runs.yaml
@@ -47,6 +48,27 @@ Run progress:
 - [ ] 5. vqapr run <run-id>
 - [ ] 6. Confirm every strategy reached status: completed
 ```
+
+### 0. Register the instruments first (strategy runs)
+
+**Registering a dataset declares nothing tradable.** The instrument roster is its own declaration,
+and only the ids in it can be ordered; a ticker the data has but the roster does not can be read,
+never traded. A strategy run in a project with no roster is refused at `check` and at `run`
+(`roster.absent`, 412). An order for an id outside the roster **fails the whole run** at the fill
+(`instrument.undeclared`, 412), and `check` cannot see it coming: which ids a strategy orders is
+known only once it decides.
+
+So before the first strategy run, ask the user which ids the strategy may trade, and register them:
+
+```python
+from vqapr import public as vq
+vq.register_instruments(".", {"005930": "stock", "069500": "etf"})  # writes the tables, registers them
+```
+
+or run `vqapr new instruments --instruments <ids...>`: it writes `instruments.py` (set each id's
+kind, then run it — it exports one parquet per kind) and `instruments.yaml` beside it, then
+`vqapr register instruments.yaml`. A datamodel run orders nothing and needs no roster. See
+[references/run-declaration.md](references/run-declaration.md).
 
 ### 1–2. Declare it
 

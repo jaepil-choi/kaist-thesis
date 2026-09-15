@@ -16,10 +16,16 @@
 |---|---|---|
 | `instrument_instant` | one value per (available_at, instrument) — a date × ticker table | `read(alias, field)` |
 | `instant` | one value per available_at, no instrument axis — an index level, a rate | `read(alias, field)` |
-| `rows` | the vendor's grain (long / EAV), unique on `key_fields`, no panel | `rows(alias)` |
+| `rows` | the vendor's grain (long / EAV); `key_fields` may repeat; no panel | `rows(alias)` |
 
 **Register a date × ticker table as `instrument_instant`.** That is the shape a panel is built
-from and the shape a cross-sectional model reads safely.
+from and the shape a cross-sectional model reads safely. A repeated or null (available_at,
+instrument) is refused there, because it would put two values in one panel cell.
+
+**A `rows` key is counted, not proved.** Registration reports how many `key_fields` groups hold
+more than one row and how many hold a null, and registers the table anyway. A read hands back
+every row, ordered by `available_at`, the key, then every field, so a repeat comes back in the same
+order on every run.
 
 The profiler's key report is the evidence for this choice. If no combination of columns is unique
 until you add a third or fourth, the table carries several facts per name and date — that is a

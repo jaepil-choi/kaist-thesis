@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Scenario friction evaluation: can a first-time vqapr user carry out a given scenario on their own, and tell vqapr's friction from their own?"
 requires-python = ">=3.12"
 dependencies = [
-    "vqapr==0.16.0",
+    "vqapr==0.16.1",
     "pandas>=2.2",
     "pyarrow>=17",
     "duckdb>=1.0",
@@ -25,4 +25,4 @@ dependencies = [
 # The exact wheel under test. The version and filename must match what `uv build` in ../../vqapr
 # (formerly ../../qlibx) actually produced from the release tag. See README.md, Protocol step 0.
 [tool.uv.sources]
-vqapr = { path = "../../vqapr/dist/vqapr-0.16.0-py3-none-any.whl" }
+vqapr = { path = "../../vqapr/dist/vqapr-0.16.1-py3-none-any.whl" }

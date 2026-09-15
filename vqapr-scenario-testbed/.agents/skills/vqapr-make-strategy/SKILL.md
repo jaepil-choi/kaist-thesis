@@ -158,6 +158,10 @@ vqapr check <run-id>
 Registration validates the contract; `check` proves the run it is named in. A component that
 imports and loads is **not** thereby compatible — being findable is not being valid.
 
+`check` refuses a strategy run in a project with no instrument roster, but it cannot know which ids
+the strategy will order. Register every id it may trade before the run (the **run-backtest** skill,
+step 0): an order for an unregistered id fails the whole run.
+
 If a declaration has drifted far from the contract, do not repair it. Generate a fresh one with
 `vqapr new` and move your logic in; editing a correct template is faster than repairing a wrong
 one.

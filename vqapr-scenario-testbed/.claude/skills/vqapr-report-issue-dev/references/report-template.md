@@ -40,8 +40,9 @@ docstring, the envelope's own `fix`. An expectation with no source is an opinion
 that is not in this project, and whether it reproduced every time or once in N.>
 
 1. `uv run vqapr new sample --out ./repro`
-2. `uv run vqapr register ./repro/sample.yaml`
-3. `uv run vqapr check sample-run`  <- fails here
+2. `uv run vqapr register ./repro/instruments.yaml`
+3. `uv run vqapr register ./repro/sample.yaml`
+4. `uv run vqapr check sample-run`  <- fails here
 
 Reproduced 3 of 3 attempts.
 

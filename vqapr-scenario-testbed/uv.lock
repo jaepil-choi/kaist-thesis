@@ -1575,8 +1575,8 @@ wheels = [
 
 [[package]]
 name = "vqapr"
-version = "0.16.0"
-source = { path = "../../vqapr/dist/vqapr-0.16.0-py3-none-any.whl" }
+version = "0.16.1"
+source = { path = "../../vqapr/dist/vqapr-0.16.1-py3-none-any.whl" }
 dependencies = [
     { name = "duckdb" },
     { name = "numpy" },
@@ -1587,7 +1587,7 @@ dependencies = [
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
 wheels = [
-    { filename = "vqapr-0.16.0-py3-none-any.whl", hash = "sha256:b0ed0b27f61555f9d37eddaefa92613d3c2938cb7ef1866898d755140ae3c1e6" },
+    { filename = "vqapr-0.16.1-py3-none-any.whl", hash = "sha256:bda9ec1355ea2c7f1e4ed4551a622b483fa056c56b103386d0466af73f8ebb58" },
 ]
 
 [package.metadata]
@@ -1641,7 +1641,7 @@ requires-dist = [
     { name = "tabulate", specifier = ">=0.10.0" },
     { name = "torch", specifier = ">=2.14.0" },
     { name = "tqdm", specifier = ">=4.70.0" },
-    { name = "vqapr", path = "../../vqapr/dist/vqapr-0.16.0-py3-none-any.whl" },
+    { name = "vqapr", path = "../../vqapr/dist/vqapr-0.16.1-py3-none-any.whl" },
 ]
 
 [[package]]

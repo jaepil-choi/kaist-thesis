@@ -80,6 +80,7 @@ hides become visible.
 
 ```bash
 vqapr new sample --out ./first-run
+vqapr register ./first-run/instruments.yaml
 vqapr register ./first-run/sample.yaml
 vqapr check sample-run
 vqapr run sample-run
@@ -87,7 +88,8 @@ vqapr show run sample-run
 ```
 
 That writes a complete journey the product runs as it stands: a five-day reversal strategy, a
-venue, a small synthetic panel, and `sample.yaml` — the one declaration that registers all of it.
+venue, a small synthetic panel, `instruments.yaml` — the roster, the names a strategy may order —
+and `sample.yaml`, which registers the data, the strategy, the venue and the run.
 The panel is **deliberately unbalanced** — one name lists late, one stops trading early — so what
 you see is the shape a real run has. It is synthetic: **draw no conclusion about a market from it**;
 do copy its `sample.yaml` when writing your own declaration.

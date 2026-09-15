@@ -93,13 +93,16 @@ exchange, and at least one component.
 
 **And a strategy run requires a fifth: the instrument roster.** The venue must know what every
 ordered id *is* before it can size or charge it, so a project that has declared no instrument is
-refused at `check` and at `run` (`roster.absent`, 412) — `vqapr new instruments --out instruments.yaml`
-writes the declaration, whose comments describe the tables; the tables themselves — one parquet per
-kind (`stock`, `etf`, `index`, `factor`), each with exactly `instrument_id` and `kind` — are yours
-to write, and `vqapr register instruments.yaml` registers them. The roster does not
-have to cover the whole execution table: only what the strategy orders. An order for an id the
-roster never described fails the run at the fill instant (`instrument.undeclared`), naming every
-undeclared id at once. `vqapr run` states which roster it read.
+refused at `check` and at `run` (`roster.absent`, 412). `vqapr new instruments --instruments <ids...>`
+writes `instruments.py`, which exports the tables when you run it — one parquet per kind (`stock`,
+`etf`, `index`, `factor`), each with exactly `instrument_id` and `kind` — and `instruments.yaml`
+beside it; `vqapr register instruments.yaml` registers them. `vq.register_instruments(project_root,
+{id: kind})` writes the tables and registers them in one call. The roster does not have to cover
+the whole execution table: only what the strategy orders. An order for an id the roster never
+described fails the whole run at the fill instant (`instrument.undeclared`), naming every
+undeclared id at once — and `check` cannot see it coming, because which ids a strategy orders is
+known only once it decides. Register every id the strategy may order before the first run.
+`vqapr run` states which roster it read.
 
 ## Editing a run declaration
 
