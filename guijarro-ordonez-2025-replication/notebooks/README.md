@@ -6,6 +6,10 @@
 | 노트북 | 내용 | 필요한 입력 |
 |---|---|---|
 | `cnn-transformer-intuition.ipynb` | CNN weight sharing, causal padding, 학습된 국소 패턴, attention, NAAG 기여도, 상승/하락 비대칭 — 논문 Figure 14–19에 대응하는 해석 분석 | `outputs/strategies/pca5_cnn_transformer_sharpe_lb30_e100_rolling_no-cost/checkpoints/subperiod_00.pt`, `outputs/pca/daily_residuals_k5_20200102_c252_l60.parquet` |
+| `factor-neutral-residuals-2factor.ipynb` | 식 (1)의 잔차와 Φ를 팩터 2개(MKT, SMB)로 손계산하는 학습 노트. 역행렬, 다중회귀, `Fᵀε = 0`이 항등식인 범위, 한국 5종목의 60일 rolling OOS 잔차와 FF1 산출물 검산 | 파트 1–3은 입력 없음. 파트 4는 `config/default.yml`의 `stock_daily`, `factor_returns_daily`, 검산은 `outputs/fama-french/daily_residuals_ff1_20200102_l60.parquet` |
+
+`factor-neutral-residuals-2factor.ipynb`의 source는 같은 이름의 `.py`(jupytext percent 형식)다.
+`.py`를 고친 뒤 `uv run jupytext --to ipynb <파일>.py`로 노트북을 다시 만든다.
 
 실행:
 
