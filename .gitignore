@@ -35,3 +35,5 @@ scratch-pad-for-ai/uv-cache-*/
 
 ## agent session runtime state
 .gjc/
+
+temp/
