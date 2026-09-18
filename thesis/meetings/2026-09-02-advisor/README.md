@@ -8,6 +8,7 @@ Guijarro-Ordonez, Pelger, and Zanotti (2025), *Deep Learning Statistical Arbitra
 
 | 파일 | 설명 |
 |---|---|
+| `feedback.md` | 미팅 후 교수님 피드백 기록. 원천은 사용자 업무일지 한 곳 |
 | `advisor-meeting.qmd` | 발표자료 원본 (Quarto revealjs) |
 | `advisor-meeting.html` | 렌더 결과. self-contained 단일 파일 |
 | `custom.scss` | 단색 테마 (2026-08-24 자료에서 그대로 가져옴) |
