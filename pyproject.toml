@@ -34,10 +34,9 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-# vqapr is consumed from the working tree on purpose: vqapr-testbed/ exists to find out where the
-# framework does not yet serve a paper replication, so a defect found here is fixed in ../qlibx and
-# picked up on the next run with no publish step.
-vqapr = { path = "../qlibx", editable = true }
+# vqapr is consumed from the working tree on purpose: a defect found here is fixed in ../vqapr and
+# picked up on the next run with no publish step. vqapr-scenario-testbed/ pins its own built wheel.
+vqapr = { path = "../vqapr", editable = true }
 
 [dependency-groups]
 dev = [
